@@ -34,11 +34,12 @@ module.exports = async (req, res) => {
       return res.status(503).json({ error: response.status === 401 || response.status === 403 ? 'MODEL_AUTH_REQUIRED' : response.status === 402 ? 'MODEL_CREDITS_REQUIRED' : response.status === 429 ? 'MODEL_BUSY' : 'MODEL_UNAVAILABLE' });
     }
     const result = await response.json();
+    console.info('Kimi completion', result.choices?.[0]?.finish_reason, result.usage?.completion_tokens);
     const content = result.choices?.[0]?.message?.content;
     const graph = validateGraph(JSON.parse(content.replace(/^\s*```(?:json)?\s*/, '').replace(/\s*```\s*$/, '')), branch ? input.node : null);
     return res.status(200).json({ graph, model, generatedAt: Date.now() });
   } catch (error) {
-    console.error('Knowledge generation failed', error.name);
+    console.error('Knowledge generation failed', error.name, error.name === 'Error' ? error.message : 'parse or timeout failure');
     return res.status(502).json({ error: error.name === 'TimeoutError' ? 'MODEL_TIMEOUT' : 'INVALID_GENERATION' });
   }
 };

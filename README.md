@@ -22,6 +22,15 @@ There are four topic networks; users can deepen a branch or cross into an adjace
 topic. Repeated expansion reuses existing nodes. Learning reflections remain in
 memory during the current session.
 
+Expansion reveals branch choices without automatically selecting a child. Users
+choose which idea to follow, including practical applications, conditions, and
+connections to other fields. Content is presented at each node, not as a report.
+
+The Chinese / English switch translates the full interface, assessment, lesson
+content, and knowledge nodes while preserving current answers and expanded paths.
+User-written descriptions are kept in their original language. Only the language
+preference is stored locally.
+
 Content is generated instantly from curated local templates and the user's
 description. This version does not call an AI service or persist personal data
 across page reloads. Branch generation is bounded at three levels, then connects
@@ -53,3 +62,4 @@ http://localhost:4173
 - `styles.css` - responsive visual system
 - `app.js` - demo data and interactive behavior
 - `network.js` - expandable knowledge nodes and connections
+- `i18n.js` - complete Chinese / English content and language switching

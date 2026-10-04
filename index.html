@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="ROBOV.ai，找到知识的方向，拓展认知的边界。"><title>ROBOV.ai | Navigate Knowledge. Expand Your Mind.</title><link rel="stylesheet" href="./styles.css"></head>
 <body><div class="app-shell">
-<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><span class="journey-label">你的私人学习旅程</span></header>
+<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
 <main>
 <ol class="journey-progress" aria-label="学习旅程"><li aria-current="step">认识你</li><li>认知小测</li><li>你的方向</li><li>开始学习</li></ol>
 <section id="intro" class="journey-screen">
@@ -26,10 +26,11 @@
 <div class="network-tool"><svg id="network-edges" aria-hidden="true"></svg><div id="knowledge-network" aria-label="可延伸的知识网络"></div></div>
 <div id="node-path" class="node-path" aria-label="当前知识路径"></div>
 <div id="node-detail" class="node-detail" aria-live="polite"></div>
+<div id="branch-choices" class="branch-choices" aria-live="polite"></div>
 <button id="extend-node" class="primary-button">延伸这个知识点 →</button>
 <p class="eyebrow">你的第一段学习 · 约 3 分钟</p><article id="explore" class="insight-panel"><div class="panel-topline"><span class="card-label">NEXT BEST KNOWLEDGE</span><span id="confidence" class="confidence"></span></div><h1 id="topic-title" tabindex="-1"></h1><p id="topic-summary"></p><div class="boundary-box"><span>你的知识边界</span><p id="topic-boundary"></p></div>
 <div class="mode-tabs" role="tablist" aria-label="探索方向"><button class="mode-tab" data-mode="deeper" role="tab">DEEPER</button><button class="mode-tab" data-mode="explore" role="tab">EXPLORE</button><button class="mode-tab" data-mode="why" role="tab">WHY</button><button class="mode-tab" data-mode="soWhat" role="tab">SO WHAT</button></div><div class="mode-output" id="mode-output" role="tabpanel" aria-live="polite"></div>
 <label class="description-label" for="reflection">把这个想法用到你自己的生活里，你会怎么做？</label><textarea id="reflection" rows="3" maxlength="1000" placeholder="写一个你想尝试的小行动……"></textarea><p class="form-error" id="reflection-error" role="alert"></p><p id="learning-feedback" aria-live="polite"></p>
 <div class="journey-actions"><button class="secondary-button" id="widen">带我探索相邻主题 →</button><button class="primary-button" id="complete-learning">完成这一步，继续深入 →</button></div></article><button class="text-button" id="back-map">← 回到我的地图</button>
 </section>
-</main></div><script src="./network.js"></script><script src="./app.js"></script></body></html>
+</main></div><script src="./network.js"></script><script src="./app.js"></script><script src="./i18n.js"></script></body></html>

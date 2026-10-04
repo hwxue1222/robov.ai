@@ -10,7 +10,7 @@ const topics = {
       ["让评估成为日常习惯", "准备几个真实任务作为固定样本。每次改变指令或模型后，对比准确性、耗时和遗漏。一次漂亮演示只能说明一个例子成功；在不同样本上持续通过，才说明流程更可靠。", "收集三个普通案例和一个容易出错的案例，写下每个案例的通过标准。"]
     ],
     questions: [
-      ["AI 写了一份看起来很专业的报告，你会先做什么？", ["直接采用，专业的语气意味着可靠", "核对关键事实、出处和任务要求", "让它把报告写得更长"], 1],
+      ["探索一个新的 AI 概念时，怎样检查自己是否理解？", ["只要记住术语就足够", "用真实例子解释原理，并检查适用条件", "阅读更多相同的解释"], 1],
       ["一个自动回复流程怎样才算形成闭环？", ["发送后检查结果，并用反馈调整流程", "回复越快越好", "换一个更大的模型"], 0],
       ["怎样判断新指令是否比旧指令更好？", ["只看一次最好的结果", "比较文字长度", "在相同真实案例上按标准对比"], 2]
     ], adjacent: "decision-science", why: "当 AI 的输出会影响工作时，判断可靠性比得到一个漂亮答案更有价值。"
@@ -128,7 +128,7 @@ function setTopic(id) {
   $("#reflection").value = reflections[id + ":" + (levels[id] || 0)] || "";
   $("#reflection-error").textContent = "";
   $("#learning-feedback").textContent = "";
-  $("#complete-learning").textContent = (levels[id] || 0) === 2 ? "完成这一步，探索相邻主题 →" : "完成这一步，继续深入 →";
+  $("#complete-learning").textContent = "记录想法，展开知识方向 →";
   setMode(activeMode);
   selectNode(id + "-" + (levels[id] || 0));
   renderNetwork();
@@ -209,9 +209,7 @@ $("#complete-learning").addEventListener("click", () => {
     $("#reflection-error").textContent = "先写下一个具体的小行动（至少 5 个字），我们再继续。";
     $("#reflection").focus(); setMode("soWhat"); return;
   }
-  const old = activeTopic;
-  if ((levels[old] || 0) < 2) levels[old] = (levels[old] || 0) + 1;
-  else activeTopic = topics[old].adjacent;
-  activeMode = "deeper"; setTopic(activeTopic); showScreen("learning");
-  $("#learning-feedback").textContent = "已记录你的行动。接下来，我们" + (old === activeTopic ? "沿着这个主题再深入一步。" : "把它连接到一个相邻主题。");
+  extendNode();
+  $("#learning-feedback").textContent = "已记录你的想法。选择一个分支，继续延伸你的知识链。";
+  $("#branch-choices").scrollIntoView({ behavior: "smooth", block: "center" });
 });

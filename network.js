@@ -32,6 +32,10 @@ function getNetwork() {
 function selectNode(id) {
   selectedNode = id;
   const nodes = getNetwork(), node = nodes.find(n => n.id === id);
+  if (node.depth > 0) levels[activeTopic] = node.index;
+  $("#confidence").textContent = "第 " + ((levels[activeTopic] || 0) + 1) + " 段";
+  $("#learning > .eyebrow").textContent = "学习阶段 " + ((levels[activeTopic] || 0) + 1) + " · 约 3 分钟";
+  $("#topic-boundary").textContent = "下一步：" + node.title + "。读懂之后，用你的真实场景检查理解。";
   $("#node-detail").replaceChildren();
   const title = document.createElement("h2"); title.textContent = node.title;
   const body = document.createElement("p"); body.textContent = node.body;
@@ -44,7 +48,23 @@ function selectNode(id) {
     const b = document.createElement("button"); b.textContent = n.title + (n.id === id ? "" : " →");
     b.addEventListener("click", () => { selectNode(n.id); renderNetwork(); }); $("#node-path").append(b);
   });
-  $("#extend-node").textContent = nodes.some(n => n.parent === id) ? "带我进入下一个知识点 →" : node.depth < 3 ? "延伸这个知识点 →" : "连接到相邻领域 →";
+  $("#extend-node").textContent = nodes.some(n => n.parent === id) ? "查看延伸方向 →" : node.depth < 3 ? "延伸这个知识点 →" : "连接到相邻领域 →";
+  const choices = $("#branch-choices");
+  choices.replaceChildren();
+  const children = nodes.filter(n => n.parent === id);
+  if (children.length || node.depth === 3) {
+    const heading = document.createElement("h3"); heading.textContent = "你想朝哪个方向延伸？"; choices.append(heading);
+    children.forEach(child => {
+      const button = document.createElement("button"); button.className = "branch-choice"; button.textContent = child.title + " →";
+      button.addEventListener("click", () => { activeMode = "deeper"; selectNode(child.id); renderNetwork(); $("#node-detail").scrollIntoView({ behavior: "smooth", block: "center" }); });
+      choices.append(button);
+    });
+    if (node.depth === 3) {
+      const adjacent = topics[activeTopic].adjacent;
+      const button = document.createElement("button"); button.className = "branch-choice"; button.textContent = "连接到「" + topics[adjacent].title + "」";
+      button.addEventListener("click", () => { activeMode = "deeper"; setTopic(adjacent); showScreen("learning"); }); choices.append(button);
+    }
+  }
   setMode(activeMode);
 }
 function renderNetwork() {
@@ -59,7 +79,7 @@ function renderNetwork() {
       b.addEventListener("click", () => { selectNode(node.id); renderNetwork(); }); row.append(b);
     }); $("#knowledge-network").append(row);
   }
-  $("#network-guidance").textContent = "已连接 " + nodes.length + " 个知识点。下一步推荐：" + nodes.find(n => n.id === selectedNode).title;
+  $("#network-guidance").textContent = "已连接 " + nodes.length + " 个知识点。当前知识点：" + nodes.find(n => n.id === selectedNode).title;
   requestAnimationFrame(drawEdges);
 }
 function drawEdges() {
@@ -85,6 +105,6 @@ function extendNode() {
     ];
     children = content.map((c, i) => ({ id: node.id + "-" + i, parent: node.id, title: c[0], body: c[1], depth: node.depth + 1, index: node.index })); nodes.push(...children);
   }
-  if (children.length) { selectNode(children[0].id); renderNetwork(); }
-  else { activeMode = "deeper"; setTopic(topics[activeTopic].adjacent); showScreen("learning"); }
+  selectNode(node.id); renderNetwork();
+  $("#branch-choices").scrollIntoView({ behavior: "smooth", block: "center" });
 }

@@ -30,6 +30,10 @@ body {
 }
 
 [hidden] { display: none !important; }
+.language-switch { display: flex; gap: 2px; border: 1px solid var(--line); border-radius: 6px; padding: 3px; }
+.language-switch button { background: transparent; border: 0; border-radius: 3px; color: var(--muted); padding: 7px 10px; font: inherit; font-size: 13px; }
+.language-switch button[aria-pressed="true"] { background: var(--ink); color: white; }
+.journey-screen button { overflow-wrap: anywhere; }
 .network-heading p { line-height: 1.8; color: var(--muted); }
 .network-tool { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; overflow: auto; max-height: 450px; }
 #knowledge-network { position: relative; display: grid; gap: 36px; }
@@ -41,6 +45,11 @@ body {
 .node-path { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0; }
 .node-path button { border: 0; background: none; color: var(--accent-dark); font: inherit; font-size: 13px; text-align: left; padding: 4px; }
 .node-detail p { line-height: 1.85; color: var(--muted); white-space: pre-line; }
+.branch-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+.branch-choices h3 { grid-column: 1 / -1; margin: 0; font-size: 18px; }
+.branch-choice { border: 1px solid #bacace; background: white; border-radius: 6px; padding: 16px; text-align: left; font: inherit; color: var(--accent-dark); line-height: 1.6; }
+.branch-choice:hover { border-color: var(--accent); background: #e5f3f0; }
+@media (max-width: 560px) { .branch-choices { grid-template-columns: 1fr; } }
 #extend-node { margin-bottom: 30px; }
 .journey-progress { display: flex; justify-content: space-between; gap: 12px; list-style: none; padding: 0; max-width: 760px; margin: 36px auto; color: var(--muted); font-size: 14px; }
 .journey-progress li { flex: 1; border-top: 3px solid #dce1e3; padding-top: 12px; }

@@ -47,6 +47,8 @@ Alternatively configure `MOONSHOT_API_KEY` for direct Moonshot calls; `KIMI_MODE
 can override the model. Keys stay on the server. No static network is used as a
 personalized fallback: failures are shown explicitly and previous data is kept.
 Generated bilingual graphs are validated for structure, references, and cycles.
+Focused networks use a structured output tool. Syntax repair is followed by the
+same graph validation; truncated completions are rejected rather than repaired.
 Descriptions, recent exploration and optional reflections inform new branches.
 Network size is limited to about 150 nodes per profile revision.
 Deeper exploration adds specific concepts under the selected node. Wider
@@ -81,3 +83,4 @@ Open http://localhost:4173. Production: https://robov.ai.
 - `i18n.js`: Chinese and English
 - `styles.css`: responsive layout
 - `vendor/`: pinned Three.js 0.180.0 modules and MIT license
+- `vendor/jsonrepair/`: jsonrepair 3.15.0 UMD build from npm, ISC license

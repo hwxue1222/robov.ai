@@ -3,7 +3,7 @@ const knowledgeVisits = Object.create(null);
 let lastVisit = '';
 function saveProgress() {
   try {
-    localStorage.setItem(progressKey, JSON.stringify({ version: 2, description, activeTopic, activeMode, selectedNode, graph: personalizedGraph, reflections, knowledgeVisits, draft: $('#self-description').value }));
+    localStorage.setItem(progressKey, JSON.stringify({ version: 2, description, activeTopic, activeMode, selectedNode, graph: personalizedGraph, networkTrail, networkForward, nodeHistory, reflections, knowledgeVisits, draft: $('#self-description').value }));
   } catch { $('#profile-storage').textContent = '探索记录不等于已掌握。当前浏览器无法保存记录，本次关闭页面后进度将丢失。'; }
 }
 function recordKnowledge(id) {
@@ -11,7 +11,7 @@ function recordKnowledge(id) {
   if (!node) return;
   const key = personalizedGraph.sessionId + ':' + id;
   if (lastVisit !== key) {
-    knowledgeVisits[key] = { title: node.title, topic: topics[activeTopic].title, depth: node.depth, count: (knowledgeVisits[key]?.count || 0) + 1, lastAt: Date.now() }; lastVisit = key;
+    knowledgeVisits[key] = { title: node.title, topic: topics[activeTopic].title, depth: node.depth + (personalizedGraph.baseDepth || 0), count: (knowledgeVisits[key]?.count || 0) + 1, lastAt: Date.now() }; lastVisit = key;
   }
   renderLivingProfile(); saveProgress();
 }
@@ -56,6 +56,13 @@ try {
     }
     for (const [key, value] of Object.entries(saved.reflections || {})) if (typeof value === 'string' && value.length <= 1000) reflections[key] = value;
     if (saved.version === 2 && saved.graph) {
+      for (const [session, ids] of Object.entries(saved.nodeHistory || {})) if (Array.isArray(ids)) nodeHistory[session] = ids.filter(id => typeof id === 'string');
+      for (const [savedRows, target] of [[saved.networkTrail, networkTrail], [saved.networkForward, networkForward]]) for (const previous of Array.isArray(savedRows) ? savedRows : []) {
+        try {
+          validateGraph(previous.graph, null, 168);
+          if (typeof previous.graph.sessionId === 'string' && previous.graph.nodes.some(n => n.id === previous.selectedNode)) target.push({ graph: previous.graph, selectedNode: previous.selectedNode, activeMode: ['deeper', 'explore', 'why', 'soWhat'].includes(previous.activeMode) ? previous.activeMode : 'deeper' });
+        } catch { /* Skip an invalid archived graph without losing the current one. */ }
+      }
       registerGraph(validateGraph(saved.graph, null, 168));
       personalizedGraph.sessionId ||= crypto.randomUUID();
       personalizedGraph.nodes.forEach(node => { if (reflections[node.id]) reflections[reflectionKey(node.id)] ||= reflections[node.id]; });

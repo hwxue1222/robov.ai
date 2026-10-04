@@ -151,6 +151,12 @@ const topicEnglish = {
   }
 };
 english['生成我的知识网络 →'] = 'Generate my knowledge network →';
+Object.assign(english, { '全部': 'All', '课题': 'Topics', '新闻': 'News', '内容类型': 'Content type', '原文 ↗': 'Source ↗', '重试': 'Retry', '核心原理': 'Core idea', '适用边界': 'Boundaries', '← 上一个节点': '← Previous node', '我的想法': 'My thoughts', '写下你的想法……': 'Write your thoughts…', '保存想法': 'Save thoughts', '← 我的画像': '← My profile' });
+english['继续深入 →'] = 'Go deeper →';
+english['向广探索 →'] = 'Explore wider →';
+english['从这里展开新网络 →'] = 'Start a new network here →';
+english['← 返回上一个网络'] = '← Back to the previous network';
+english['继续新网络 →'] = 'Return to the new network →';
 english['学习内容由 AI 生成，可能有误；重要结论请核对可靠资料。'] = 'Learning content is AI-generated and may contain errors. Verify important claims with reliable sources.';
 english['生成时，你的描述、相关探索记录和所选节点的想法会发送给 Kimi 服务。请勿填写隐私或机密信息。'] = 'Generation sends your description, relevant exploration history and thoughts on the selected idea to Kimi. Do not enter private or confidential information.';
 english['这个点还没有跨领域关联。选择延伸，生成新的连接方向。'] = 'This idea has no cross-field links yet. Expand it to generate new directions.';

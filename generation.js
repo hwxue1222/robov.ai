@@ -1,4 +1,6 @@
 let generating = false;
+const networkTrail = [];
+const networkForward = [];
 const errors = {
   MODEL_NOT_CONFIGURED: ['服务暂不可用，请稍后再试。你的描述已保留。', 'The service is temporarily unavailable. Please retry later; your description has been kept.'],
   MODEL_AUTH_REQUIRED: ['服务暂不可用，请稍后再试。你的描述已保留。', 'The service is temporarily unavailable. Please retry later; your description has been kept.'],
@@ -35,30 +37,59 @@ async function requestGraph(payload) {
 }
 function setBusy(value) {
   generating = value;
-  ['#intro-form button', '#extend-node', '#widen', '#complete-learning'].forEach(selector => {
+  ['#intro-form button', '#extend-node', '#widen-node', '#recenter-node', '#complete-learning'].forEach(selector => {
     $(selector).disabled = value;
     $(selector).setAttribute('aria-busy', String(value));
   });
   $('#intro-form').setAttribute('aria-busy', String(value));
+  $('#return-network').disabled = value;
+  $('#forward-network').disabled = value;
+  $('#back-node').disabled = value;
 }
 function generationError(error) {
   const pair = errors[error.message] || ['暂时未能生成知识网络，请重试。你的描述和记录已保留。', 'Could not generate the knowledge network. Please retry; your description and history are preserved.'];
   return localText({ zh: pair[0], en: pair[1] });
 }
-async function generateNetwork(input) {
+async function generateNetwork(input, focus = null) {
   if (generating) return;
   if (input.length < 10) { $('#intro-error').textContent = '再多说一点吧，至少 10 个字，让我更了解你的起点。'; return; }
   setBusy(true);
   $('#intro-error').textContent = '';
+  $('#network-error').textContent = '';
   try {
-    const graph = await requestGraph({ description: input, history: Object.values(knowledgeVisits).sort((a, b) => b.lastAt - a.lastAt).slice(0, 12) });
+    const graph = await requestGraph({ description: input, focus, reflection: focus ? reflections[reflectionKey(focus.id)] || '' : '', history: Object.values(knowledgeVisits).sort((a, b) => b.lastAt - a.lastAt).slice(0, 12) });
+    if (focus) {
+      const source = personalizedGraph.nodes.find(n => n.id === focus.id) || personalizedGraph.nodes.find(n => n.id === selectedNode);
+      networkTrail.push({ graph: personalizedGraph, selectedNode: source.id, activeMode });
+      graph.originTitle = focus.title;
+      graph.baseDepth = (personalizedGraph.baseDepth || 0) + (networks[source.domain].find(n => n.id === source.id)?.depth || 0);
+    } else if (personalizedGraph) {
+      networkTrail.push({ graph: personalizedGraph, selectedNode, activeMode });
+    }
+    networkForward.length = 0;
     description = input; graph.sessionId = crypto.randomUUID(); registerGraph(graph);
     const next = graph.nodes.find(n => n.id === graph.next.id);
     activeMode = 'deeper'; setTopic(next.domain, next.id); renderLivingProfile(); showScreen('learning');
     $('#learning-feedback').textContent = graph.next.reason.zh;
     $('#intro-error').textContent = ''; saveProgress();
-  } catch (error) { $('#intro-error').textContent = generationError(error); saveProgress(); }
+  } catch (error) { $(focus ? '#network-error' : '#intro-error').textContent = generationError(error); saveProgress(); }
   finally { setBusy(false); }
+}
+function returnToNetwork() {
+  if (generating || !networkTrail.length) return;
+  networkForward.push({ graph: personalizedGraph, selectedNode, activeMode });
+  const previous = networkTrail.pop();
+  restoreNetwork(previous);
+}
+function forwardToNetwork() {
+  if (generating || !networkForward.length) return;
+  networkTrail.push({ graph: personalizedGraph, selectedNode, activeMode });
+  restoreNetwork(networkForward.pop());
+}
+function restoreNetwork(previous) {
+  registerGraph(previous.graph); activeMode = previous.activeMode;
+  const node = personalizedGraph.nodes.find(n => n.id === previous.selectedNode) || personalizedGraph.nodes.find(n => n.id === personalizedGraph.next.id);
+  setTopic(node.domain, node.id); showScreen('learning'); saveProgress();
 }
 async function generateBranches(node, direction) {
   setBusy(true); $('#learning-feedback').textContent = '';

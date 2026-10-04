@@ -1,19 +1,20 @@
 const networks = Object.create(null);
 let selectedNode = '';
+let selectedSession = '';
+let restoringNode = false;
+const nodeHistory = Object.create(null);
 function getNetwork() { return networks[activeTopic] || []; }
 function selectNode(id) {
   const node = getNetwork().find(n => n.id === id);
   if (!node) return;
-  selectedNode = id;
-  $('#topic-title').textContent = node.title;
-  $('#topic-summary').textContent = topics[activeTopic].summary;
-  $('#topic-boundary').textContent = node.boundary;
-  $('#confidence').textContent = '第 ' + (node.depth + 1) + ' 段';
-  $('#learning > .eyebrow').textContent = '学习阶段 ' + (node.depth + 1) + ' · 约 3 分钟';
+  const trail = nodeHistory[personalizedGraph.sessionId] ||= [];
+  if (!restoringNode && selectedSession === personalizedGraph.sessionId && selectedNode && selectedNode !== id) trail.push(selectedNode);
+  selectedNode = id; selectedSession = personalizedGraph.sessionId;
+  $('#network-error').textContent = '';
   $('#reflection').value = reflections[reflectionKey(id)] || '';
   $('#node-detail').replaceChildren();
-  const title = document.createElement('h3'), body = document.createElement('p');
-  title.textContent = node.title; body.textContent = node.body; $('#node-detail').append(title, body);
+  const title = document.createElement('h2'); title.tabIndex = -1;
+  title.textContent = node.title; $('#node-detail').append(title);
   $('#node-path').replaceChildren();
   const path = []; let current = node;
   while (current && path.length < 20) { path.unshift(current); current = getNetwork().find(n => n.id === current.parent); }
@@ -40,6 +41,10 @@ function selectNode(id) {
 }
 function renderNetwork() {
   const nodes = getNetwork();
+  $('#return-network').hidden = !networkTrail.length;
+  $('#forward-network').hidden = !networkForward.length;
+  $('#back-node').hidden = !(nodeHistory[personalizedGraph.sessionId]?.length);
+  $('#network-origin').textContent = personalizedGraph.originTitle ? localText({ zh: '起点：' + personalizedGraph.originTitle.zh, en: 'Starting point: ' + personalizedGraph.originTitle.en }) : '';
   $('#knowledge-network').replaceChildren();
   Object.keys(networks).forEach(domain => {
     const row = document.createElement('div'); row.className = 'network-row';
@@ -57,7 +62,17 @@ function renderNetwork() {
   button.addEventListener('click', () => { setTopic(next.domain, next.id); $('#node-detail').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
   const reason = document.createElement('p'); reason.textContent = personalizedGraph.next.reason.zh;
   $('#next-direction').append(label, button, reason);
+  renderPool();
   requestAnimationFrame(drawEdges);
+}
+function backToNode() {
+  if (generating) return;
+  const trail = nodeHistory[personalizedGraph.sessionId] || [];
+  const node = personalizedGraph.nodes.find(n => n.id === trail.pop());
+  if (!node) return;
+  restoringNode = true;
+  try { setTopic(node.domain, node.id); } finally { restoringNode = false; }
+  $('#node-detail').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 function drawEdges() { window.robovScene?.sync(); }
 async function extendNode(direction = 'deeper') {

@@ -17,6 +17,13 @@ Each node presents knowledge content and selectable directions for deeper
 concepts, applications, boundaries, and connections to other domains. Expanding
 a node reveals choices without choosing a branch for the user.
 
+Any point can also become the center of a fresh knowledge network. Previous and
+next network controls preserve the selected point, with a separate previous-node
+control inside each network. The Pool offers selectable topics and real linked
+news from GDELT, rather than numbered learning stages or mandatory exercises.
+News availability depends on the source; failures never produce invented news.
+Choosing a headline generates related concepts, not a summary of an unread report.
+
 Chinese and English include the interface, content, and knowledge nodes. A
 language change preserves the current path and profile. Descriptions retain
 their original wording.

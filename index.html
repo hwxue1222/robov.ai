@@ -7,7 +7,7 @@
 <ol class="journey-progress" aria-label="学习旅程"><li aria-current="step">认识你</li><li>知识网络</li><li>持续探索</li></ol>
 <section id="intro" class="journey-screen">
 <p class="eyebrow">PROFILE SCAN</p><h1>先从你自己说起。</h1><p class="guide-copy">你好，我是 ROBOV。你最近在做什么？对什么感兴趣？有什么想弄懂、却一直没找到方向的事？</p>
-<form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="alert"></p><button class="primary-button" type="submit">生成我的初步画像 →</button></form>
+<form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="status" aria-live="polite"></p><button class="primary-button" type="submit">生成我的知识网络 →</button></form>
 <p class="brand-promise">Navigate Knowledge. Expand Your Mind.<br>找到知识的方向，拓展认知的边界。</p>
 </section>
 <section id="profile-review" class="journey-screen" hidden>
@@ -40,4 +40,4 @@
 <label class="description-label" for="reflection">把这个想法用到你自己的生活里，你会怎么做？</label><textarea id="reflection" rows="3" maxlength="1000" placeholder="写一个你想尝试的小行动……"></textarea><p class="form-error" id="reflection-error" role="alert"></p><p id="learning-feedback" aria-live="polite"></p>
 <div class="journey-actions"><button class="secondary-button" id="widen">带我探索相邻主题 →</button><button class="primary-button" id="complete-learning">完成这一步，继续深入 →</button></div></article><button class="text-button" id="back-map">← 回到我的地图</button>
 </section>
-</main></div><script src="./network.js"></script><script src="./app.js"></script><script src="./profile.js"></script><script src="./i18n.js"></script><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script><script type="module" src="./scene.js"></script></body></html>
+</main></div><script src="./lib/graph.js"></script><script src="./network.js"></script><script src="./app.js"></script><script src="./i18n.js"></script><script src="./generation.js"></script><script src="./profile.js"></script><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script><script type="module" src="./scene.js"></script></body></html>

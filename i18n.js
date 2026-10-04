@@ -150,19 +150,8 @@ const topicEnglish = {
     ]
   }
 };
-for (const [id, en] of Object.entries(topicEnglish)) {
-  const zh = topics[id];
-  ["title", "summary", "why"].forEach(key => english[zh[key]] = en[key]);
-  zh.concepts.forEach((row, i) => row.forEach((text, j) => english[text] = en.concepts[i][j]));
-  zh.questions.forEach((row, i) => {
-    english[row[0]] = en.questions[i][0];
-    row[1].forEach((text, j) => english[text] = en.questions[i][1][j]);
-  });
-  nodeLibrary[id].forEach((row, i) => row.forEach((pair, j) => pair.forEach((text, k) => english[text] = en.branches[i][j][k])));
-}
-topics["learning-design"].keywords = /学习|读书|教育|记忆|考试|知识|研究|learn|study|reading|education|memory|research/i;
-topics["decision-science"].keywords = /商业|投资|决策|管理|创业|business|finance|invest|decision|manage|startup/i;
-topics["creative-tech"].keywords = /设计|创作|艺术|视频|写作|design|creative|art|video|writing/i;
+english['生成我的知识网络 →'] = 'Generate my knowledge network →';
+english['这个点还没有跨领域关联。选择延伸，生成新的连接方向。'] = 'This idea has no cross-field links yet. Expand it to generate new directions.';
 let language = "zh";
 try { language = localStorage.getItem("robov-language") === "en" ? "en" : "zh"; } catch {}
 function translate(source) {
@@ -171,8 +160,8 @@ function translate(source) {
     [/^你目前关注「(.+)」。这份画像会随着你的自我描述和知识探索持续更新。$/, m => "Your current direction is " + translate(m[1]) + ". Your profile keeps updating through your descriptions and knowledge exploration."],
     [/^(.+) · (\d+) 次打开$/, m => translate(m[1]) + " · opened " + m[2] + (m[2] === "1" ? " time" : " times")],
     [/^认知小测 · (\d) \/ 3$/, m => "Quick check · " + m[1] + " / 3"],
-    [/^学习阶段 (\d) · 约 3 分钟$/, m => "Learning stage " + m[1] + " · about 3 minutes"],
-    [/^第 (\d) 段$/, m => "Stage " + m[1]],
+    [/^学习阶段 (\d+) · 约 3 分钟$/, m => "Learning stage " + m[1] + " · about 3 minutes"],
+    [/^第 (\d+) 段$/, m => "Stage " + m[1]],
     [/^(.+) · (准备进阶|建立基础)$/, m => translate(m[1]) + " · " + (m[2] === "准备进阶" ? "Ready to advance" : "Build foundations")],
     [/^你说：「([\s\S]*)」$/, m => "You said: “" + m[1] + "”"],
     [/^我们先从「(.+)」了解你的起点。不确定也没关系，选出最接近你想法的一项。$/, m => "Let's start with " + translate(m[1]) + ". It's okay to be unsure. Choose the answer closest to your thinking."],

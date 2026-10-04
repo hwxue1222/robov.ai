@@ -48,25 +48,24 @@ if (renderer) {
   function build() {
     const rows = [];
     Object.keys(topics).forEach((topicId, i) => {
-      const data = networks[topicId] || [
-        { id: topicId, title: topics[topicId].title, parent: null, depth: 0 },
-        ...topics[topicId].concepts.map((c, j) => ({ id: topicId + "-" + j, title: c[0], parent: topicId, depth: 1, index: j }))
-      ];
-      data.forEach(n => rows.push({ ...n, topicId, color: colors[i], center: centers[i] }));
+      const data = networks[topicId] || [];
+      const angle = i * Math.PI * 2 / Object.keys(topics).length;
+      const center = new THREE.Vector3(Math.cos(angle) * 4.2, Math.sin(angle) * 3, Math.sin(angle * 2) * 1.5);
+      data.forEach(n => rows.push({ ...n, topicId, color: colors[i % colors.length], center }));
     });
     const nextSignature = rows.map(n => n.id).join("|");
     if (signature === nextSignature) { updateSelection(); return; }
     signature = nextSignature; disposeGraph(); framed = false;
     const positions = new Map();
-    rows.forEach(n => {
+    rows.sort((a, b) => a.depth - b.depth).forEach(n => {
       let position = n.center.clone();
       if (n.depth === 1) {
-        const angle = n.index * Math.PI * 2 / 3;
+        const angle = n.index * Math.PI * 2 / rows.filter(r => r.parent === n.parent).length;
         position.add(new THREE.Vector3(Math.cos(angle) * 1.85, Math.sin(angle) * 1.65, n.index === 1 ? 1.5 : -0.8));
       } else if (n.depth > 1) {
         const parent = positions.get(n.parent);
-        const side = n.id.endsWith("-0") ? -1 : 1;
-        position = parent.clone().add(new THREE.Vector3(side * 1.15, -0.85, side * 1.2));
+        const angle = n.index * Math.PI * 2 / rows.filter(r => r.parent === n.parent).length;
+        position = parent.clone().add(new THREE.Vector3(Math.cos(angle) * 1.8, Math.sin(angle) * 1.6 - 0.5, 1.2));
       }
       positions.set(n.id, position);
       const material = new THREE.MeshStandardMaterial({ color: n.color, emissive: n.color, emissiveIntensity: 0.25, roughness: 0.35 });
@@ -83,10 +82,10 @@ if (renderer) {
       const geometry = new THREE.BufferGeometry().setFromPoints([positions.get(n.parent), positions.get(n.id)]);
       group.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: n.color, transparent: true, opacity: 0.45 })));
     });
-    Object.keys(topics).forEach((topicId, i) => {
-      const next = topics[topicId].adjacent;
-      const geometry = new THREE.BufferGeometry().setFromPoints([positions.get(topicId), positions.get(next)]);
-      group.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: colors[i], transparent: true, opacity: 0.2 })));
+    (personalizedGraph?.edges || []).forEach(edge => {
+      if (!positions.has(edge.from) || !positions.has(edge.to) || rows.some(n => n.id === edge.to && n.parent === edge.from)) return;
+      const geometry = new THREE.BufferGeometry().setFromPoints([positions.get(edge.from), positions.get(edge.to)]);
+      group.add(new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 })));
     });
     updateSelection();
   }

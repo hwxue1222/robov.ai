@@ -29,7 +29,7 @@ function renderPoolItems() {
   if (!personalizedGraph) return;
   const items = $('#pool-items'); items.replaceChildren();
   if (poolFilter !== 'news') poolTopics().forEach(node => {
-    items.append(poolItem('topic', node.title.zh, node.exercise.zh, () => generateNetwork(description, node)));
+    items.append(poolItem('topic', node.title.zh, node.why.zh, () => generateNetwork(description, node)));
   });
   const state = newsCache.get(poolQuery());
   if (poolFilter !== 'topic') {

@@ -727,3 +727,5 @@ input {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+.pool-choice { overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: reduce) { .pool-loading::after { animation: none; } }

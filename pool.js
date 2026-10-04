@@ -50,7 +50,11 @@ function renderPoolItems() {
     const channel = document.createElement('span'); channel.className = 'pool-channel';
     channel.textContent = 'AI 知识线索 · ' + channelLabels[entry.channel];
     localText({ zh: channel.textContent, en: 'AI knowledge lead · ' + ({ science: 'Science', history: 'History', culture: 'Society & culture', practice: 'Practice' })[entry.channel] });
-    row.append(channel); items.append(row);
+    row.append(channel);
+    if (entry.sourceUrl) {
+      const link = document.createElement('a'); link.href = entry.sourceUrl; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.className = 'pool-source'; link.textContent = '百科 ↗'; link.title = entry.sourceTitle; row.append(link);
+    }
+    items.append(row);
   });
   const research = researchCache.get(poolResearchQuery());
   if (['all', 'research'].includes(poolFilter)) (research?.articles || []).forEach((article, index) => {
@@ -117,7 +121,7 @@ async function loadPoolIdeas() {
     if (!response.ok) throw new Error('Pool unavailable');
     const entries = validatePool(result.entries);
     entries.forEach(entry => { localText(entry.title); localText(entry.body); });
-    (graph.pools ||= {})[id] = entries; saveProgress();
+    (graph.pools ||= {})[id] = entries; graph.poolVersion = 2; saveProgress();
   } catch (error) {
     if (error.name !== 'AbortError' || ideaKey === key) ideaErrors.add(key);
   } finally {

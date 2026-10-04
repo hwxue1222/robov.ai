@@ -26,7 +26,9 @@ Choosing a headline generates related concepts, not a summary of an unread repor
 
 Pool mixes topics, people, historical events, timelines, research and news.
 Bilingual AI knowledge leads offer science, history, cultural and practical
-perspectives, clearly separate from retrieved sources. Crossref supplies real
+perspectives, clearly separate from retrieved sources. Non-topic leads must match
+an existing English Wikipedia page, linked for reference. This checks entity
+identity, not the accuracy of the AI's explanation. Crossref supplies real
 publication metadata and DOI links; no unread paper is summarized. News remains
 from GDELT and depends on provider availability. Generated leads persist per node.
 

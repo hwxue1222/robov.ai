@@ -13,6 +13,7 @@ function localText(value) {
   return value.zh;
 }
 function registerGraph(graph) {
+  if (graph.poolVersion !== 2) delete graph.pools;
   if (graph.pools && typeof graph.pools === 'object') {
     for (const id of Object.keys(graph.pools)) {
       try { graph.pools[id] = validatePool(graph.pools[id]); }

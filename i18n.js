@@ -153,6 +153,7 @@ const topicEnglish = {
 english['生成我的知识网络 →'] = 'Generate my knowledge network →';
 Object.assign(english, { '全部': 'All', '课题': 'Topics', '新闻': 'News', '内容类型': 'Content type', '原文 ↗': 'Source ↗', '重试': 'Retry', '核心原理': 'Core idea', '适用边界': 'Boundaries', '← 上一个节点': '← Previous node', '我的想法': 'My thoughts', '写下你的想法……': 'Write your thoughts…', '保存想法': 'Save thoughts', '← 我的画像': '← My profile' });
 Object.assign(english, { '人物': 'People', '重大事件': 'Major events', '时间线': 'Timelines', '文献': 'Research', '重试知识线索': 'Retry knowledge leads', '重试文献': 'Retry research', '重试新闻': 'Retry news' });
+english['百科 ↗'] = 'Encyclopedia ↗';
 english['继续深入 →'] = 'Go deeper →';
 english['向广探索 →'] = 'Explore wider →';
 english['从这里展开新网络 →'] = 'Start a new network here →';

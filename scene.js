@@ -107,8 +107,8 @@ if (renderer) {
       const size = bounds.getSize(new THREE.Vector3());
       const center = bounds.getCenter(new THREE.Vector3());
       const halfFov = THREE.MathUtils.degToRad(camera.fov / 2);
-      const distance = Math.max((size.x + 4) / (2 * Math.tan(halfFov) * camera.aspect), (size.y + 4) / (2 * Math.tan(halfFov))) + size.z / 2;
-      controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(0, 1, Math.min(55, Math.max(19, distance))));
+      const distance = Math.max((size.x + 3) / (2 * Math.tan(halfFov) * camera.aspect), (size.y + 1.5) / (2 * Math.tan(halfFov))) + size.z / 2;
+      controls.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(0, 1, Math.min(55, Math.max(12, distance))));
       framed = true;
     }
   }
@@ -116,6 +116,14 @@ if (renderer) {
   const raycaster = new THREE.Raycaster();
   let pointerStart = null;
   canvas.addEventListener("pointerdown", event => { pointerStart = [event.clientX, event.clientY]; });
+  canvas.addEventListener("pointermove", event => {
+    const rect = canvas.getBoundingClientRect();
+    raycaster.setFromCamera(new THREE.Vector2((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1), camera);
+    const hit = raycaster.intersectObjects(visualNodes.map(n => n.mesh))[0];
+    const node = hit && visualNodes.find(n => n.id === hit.object.userData.id);
+    canvas.style.cursor = node ? "pointer" : "grab";
+    canvas.title = node ? (document.documentElement.lang === "en" ? translate(node.title) : node.title) : "";
+  });
   canvas.addEventListener("pointerup", event => {
     if (!pointerStart || Math.hypot(event.clientX - pointerStart[0], event.clientY - pointerStart[1]) > 6) return;
     const rect = canvas.getBoundingClientRect();

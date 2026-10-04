@@ -19,6 +19,7 @@ test('financial source routing avoids unrelated news and supports bilingual node
   for (const [zh, en, expected] of [
     ['咖啡萃取', 'Coffee extraction', ''], ['利率传导', 'Interest rate transmission', '利率'],
     ['资产配置', 'Asset allocation', '资产配置'], ['平安银行 000001', 'Ping An Bank 000001', '000001'],
+    ['需求预测与库存周转', 'Inventory turnover', '库存'],
     ['宏观基础', 'Inflation expectations', '通货膨胀']
   ]) assert.equal(vm.runInContext('poolFinanceQuery()', context({ zh, en })), expected);
 });

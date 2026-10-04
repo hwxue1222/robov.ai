@@ -28,6 +28,7 @@ function poolFinanceQuery() {
     ['汇率', /汇率|\bexchange rates?\b|\bforex\b/i], ['股票', /股票|股市|\bstocks?\b|\bequities\b/i],
     ['债券', /债券|\bbonds?\b/i], ['基金', /基金|\bfunds?\b|\betfs?\b/i],
     ['资产配置', /资产配置|\basset allocation\b/i], ['现金流', /现金流|\bcash flow\b/i],
+    ['库存', /库存|\binventor(y|ies)\b/i], ['定价', /定价|\bpricing\b/i],
     ['货币政策', /货币政策|\bmonetary policy\b/i], ['贸易', /贸易|\btrade\b/i],
     ['投资', /投资|\binvest(ment|ing)\b/i], ['金融', /金融|\bfinanc(e|ial)\b/i],
     ['经济', /经济|\beconom(y|ics|ic)\b/i]

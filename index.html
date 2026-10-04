@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ROBOV.ai is a personalized AI private school and cognitive navigation system."
+    />
+    <title>ROBOV.ai | Navigate Knowledge. Expand Your Mind.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar" aria-label="ROBOV navigation">
+        <a class="brand" href="#home" aria-label="ROBOV.ai home">
+          <span class="brand-mark">R</span>
+          <span>ROBOV.ai</span>
+        </a>
+        <nav class="nav-links" aria-label="Sections">
+          <a href="#scan">Profile Scan</a>
+          <a href="#map">Knowledge Map</a>
+          <a href="#explore">Explore</a>
+        </nav>
+        <button class="ghost-button" data-scroll-to="scan">Start Scan</button>
+      </header>
+
+      <main>
+        <section class="hero" id="home">
+          <div class="hero-copy">
+            <p class="eyebrow">Personalized AI Private School</p>
+            <h1>ROBOV.ai</h1>
+            <p class="tagline">Navigate Knowledge. Expand Your Mind.</p>
+            <p class="tagline zh">找到知识的方向，拓展认知的边界。</p>
+            <p class="hero-body">
+              ROBOV builds a living cognitive profile, maps what you know,
+              reveals the boundary of your understanding, and recommends the
+              next best knowledge to learn right now.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-button" data-scroll-to="scan">Begin Profile Scan</button>
+              <button class="secondary-button" data-scroll-to="map">Preview Demo Map</button>
+            </div>
+          </div>
+          <div class="orbit" aria-label="ROBOV cognitive navigation preview">
+            <div class="orbit-core">
+              <span>Dynamic</span>
+              <strong>Cognitive Profile</strong>
+            </div>
+            <button class="orbit-node node-a" data-topic="ai-systems">AI Systems</button>
+            <button class="orbit-node node-b" data-topic="learning-design">Learning Design</button>
+            <button class="orbit-node node-c" data-topic="decision-science">Decision Science</button>
+            <button class="orbit-node node-d" data-topic="creative-tech">Creative Tech</button>
+            <span class="orbit-ring ring-one"></span>
+            <span class="orbit-ring ring-two"></span>
+          </div>
+        </section>
+
+        <section class="scan-section" id="scan">
+          <div class="section-heading">
+            <p class="eyebrow">Profile Scan</p>
+            <h2>Tell ROBOV how your mind moves.</h2>
+            <p>
+              Choose what feels true today. The demo instantly turns your
+              answers into a cognitive profile and first learning route.
+            </p>
+          </div>
+
+          <div class="scan-grid">
+            <form class="scan-panel" id="profile-form">
+              <fieldset>
+                <legend>Primary goal</legend>
+                <label><input type="radio" name="goal" value="builder" checked /> Build products with AI</label>
+                <label><input type="radio" name="goal" value="thinker" /> Understand complex ideas faster</label>
+                <label><input type="radio" name="goal" value="creator" /> Turn knowledge into creative work</label>
+              </fieldset>
+
+              <fieldset>
+                <legend>Current depth</legend>
+                <label><input type="radio" name="depth" value="beginner" /> Curious beginner</label>
+                <label><input type="radio" name="depth" value="intermediate" checked /> Working knowledge</label>
+                <label><input type="radio" name="depth" value="advanced" /> Advanced and specialized</label>
+              </fieldset>
+
+              <fieldset>
+                <legend>Learning style</legend>
+                <label><input type="radio" name="style" value="visual" checked /> Visual maps and examples</label>
+                <label><input type="radio" name="style" value="socratic" /> Questions and reasoning chains</label>
+                <label><input type="radio" name="style" value="project" /> Project-based practice</label>
+              </fieldset>
+
+              <fieldset>
+                <legend>Interests</legend>
+                <label><input type="checkbox" name="interest" value="AI" checked /> AI</label>
+                <label><input type="checkbox" name="interest" value="Business" checked /> Business</label>
+                <label><input type="checkbox" name="interest" value="Design" /> Design</label>
+                <label><input type="checkbox" name="interest" value="Cognition" checked /> Cognition</label>
+                <label><input type="checkbox" name="interest" value="Science" /> Science</label>
+              </fieldset>
+
+              <button class="primary-button full" type="submit">Generate My Cognitive Map</button>
+            </form>
+
+            <aside class="profile-card" aria-live="polite">
+              <div class="card-label">Dynamic Cognitive Profile</div>
+              <h3 id="profile-title">AI Builder with Strategic Curiosity</h3>
+              <p id="profile-summary">
+                You prefer useful systems, clear mental models, and ideas that
+                can quickly become experiments.
+              </p>
+              <div class="metric-list">
+                <div>
+                  <span>Knowledge depth</span>
+                  <strong id="metric-depth">64%</strong>
+                </div>
+                <div>
+                  <span>Exploration range</span>
+                  <strong id="metric-range">78%</strong>
+                </div>
+                <div>
+                  <span>Goal alignment</span>
+                  <strong id="metric-goal">86%</strong>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="map-section" id="map">
+          <div class="section-heading compact">
+            <p class="eyebrow">Personal Knowledge Map</p>
+            <h2>Your next learning field.</h2>
+            <p>
+              Each node shows what to strengthen, where your boundary sits, and
+              what topic ROBOV would guide you to next.
+            </p>
+          </div>
+
+          <div class="workspace">
+            <div class="knowledge-map" aria-label="Interactive knowledge map">
+              <button class="map-node active" data-topic="ai-systems">
+                <span>Core</span>
+                AI Systems Thinking
+              </button>
+              <button class="map-node" data-topic="learning-design">
+                <span>Bridge</span>
+                Learning Architecture
+              </button>
+              <button class="map-node" data-topic="decision-science">
+                <span>Boundary</span>
+                Decision Science
+              </button>
+              <button class="map-node" data-topic="creative-tech">
+                <span>Expansion</span>
+                Creative Technology
+              </button>
+              <div class="map-line line-a"></div>
+              <div class="map-line line-b"></div>
+              <div class="map-line line-c"></div>
+            </div>
+
+            <article class="insight-panel" id="explore">
+              <div class="panel-topline">
+                <span class="card-label">Next Best Knowledge</span>
+                <span class="confidence" id="confidence">92% fit</span>
+              </div>
+              <h3 id="topic-title">AI Systems Thinking</h3>
+              <p id="topic-summary">
+                Learn how models, tools, workflows, data, and human decisions
+                become one adaptive system.
+              </p>
+
+              <div class="boundary-box">
+                <span>Knowledge Boundary</span>
+                <p id="topic-boundary">
+                  You know what AI can do, but the next edge is understanding
+                  how to design reliable loops around it.
+                </p>
+              </div>
+
+              <div class="mode-tabs" role="tablist" aria-label="Explore topic modes">
+                <button class="mode-tab active" data-mode="deeper" role="tab">DEEPER</button>
+                <button class="mode-tab" data-mode="explore" role="tab">EXPLORE</button>
+                <button class="mode-tab" data-mode="why" role="tab">WHY</button>
+                <button class="mode-tab" data-mode="soWhat" role="tab">SO WHAT</button>
+              </div>
+
+              <div class="mode-output" id="mode-output">
+                <h4>Go deeper</h4>
+                <p>
+                  Study feedback loops, evaluation methods, and agentic
+                  workflow design. Your next exercise is to map one real task
+                  into inputs, decisions, actions, and review points.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

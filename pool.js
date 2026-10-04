@@ -92,7 +92,7 @@ function renderPoolItems() {
   ideaStatus.classList.toggle('pool-loading', showIdeas && !entries && !failed);
   ideaStatus.setAttribute('aria-busy', String(showIdeas && !entries && !failed));
   if (showIdeas && failed) ideaStatus.textContent = localText({ zh: '更多知识线索暂不可用。', en: 'Additional knowledge leads are unavailable.' });
-  else if (showIdeas && entries && poolFilter !== 'all' && poolFilter !== 'topic' && !entries.some(e => e.kind === poolFilter)) ideaStatus.textContent = localText({ zh: '当前知识点没有此类线索。', en: 'No leads of this type for the current idea.' });
+  else if (showIdeas && entries && !['all', 'topic', 'research'].includes(poolFilter) && !entries.some(e => e.kind === poolFilter)) ideaStatus.textContent = localText({ zh: '当前知识点没有此类线索。', en: 'No leads of this type for the current idea.' });
   $('#retry-ideas').hidden = !showIdeas || !failed;
   const showResearch = ['all', 'research'].includes(poolFilter), researchStatus = $('#pool-research-status'); researchStatus.textContent = '';
   researchStatus.classList.toggle('pool-loading', showResearch && (!research || research.pending) && !failed);

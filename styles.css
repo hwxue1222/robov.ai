@@ -254,6 +254,30 @@ a {
   background: var(--accent-dark);
 }
 
+button[aria-busy="true"] {
+  position: relative;
+  color: transparent;
+  cursor: wait;
+}
+
+button[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 9px);
+  top: calc(50% - 9px);
+  width: 14px;
+  height: 14px;
+  border: 2px solid #56dcb5;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: busy-spin 0.8s linear infinite;
+}
+
+@keyframes busy-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  button[aria-busy="true"]::after { animation: none; }
+}
+
 .secondary-button,
 .ghost-button {
   color: var(--ink);

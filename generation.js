@@ -1,9 +1,9 @@
 let generating = false;
 const errors = {
-  MODEL_NOT_CONFIGURED: ['Kimi 服务尚未配置，请联系管理员连接模型。你的描述已保留。', 'Kimi is not configured yet. Your description has been kept.'],
-  MODEL_AUTH_REQUIRED: ['Kimi 服务需要授权，请联系管理员完成模型连接。你的描述已保留。', 'Kimi needs authorization. Your description has been kept.'],
-  MODEL_CREDITS_REQUIRED: ['模型服务余额不足，暂时无法生成。你的描述和记录不会丢失。', 'The model service needs credits. Your description and history are preserved.'],
-  MODEL_BUSY: ['Kimi 当前繁忙，请稍后再试。', 'Kimi is busy. Please try again shortly.']
+  MODEL_NOT_CONFIGURED: ['服务暂不可用，请稍后再试。你的描述已保留。', 'The service is temporarily unavailable. Please retry later; your description has been kept.'],
+  MODEL_AUTH_REQUIRED: ['服务暂不可用，请稍后再试。你的描述已保留。', 'The service is temporarily unavailable. Please retry later; your description has been kept.'],
+  MODEL_CREDITS_REQUIRED: ['服务暂不可用，请稍后再试。你的描述和记录已保留。', 'The service is temporarily unavailable. Please retry later; your description and history are preserved.'],
+  MODEL_BUSY: ['请稍后再试。你的描述和记录已保留。', 'Please try again shortly. Your description and history are preserved.']
 };
 function localText(value) {
   if (typeof value === 'string') return value;
@@ -35,7 +35,10 @@ async function requestGraph(payload) {
 }
 function setBusy(value) {
   generating = value;
-  ['#intro-form button', '#extend-node', '#widen', '#complete-learning'].forEach(selector => $(selector).disabled = value);
+  ['#intro-form button', '#extend-node', '#widen', '#complete-learning'].forEach(selector => {
+    $(selector).disabled = value;
+    $(selector).setAttribute('aria-busy', String(value));
+  });
   $('#intro-form').setAttribute('aria-busy', String(value));
 }
 function generationError(error) {
@@ -46,7 +49,7 @@ async function generateNetwork(input) {
   if (generating) return;
   if (input.length < 10) { $('#intro-error').textContent = '再多说一点吧，至少 10 个字，让我更了解你的起点。'; return; }
   setBusy(true);
-  $('#intro-error').textContent = localText({ zh: 'Kimi 正在根据你的描述连接知识点，预计需要 20–60 秒……', en: 'Kimi is connecting ideas from your description. This may take 20–60 seconds…' });
+  $('#intro-error').textContent = '';
   try {
     const graph = await requestGraph({ description: input, history: Object.values(knowledgeVisits).sort((a, b) => b.lastAt - a.lastAt).slice(0, 12) });
     description = input; graph.sessionId = crypto.randomUUID(); registerGraph(graph);
@@ -58,7 +61,7 @@ async function generateNetwork(input) {
   finally { setBusy(false); }
 }
 async function generateBranches(node, direction) {
-  setBusy(true); $('#learning-feedback').textContent = localText({ zh: 'Kimi 正在生成新的知识方向……', en: 'Kimi is generating new knowledge directions…' });
+  setBusy(true); $('#learning-feedback').textContent = '';
   try {
     const branch = await requestGraph({ description, node, direction, reflection: reflections[reflectionKey(node.id)] || '', existing: personalizedGraph.nodes.map(n => ({ id: n.id, title: n.title })), history: Object.values(knowledgeVisits).sort((a, b) => b.lastAt - a.lastAt).slice(0, 12) });
     if (branch.nodes.some(n => personalizedGraph.nodes.some(old => old.id === n.id))) throw new Error('DUPLICATE_NODE');

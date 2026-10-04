@@ -53,7 +53,7 @@ if (renderer) {
       const center = new THREE.Vector3(Math.cos(angle) * 4.2, Math.sin(angle) * 3, Math.sin(angle * 2) * 1.5);
       data.forEach(n => rows.push({ ...n, topicId, color: colors[i % colors.length], center }));
     });
-    const nextSignature = rows.map(n => n.id).join("|");
+    const nextSignature = rows.map(n => n.id + ':' + n.title).join("|");
     if (signature === nextSignature) { updateSelection(); return; }
     signature = nextSignature; disposeGraph(); framed = false;
     const positions = new Map();

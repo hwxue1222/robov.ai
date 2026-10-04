@@ -12,11 +12,12 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   const input = req.body;
+  if (JSON.stringify(input || {}).length > 28000) return res.status(413).json({ error: 'INPUT_TOO_LARGE' });
   if (!input || typeof input.description !== 'string' || input.description.trim().length < 10 || input.description.length > 2000) return res.status(400).json({ error: 'INVALID_DESCRIPTION' });
   const branch = input.node != null;
   if (branch && (typeof input.node.id !== 'string' || typeof input.node.domain !== 'string' || JSON.stringify(input.node).length > 6000)) return res.status(400).json({ error: 'INVALID_NODE' });
   const direct = !!process.env.MOONSHOT_API_KEY;
-  const key = direct ? process.env.MOONSHOT_API_KEY : process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN;
+  const key = direct ? process.env.MOONSHOT_API_KEY : process.env.AI_GATEWAY_API_KEY || (process.env.VERCEL ? req.headers?.['x-vercel-oidc-token'] : null) || process.env.VERCEL_OIDC_TOKEN;
   if (!key) return res.status(503).json({ error: 'MODEL_NOT_CONFIGURED' });
   const model = process.env.KIMI_MODEL || (direct ? 'kimi-k2-0905-preview' : 'moonshotai/kimi-k2');
   try {

@@ -11,6 +11,7 @@ function localText(value) {
   return value.zh;
 }
 function registerGraph(graph) {
+  normalizeRecommendation(graph);
   const register = value => {
     if (value && typeof value === 'object') {
       if (typeof value.zh === 'string' && typeof value.en === 'string') english[value.zh] = value.en;

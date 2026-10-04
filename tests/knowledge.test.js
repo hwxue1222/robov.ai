@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { validateGraph } = require('../lib/graph');
+const { validateGraph, normalizeRecommendation } = require('../lib/graph');
 const handler = require('../api/knowledge');
 const text = { zh: '萃取', en: 'Extraction' };
 function fixture() {
@@ -50,4 +50,9 @@ test('wide exploration creates a connected new domain', () => {
   const wide = { ...g, domains: [g.domains[1]], nodes: g.nodes.filter(n => n.domain === 'd2'), edges: [{ from: parent.id, to: 'd2', reason: text }], next: { id: 'd2-1', reason: text } };
   assert.equal(validateGraph(wide, parent).domains.length, 1);
   wide.nodes[1].parent = 'absent'; assert.throws(() => validateGraph(wide, parent));
+});
+test('recommendations do not equate viewing with mastering', () => {
+  const g = fixture(); g.next.reason = { zh: '你已掌握流体力学，下一步学习传热。', en: 'Having mastered fluid dynamics, explore heat transfer.' };
+  normalizeRecommendation(g);
+  assert.match(g.next.reason.zh, /^你正在探索/); assert.match(g.next.reason.en, /^As you explore/);
 });

@@ -1,4 +1,4 @@
-const { validateGraph } = require('../lib/graph');
+const { validateGraph, normalizeRecommendation } = require('../lib/graph');
 const { randomUUID } = require('node:crypto');
 
 const system = `You are ROBOV, a personal knowledge navigator, not a report writer.
@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
       graph.edges.forEach(edge => { edge.from = ids.get(edge.from) || edge.from; edge.to = ids.get(edge.to) || edge.to; });
       graph.next.id = ids.get(graph.next.id);
     }
-    return res.status(200).json({ graph, model, generatedAt: Date.now() });
+    return res.status(200).json({ graph: normalizeRecommendation(graph), model, generatedAt: Date.now() });
   } catch (error) {
     console.error('Knowledge generation failed', error.name, error.name === 'Error' ? error.message : 'parse or timeout failure');
     return res.status(502).json({ error: error.name === 'TimeoutError' ? 'MODEL_TIMEOUT' : 'INVALID_GENERATION' });

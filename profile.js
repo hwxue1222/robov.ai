@@ -27,7 +27,7 @@ function renderLivingProfile() {
   const breadth = new Set(visits.map(v => v.topic)).size;
   const depth = Math.max(0, ...visits.map(v => v.depth));
   $("#open-profile").hidden = !description;
-  $("#live-summary").textContent = "你目前关注「" + topics[activeTopic].title + "」。这份画像会随着你的自我描述、答题和知识探索持续更新。";
+  $("#live-summary").textContent = "你目前关注「" + topics[activeTopic].title + "」。这份画像会随着你的自我描述和知识探索持续更新。";
   $("#live-description").textContent = "你说：「" + description + "」";
   const interests = Object.keys(topics).filter(id => topics[id].keywords.test(description));
   $("#signal-interests").replaceChildren();
@@ -40,7 +40,7 @@ function renderLivingProfile() {
   $("#signal-goal").textContent = goalMatch ? goalMatch[0].trim() : "尚未明确，可以在自我描述中补充";
   const timeMatch = description.match(/(?:每天|每日|每周|daily|each day|per day)?\s*(?:\d+|[零一二两三四五六七八九十百]+|ten|twenty|thirty|one|two|half)\s*(?:分钟|小时|minutes?|hours?)(?:\s*(?:a day|each day|daily|per day))?/i);
   $("#signal-time").textContent = timeMatch ? timeMatch[0].trim() : "尚未提供";
-  const start = /初学|入门|不太懂|不懂|beginner|new to/i.test(description) ? "从基础开始" : /熟练|专业|精通|advanced|expert/i.test(description) ? "有深入经验" : "通过小测继续了解";
+  const start = /初学|入门|不太懂|不懂|beginner|new to/i.test(description) ? "从基础开始" : /熟练|专业|精通|advanced|expert/i.test(description) ? "有深入经验" : "在探索中继续了解";
   $("#signal-start").textContent = start;
   $("#live-breadth").textContent = String(breadth);
   $("#live-depth").textContent = String(depth);
@@ -52,7 +52,7 @@ function renderLivingProfile() {
   $("#profile-history").replaceChildren();
   const recent = visits.sort((a, b) => b.lastAt - a.lastAt).slice(0, 8);
   if (!recent.length) {
-    const li = document.createElement("li"); li.textContent = "从小测开始，你的第一条知识路径会在这里留下足迹。"; $("#profile-history").append(li);
+    const li = document.createElement("li"); li.textContent = "选择一个知识点，你的第一条知识路径会在这里留下足迹。"; $("#profile-history").append(li);
   }
   recent.forEach(visit => {
     const li = document.createElement("li"); li.textContent = visit.title + " · " + visit.count + " 次打开"; $("#profile-history").append(li);
@@ -60,7 +60,7 @@ function renderLivingProfile() {
 }
 $("#open-profile").addEventListener("click", () => { renderLivingProfile(); showScreen("profile-review"); });
 $("#begin-check").addEventListener("click", () => {
-  activeTopic = inferTopic(description); questionIndex = 0; answers = []; renderQuestion();
+  setTopic(activeTopic); showScreen("learning");
 });
 $("#resume-learning").addEventListener("click", () => {
   const previousNode = selectedNode;

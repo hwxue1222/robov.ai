@@ -84,17 +84,7 @@ function renderNetwork() {
   requestAnimationFrame(drawEdges);
 }
 function drawEdges() {
-  if ($("#learning").hidden) return;
-  const svg = $("#network-edges"), box = $(".network-tool"), rect = box.getBoundingClientRect();
-  svg.replaceChildren(); svg.setAttribute("viewBox", "0 0 " + box.clientWidth + " " + box.scrollHeight); svg.style.height = box.scrollHeight + "px";
-  const buttons = $$(".knowledge-point");
-  getNetwork().filter(n => n.parent).forEach(n => {
-    const a = buttons.find(b => b.dataset.node === n.parent).getBoundingClientRect(), b = buttons.find(b => b.dataset.node === n.id).getBoundingClientRect();
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", a.left + a.width / 2 - rect.left); line.setAttribute("y1", a.bottom - rect.top + box.scrollTop);
-    line.setAttribute("x2", b.left + b.width / 2 - rect.left); line.setAttribute("y2", b.top - rect.top + box.scrollTop);
-    line.setAttribute("stroke", "#75aaa4"); line.setAttribute("stroke-width", "2"); svg.append(line);
-  });
+  window.robovScene?.sync();
 }
 function extendNode() {
   const nodes = getNetwork(), node = nodes.find(n => n.id === selectedNode);

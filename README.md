@@ -1,73 +1,51 @@
 # ROBOV.ai V1
 
-ROBOV.ai is a personalized AI private school and cognitive navigation system.
+Navigate Knowledge. Expand Your Mind.
+找到知识的方向，拓展认知的边界。
 
-Core flow:
+## Experience
 
-1. Profile Scan
-2. Dynamic Cognitive Profile
-3. Personal Knowledge Map
-4. Knowledge Boundary
-5. Next Best Knowledge
-6. Topic exploration through DEEPER / EXPLORE / WHY / SO WHAT
+Describe yourself to create an initial profile and enter a 3D knowledge network
+directly. There is no assessment or quiz step.
 
-First use is a guided Chinese-language journey: describe yourself in free text,
-answer three topic-specific questions, review your starting point, then begin a
-lesson with an explicit next step. Interests route by local keyword rules.
-The initial assessment reports actual correct-answer counts, not invented scores.
+The Three.js scene shows four connected domains, their concepts, and expanded
+branches. Drag to rotate, use the wheel or zoom controls to zoom, and select a
+sphere or its label to open that idea. Touch gestures work on mobile. A keyboard
+accessible node list remains available, including when WebGL is unavailable.
 
-Each topic has three lesson stages. Stage concepts expand into connected knowledge
-nodes with explanations, application exercises, boundaries, and clickable paths.
-There are four topic networks; users can deepen a branch or cross into an adjacent
-topic. Repeated expansion reuses existing nodes. Learning reflections remain in
-memory during the current session.
+Each node presents knowledge content and selectable directions for deeper
+concepts, applications, boundaries, and connections to other domains. Expanding
+a node reveals choices without choosing a branch for the user.
 
-Expansion reveals branch choices without automatically selecting a child. Users
-choose which idea to follow, including practical applications, conditions, and
-connections to other fields. Content is presented at each node, not as a report.
+Chinese and English include the interface, content, and knowledge nodes. A
+language change preserves the current path and profile. Descriptions retain
+their original wording.
 
-The Chinese / English switch translates the full interface, assessment, lesson
-content, and knowledge nodes while preserving current answers and expanded paths.
-User-written descriptions are kept in their original language. Only the language
-preference and learning snapshot are stored locally.
+Profiles, reflections, expanded branches, and knowledge visits persist in the
+current browser. Actual visits update observed breadth and depth, not mastery
+scores. Updating a description preserves exploration history. Records can be
+cleared in the profile view. Cross-device synchronization is not implemented.
 
-Self-description creates an initial editable profile before the quick check.
-Visited topics and node depths update observed exploration breadth and depth;
-these measures are not treated as mastery scores. Profiles, expanded networks,
-reflections, and visit history persist in this browser, can be resumed after a
-reload, and can be cleared from the profile view. Updating the description
-preserves exploration history. There is no cross-device account synchronization.
+Content uses curated local templates and interest routing, without an AI API.
+Branch generation is bounded at three levels before connecting to another field.
 
-Content is generated instantly from curated local templates and the user's
-description. This version does not call an AI service or persist personal data
-across page reloads. Branch generation is bounded at three levels, then connects
-to an adjacent topic.
+## Run
 
-Brand copy:
+Serve this folder over HTTP because the 3D renderer uses ES modules:
 
-- ROBOV.ai
-- Navigate Knowledge. Expand Your Mind.
-- 找到知识的方向，拓展认知的边界。
-
-## Run locally
-
-This V1 is a static prototype, so it can run without installing dependencies.
-
-```bash
+```sh
 python3 -m http.server 4173
 ```
 
-Then open:
-
-```text
-http://localhost:4173
-```
+Open http://localhost:4173. Production: https://robov.ai.
 
 ## Files
 
-- `index.html` - product structure and first-use flow
-- `styles.css` - responsive visual system
-- `app.js` - demo data and interactive behavior
-- `network.js` - expandable knowledge nodes and connections
-- `i18n.js` - complete Chinese / English content and language switching
-- `profile.js` - living profile, observed learning history, and local persistence
+- `index.html`: guided entry, profile, and exploration views
+- `app.js`: content and exploration modes
+- `network.js`: knowledge nodes and selectable branches
+- `scene.js`: Three.js rendering, labels, picking, and camera controls
+- `profile.js`: profile and local learning history
+- `i18n.js`: Chinese and English
+- `styles.css`: responsive layout
+- `vendor/`: pinned Three.js 0.180.0 modules and MIT license

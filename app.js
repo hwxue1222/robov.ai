@@ -67,10 +67,10 @@ let score = 0;
 const levels = {};
 const reflections = {};
 function showScreen(id) {
-  const ids = ["intro", "profile-review", "assessment", "results", "learning"];
+  const ids = ["intro", "profile-review", "results", "learning"];
   ids.forEach(name => $("#" + name).hidden = name !== id);
   $$(".journey-progress li").forEach((li, i) => {
-    if (i === Math.max(0, ids.indexOf(id) - (id === "intro" ? 0 : 1))) li.setAttribute("aria-current", "step");
+    if (i === (id === "learning" ? 1 : id === "results" ? 2 : 0)) li.setAttribute("aria-current", "step");
     else li.removeAttribute("aria-current");
   });
   window.scrollTo({ top: 0, behavior: "instant" });
@@ -84,38 +84,7 @@ function inferTopic(text) {
   const matched = Object.keys(topics).filter(id => topics[id].keywords.test(text));
   return matched[0] || "learning-design";
 }
-function renderQuestion() {
-  const question = topics[activeTopic].questions[questionIndex];
-  $("#question-count").textContent = "认知小测 · " + (questionIndex + 1) + " / 3";
-  $("#question-title").textContent = question[0];
-  $("#question-context").textContent = "我们先从「" + topics[activeTopic].title + "」了解你的起点。不确定也没关系，选出最接近你想法的一项。";
-  $("#question-options").replaceChildren();
-  question[1].concat("我还不确定").forEach((text, i) => {
-    const label = document.createElement("label");
-    const input = document.createElement("input");
-    input.type = "radio"; input.name = "answer"; input.value = String(i);
-    input.checked = answers[questionIndex] === i;
-    label.append(input, document.createTextNode(text));
-    $("#question-options").append(label);
-  });
-  $("#question-error").textContent = "";
-  $("#question-next").textContent = questionIndex === 2 ? "看看我的学习方向 →" : "下一题 →";
-  showScreen("assessment");
-}
-function renderResults() {
-  score = answers.reduce((n, a, i) => n + (a === topics[activeTopic].questions[i][2] ? 1 : 0), 0);
-  levels[activeTopic] = score === 3 ? 1 : 0;
-  $("#profile-title").textContent = topics[activeTopic].title + " · " + (score === 3 ? "准备进阶" : "建立基础");
-  $("#profile-summary").textContent = "你说：「" + description + "」";
-  $("#metric-depth").textContent = score + " / 3";
-  $("#metric-range").textContent = score === 3 ? "实践与反馈" : "核心概念";
-  $("#metric-goal").textContent = topics[activeTopic].title;
-  $("#result-guidance").textContent = "根据你提到的兴趣，我们从「" + topics[activeTopic].title + "」出发。你答对了 " + score + " 道题，接下来我会带你学一个概念，并用你自己的场景练习。";
-  setTopic(activeTopic);
-  renderLivingProfile();
-  showScreen("results");
-}
-function setTopic(id) {
+function setTopic(id, nodeId) {
   activeTopic = id;
   const topic = topics[id];
   $("#topic-title").textContent = topic.title;
@@ -133,7 +102,7 @@ function setTopic(id) {
   $("#learning-feedback").textContent = "";
   $("#complete-learning").textContent = "记录想法，展开知识方向 →";
   setMode(activeMode);
-  selectNode(id + "-" + (levels[id] || 0));
+  selectNode(nodeId || id + "-" + (levels[id] || 0));
   renderNetwork();
   $("#learning > .eyebrow").textContent = "学习阶段 " + ((levels[id] || 0) + 1) + " · 约 3 分钟";
 }
@@ -167,27 +136,16 @@ $("#intro-form").addEventListener("submit", event => {
   description = $("#self-description").value.trim();
   if (description.length < 10) { $("#intro-error").textContent = "再多说一点吧，至少 10 个字，让我更了解你的起点。"; return; }
   activeTopic = inferTopic(description); answers = []; questionIndex = 0;
+  setTopic(activeTopic);
   renderLivingProfile();
-  showScreen("profile-review");
+  showScreen("learning");
 });
 $$(".journey-screen h1").forEach(heading => heading.tabIndex = -1);
-$("#question-form").addEventListener("submit", event => {
-  event.preventDefault();
-  const answer = new FormData(event.currentTarget).get("answer");
-  if (answer === null) { $("#question-error").textContent = "选一项再继续，也可以选择「我还不确定」。"; return; }
-  answers[questionIndex] = Number(answer);
-  if (questionIndex < 2) { questionIndex++; renderQuestion(); } else renderResults();
-});
-$("#question-back").addEventListener("click", () => {
-  const selected = $("#question-options input:checked");
-  if (selected) answers[questionIndex] = Number(selected.value);
-  if (questionIndex === 0) showScreen("intro"); else { questionIndex--; renderQuestion(); }
-});
 $("#edit-description").addEventListener("click", () => showScreen("intro"));
 $("#extend-node").addEventListener("click", extendNode);
 window.addEventListener("resize", drawEdges);
 $("#start-learning").addEventListener("click", () => { activeMode = "deeper"; setTopic(activeTopic); showScreen("learning"); });
-$("#back-map").addEventListener("click", () => showScreen("results"));
+$("#back-map").addEventListener("click", () => { renderLivingProfile(); showScreen("profile-review"); });
 $$("[data-topic]").forEach(node => node.addEventListener("click", () => setTopic(node.dataset.topic)));
 $$(".mode-tab").forEach(tab => {
   tab.addEventListener("click", () => setMode(tab.dataset.mode));

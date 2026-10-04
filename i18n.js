@@ -1,4 +1,12 @@
 const english = {
+  "知识网络": "Knowledge network", "持续探索": "Keep exploring",
+  "进入我的三维知识网络 →": "Enter my 3D knowledge network →",
+  "三维知识网络": "3D knowledge network", "知识节点列表": "Knowledge node list",
+  "重置视角": "Reset view", "放大": "Zoom in", "缩小": "Zoom out", "自动旋转": "Auto rotate",
+  "在探索中继续了解": "Discover through exploration",
+  "选择一个知识点，你的第一条知识路径会在这里留下足迹。": "Choose an idea. Your first knowledge trail will appear here.",
+  "三维视图暂不可用，可以从知识节点列表继续探索。": "The 3D view is unavailable. Continue from the knowledge node list.",
+  "这是基于你的描述与探索记录的初步方向。随着学习，我们会继续调整。": "This initial direction is based on your description and exploration history. It evolves as you learn.",
   "我的画像": "My profile",
   "兴趣信号": "Interests", "当前目标": "Current goal", "学习时间": "Study time", "自述起点": "Starting point",
   "尚未明确，可以在自我描述中补充": "Not specified yet; add it to your description",
@@ -160,7 +168,7 @@ try { language = localStorage.getItem("robov-language") === "en" ? "en" : "zh"; 
 function translate(source) {
   if (english[source]) return english[source];
   const patterns = [
-    [/^你目前关注「(.+)」。这份画像会随着你的自我描述、答题和知识探索持续更新。$/, m => "Your current direction is " + translate(m[1]) + ". Your profile keeps updating through your descriptions, answers, and knowledge exploration."],
+    [/^你目前关注「(.+)」。这份画像会随着你的自我描述和知识探索持续更新。$/, m => "Your current direction is " + translate(m[1]) + ". Your profile keeps updating through your descriptions and knowledge exploration."],
     [/^(.+) · (\d+) 次打开$/, m => translate(m[1]) + " · opened " + m[2] + (m[2] === "1" ? " time" : " times")],
     [/^认知小测 · (\d) \/ 3$/, m => "Quick check · " + m[1] + " / 3"],
     [/^学习阶段 (\d) · 约 3 分钟$/, m => "Learning stage " + m[1] + " · about 3 minutes"],

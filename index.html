@@ -4,7 +4,7 @@
 <body><div class="app-shell">
 <header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><button id="open-profile" class="text-button" hidden>我的画像</button><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
 <main>
-<ol class="journey-progress" aria-label="学习旅程"><li aria-current="step">认识你</li><li>认知小测</li><li>你的方向</li><li>开始学习</li></ol>
+<ol class="journey-progress" aria-label="学习旅程"><li aria-current="step">认识你</li><li>知识网络</li><li>持续探索</li></ol>
 <section id="intro" class="journey-screen">
 <p class="eyebrow">PROFILE SCAN</p><h1>先从你自己说起。</h1><p class="guide-copy">你好，我是 ROBOV。你最近在做什么？对什么感兴趣？有什么想弄懂、却一直没找到方向的事？</p>
 <form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="alert"></p><button class="primary-button" type="submit">生成我的初步画像 →</button></form>
@@ -17,23 +17,20 @@
 <div class="living-metrics"><div><span>探索宽度</span><strong id="live-breadth">0</strong><small>已探索的领域</small></div><div><span>探索深度</span><strong id="live-depth">0</strong><small>最深的延伸层数</small></div><div><span>知识足迹</span><strong id="live-count">0</strong><small>已打开的知识点</small></div></div>
 <p class="result-note" id="profile-storage">探索记录反映你走过的路径，不等于已掌握。画像和学习记录保存在当前浏览器，刷新后可以继续。</p>
 <h2>最近的知识足迹</h2><ul id="profile-history" class="profile-history"></ul>
-<div class="journey-actions"><button id="begin-check" class="primary-button">开始小测，校准我的起点 →</button><button id="resume-learning" class="secondary-button" hidden>继续我的知识链 →</button></div>
+<div class="journey-actions"><button id="begin-check" class="primary-button">进入我的三维知识网络 →</button><button id="resume-learning" class="secondary-button" hidden>继续我的知识链 →</button></div>
 <button id="update-profile" class="text-button">更新我的自我描述</button><button id="clear-progress" class="text-button">清除本机学习记录</button>
-</section>
-<section id="assessment" class="journey-screen" hidden>
-<p class="eyebrow" id="question-count"></p><h1 id="question-title" tabindex="-1"></h1><p class="guide-copy" id="question-context"></p>
-<form id="question-form"><fieldset id="question-options"><legend class="sr-only">选择最接近你想法的一项</legend></fieldset><p id="question-error" class="form-error" role="alert"></p><div class="journey-actions"><button id="question-back" class="secondary-button" type="button">← 上一步</button><button class="primary-button" type="submit" id="question-next">下一题 →</button></div></form>
 </section>
 <section id="results" class="journey-screen results-screen" hidden>
 <p class="eyebrow">DYNAMIC COGNITIVE PROFILE</p><h1 tabindex="-1">你的起点，已经清晰了一些。</h1><p class="guide-copy" id="result-guidance"></p>
 <div class="profile-card"><h2 id="profile-title"></h2><p id="profile-summary"></p><div class="metric-list"><div><span>探索深度</span><strong id="metric-depth"></strong></div><div><span>探索宽度</span><strong id="metric-range"></strong></div><div><span>知识足迹</span><strong id="metric-goal"></strong></div></div></div>
-<p class="result-note">这是基于你的描述与三道小测的初步方向，不是完整能力评估。随着学习，我们会继续调整。</p>
+<p class="result-note">这是基于你的描述与探索记录的初步方向。随着学习，我们会继续调整。</p>
 <div id="map"><h2>你的知识地图</h2><div class="knowledge-map" aria-label="知识地图"><button class="map-node" data-topic="ai-systems"><span>系统</span>AI 系统思维</button><button class="map-node" data-topic="learning-design"><span>学习</span>学习架构</button><button class="map-node" data-topic="decision-science"><span>判断</span>决策科学</button><button class="map-node" data-topic="creative-tech"><span>创造</span>创意技术</button></div></div>
 <div class="next-route"><span class="eyebrow">NEXT BEST KNOWLEDGE</span><h2 id="route-title"></h2><p id="route-reason"></p><button id="start-learning" class="primary-button">带我开始第一段学习 →</button></div><button class="text-button" id="edit-description">修改我的描述</button>
 </section>
 <section id="learning" class="journey-screen" hidden>
 <div class="network-heading"><span class="eyebrow">PERSONAL KNOWLEDGE NETWORK</span><h2>从一个点，连接新的理解。</h2><p id="network-guidance" aria-live="polite"></p></div>
-<div class="network-tool"><svg id="network-edges" aria-hidden="true"></svg><div id="knowledge-network" aria-label="可延伸的知识网络"></div></div>
+<div class="network-scene" id="network-scene"><canvas id="network-canvas" aria-label="三维知识网络" tabindex="0"></canvas><div id="scene-labels"></div><div class="scene-toolbar"><button id="scene-home" title="重置视角" aria-label="重置视角">↺</button><button id="scene-in" title="放大" aria-label="放大">+</button><button id="scene-out" title="缩小" aria-label="缩小">−</button><label><input id="scene-rotate" type="checkbox" checked>自动旋转</label></div><p id="scene-status" role="status"></p></div>
+<details class="network-list"><summary>知识节点列表</summary><div id="knowledge-network" aria-label="可延伸的知识网络"></div></details>
 <div id="node-path" class="node-path" aria-label="当前知识路径"></div>
 <div id="node-detail" class="node-detail" aria-live="polite"></div>
 <div id="branch-choices" class="branch-choices" aria-live="polite"></div>
@@ -43,4 +40,4 @@
 <label class="description-label" for="reflection">把这个想法用到你自己的生活里，你会怎么做？</label><textarea id="reflection" rows="3" maxlength="1000" placeholder="写一个你想尝试的小行动……"></textarea><p class="form-error" id="reflection-error" role="alert"></p><p id="learning-feedback" aria-live="polite"></p>
 <div class="journey-actions"><button class="secondary-button" id="widen">带我探索相邻主题 →</button><button class="primary-button" id="complete-learning">完成这一步，继续深入 →</button></div></article><button class="text-button" id="back-map">← 回到我的地图</button>
 </section>
-</main></div><script src="./network.js"></script><script src="./app.js"></script><script src="./profile.js"></script><script src="./i18n.js"></script></body></html>
+</main></div><script src="./network.js"></script><script src="./app.js"></script><script src="./profile.js"></script><script src="./i18n.js"></script><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script><script type="module" src="./scene.js"></script></body></html>

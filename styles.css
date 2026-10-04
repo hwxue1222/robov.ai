@@ -1,5 +1,5 @@
 :root {
-  --bg: #f6f3ec;
+  --bg: #f3f6f7;
   --ink: #161714;
   --muted: #62645f;
   --line: rgba(22, 23, 20, 0.14);
@@ -25,10 +25,57 @@ html {
 body {
   margin: 0;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 12% 8%, rgba(14, 124, 123, 0.14), transparent 28rem),
-    linear-gradient(140deg, #fbfaf6 0%, var(--bg) 45%, #edf2ef 100%);
+  background: var(--bg);
   min-height: 100vh;
+}
+
+[hidden] { display: none !important; }
+.network-heading p { line-height: 1.8; color: var(--muted); }
+.network-tool { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; overflow: auto; max-height: 450px; }
+#knowledge-network { position: relative; display: grid; gap: 36px; }
+#network-edges { position: absolute; inset: 0; pointer-events: none; width: 100%; height: 100%; }
+.network-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; position: relative; z-index: 1; }
+.knowledge-point { max-width: 200px; min-height: 50px; padding: 12px; background: #fff; border: 1px solid #bacace; border-radius: 6px; color: var(--ink); font: inherit; font-size: 14px; overflow-wrap: anywhere; }
+.knowledge-point[aria-pressed="true"] { background: var(--accent-dark); color: white; border-color: var(--accent-dark); }
+.knowledge-point small { display: block; font-size: 11px; margin-top: 4px; opacity: .8; }
+.node-path { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0; }
+.node-path button { border: 0; background: none; color: var(--accent-dark); font: inherit; font-size: 13px; text-align: left; padding: 4px; }
+.node-detail p { line-height: 1.85; color: var(--muted); white-space: pre-line; }
+#extend-node { margin-bottom: 30px; }
+.journey-progress { display: flex; justify-content: space-between; gap: 12px; list-style: none; padding: 0; max-width: 760px; margin: 36px auto; color: var(--muted); font-size: 14px; }
+.journey-progress li { flex: 1; border-top: 3px solid #dce1e3; padding-top: 12px; }
+.journey-progress li[aria-current] { color: var(--accent-dark); border-color: var(--accent); font-weight: 700; }
+.journey-screen { max-width: 760px; margin: 0 auto; padding: 16px 0 64px; }
+.journey-screen h1 { font-size: 36px; line-height: 1.35; margin: 16px 0; overflow-wrap: anywhere; }
+.guide-copy { color: var(--muted); font-size: 18px; line-height: 1.9; }
+.description-label { display: block; color: var(--ink); margin: 28px 0 12px; font-weight: 600; }
+textarea { display: block; width: 100%; resize: vertical; padding: 18px; border: 1px solid #bfcacc; border-radius: 8px; font: inherit; line-height: 1.8; background: white; }
+textarea:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #315fd8; outline-offset: 3px; }
+.form-error { color: #a32742; min-height: 20px; font-size: 14px; }
+.brand-promise { margin-top: 42px; font-size: 14px; line-height: 1.9; color: var(--muted); }
+.journey-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.journey-actions button { flex: 1; padding: 12px 16px; }
+.journey-label { font-size: 13px; color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+#question-options { border: 0; padding: 0; background: none; gap: 12px; }
+#question-options label { padding: 18px; border: 1px solid #cbd5d7; border-radius: 8px; background: white; cursor: pointer; color: var(--ink); line-height: 1.7; }
+#question-options label:has(input:checked) { border-color: var(--accent); background: #e5f3f0; }
+.result-note { color: var(--muted); font-size: 13px; line-height: 1.8; }
+.results-screen .knowledge-map { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-height: 0; border: 0; padding: 16px 0; background: none; overflow: visible; }
+.results-screen .map-node { position: static; width: 100%; box-shadow: none; }
+.next-route { border-top: 1px solid var(--line); padding-top: 28px; margin-top: 24px; }
+.next-route p { color: var(--muted); line-height: 1.8; }
+.text-button { border: 0; background: none; color: var(--accent-dark); padding: 16px 0; font: inherit; }
+.insight-panel { box-shadow: none; background: white; }
+.profile-card { box-shadow: none; background: white; }
+.metric-list strong { font-size: 16px; }
+@media (max-width: 560px) {
+  .journey-screen h1 { font-size: 27px; }
+  .guide-copy { font-size: 16px; }
+  .journey-progress { font-size: 12px; gap: 8px; margin: 24px auto; }
+  .journey-actions { flex-direction: column; }
+  .insight-panel, .profile-card { padding: 18px; }
+  .metric-list div { flex-wrap: wrap; }
 }
 
 button,

@@ -1,210 +1,35 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="ROBOV.ai is a personalized AI private school and cognitive navigation system."
-    />
-    <title>ROBOV.ai | Navigate Knowledge. Expand Your Mind.</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <header class="topbar" aria-label="ROBOV navigation">
-        <a class="brand" href="#home" aria-label="ROBOV.ai home">
-          <span class="brand-mark">R</span>
-          <span>ROBOV.ai</span>
-        </a>
-        <nav class="nav-links" aria-label="Sections">
-          <a href="#scan">Profile Scan</a>
-          <a href="#map">Knowledge Map</a>
-          <a href="#explore">Explore</a>
-        </nav>
-        <button class="ghost-button" data-scroll-to="scan">Start Scan</button>
-      </header>
-
-      <main>
-        <section class="hero" id="home">
-          <div class="hero-copy">
-            <p class="eyebrow">Personalized AI Private School</p>
-            <h1>ROBOV.ai</h1>
-            <p class="tagline">Navigate Knowledge. Expand Your Mind.</p>
-            <p class="tagline zh">找到知识的方向，拓展认知的边界。</p>
-            <p class="hero-body">
-              ROBOV builds a living cognitive profile, maps what you know,
-              reveals the boundary of your understanding, and recommends the
-              next best knowledge to learn right now.
-            </p>
-            <div class="hero-actions">
-              <button class="primary-button" data-scroll-to="scan">Begin Profile Scan</button>
-              <button class="secondary-button" data-scroll-to="map">Preview Demo Map</button>
-            </div>
-          </div>
-          <div class="orbit" aria-label="ROBOV cognitive navigation preview">
-            <div class="orbit-core">
-              <span>Dynamic</span>
-              <strong>Cognitive Profile</strong>
-            </div>
-            <button class="orbit-node node-a" data-topic="ai-systems">AI Systems</button>
-            <button class="orbit-node node-b" data-topic="learning-design">Learning Design</button>
-            <button class="orbit-node node-c" data-topic="decision-science">Decision Science</button>
-            <button class="orbit-node node-d" data-topic="creative-tech">Creative Tech</button>
-            <span class="orbit-ring ring-one"></span>
-            <span class="orbit-ring ring-two"></span>
-          </div>
-        </section>
-
-        <section class="scan-section" id="scan">
-          <div class="section-heading">
-            <p class="eyebrow">Profile Scan</p>
-            <h2>Tell ROBOV how your mind moves.</h2>
-            <p>
-              Choose what feels true today. The demo instantly turns your
-              answers into a cognitive profile and first learning route.
-            </p>
-          </div>
-
-          <div class="scan-grid">
-            <form class="scan-panel" id="profile-form">
-              <fieldset>
-                <legend>Primary goal</legend>
-                <label><input type="radio" name="goal" value="builder" checked /> Build products with AI</label>
-                <label><input type="radio" name="goal" value="thinker" /> Understand complex ideas faster</label>
-                <label><input type="radio" name="goal" value="creator" /> Turn knowledge into creative work</label>
-              </fieldset>
-
-              <fieldset>
-                <legend>Current depth</legend>
-                <label><input type="radio" name="depth" value="beginner" /> Curious beginner</label>
-                <label><input type="radio" name="depth" value="intermediate" checked /> Working knowledge</label>
-                <label><input type="radio" name="depth" value="advanced" /> Advanced and specialized</label>
-              </fieldset>
-
-              <fieldset>
-                <legend>Learning style</legend>
-                <label><input type="radio" name="style" value="visual" checked /> Visual maps and examples</label>
-                <label><input type="radio" name="style" value="socratic" /> Questions and reasoning chains</label>
-                <label><input type="radio" name="style" value="project" /> Project-based practice</label>
-              </fieldset>
-
-              <fieldset>
-                <legend>Interests</legend>
-                <label><input type="checkbox" name="interest" value="AI" checked /> AI</label>
-                <label><input type="checkbox" name="interest" value="Business" checked /> Business</label>
-                <label><input type="checkbox" name="interest" value="Design" /> Design</label>
-                <label><input type="checkbox" name="interest" value="Cognition" checked /> Cognition</label>
-                <label><input type="checkbox" name="interest" value="Science" /> Science</label>
-              </fieldset>
-
-              <button class="primary-button full" type="submit">Generate My Cognitive Map</button>
-            </form>
-
-            <aside class="profile-card" aria-live="polite">
-              <div class="card-label">Dynamic Cognitive Profile</div>
-              <h3 id="profile-title">AI Builder with Strategic Curiosity</h3>
-              <p id="profile-summary">
-                You prefer useful systems, clear mental models, and ideas that
-                can quickly become experiments.
-              </p>
-              <div class="metric-list">
-                <div>
-                  <span>Knowledge depth</span>
-                  <strong id="metric-depth">64%</strong>
-                </div>
-                <div>
-                  <span>Exploration range</span>
-                  <strong id="metric-range">78%</strong>
-                </div>
-                <div>
-                  <span>Goal alignment</span>
-                  <strong id="metric-goal">86%</strong>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <section class="map-section" id="map">
-          <div class="section-heading compact">
-            <p class="eyebrow">Personal Knowledge Map</p>
-            <h2>Your next learning field.</h2>
-            <p>
-              Each node shows what to strengthen, where your boundary sits, and
-              what topic ROBOV would guide you to next.
-            </p>
-          </div>
-
-          <div class="workspace">
-            <div class="knowledge-map" aria-label="Interactive knowledge map">
-              <button class="map-node active" data-topic="ai-systems">
-                <span>Core</span>
-                AI Systems Thinking
-              </button>
-              <button class="map-node" data-topic="learning-design">
-                <span>Bridge</span>
-                Learning Architecture
-              </button>
-              <button class="map-node" data-topic="decision-science">
-                <span>Boundary</span>
-                Decision Science
-              </button>
-              <button class="map-node" data-topic="creative-tech">
-                <span>Expansion</span>
-                Creative Technology
-              </button>
-              <div class="map-line line-a"></div>
-              <div class="map-line line-b"></div>
-              <div class="map-line line-c"></div>
-            </div>
-
-            <article class="insight-panel" id="explore">
-              <div class="panel-topline">
-                <span class="card-label">Next Best Knowledge</span>
-                <span class="confidence" id="confidence">92% fit</span>
-              </div>
-              <h3 id="topic-title">AI Systems Thinking</h3>
-              <p id="topic-summary">
-                Learn how models, tools, workflows, data, and human decisions
-                become one adaptive system.
-              </p>
-
-              <div class="boundary-box">
-                <span>Knowledge Boundary</span>
-                <p id="topic-boundary">
-                  You know what AI can do, but the next edge is understanding
-                  how to design reliable loops around it.
-                </p>
-              </div>
-
-              <div class="mode-tabs" role="tablist" aria-label="Explore topic modes">
-                <button class="mode-tab active" data-mode="deeper" role="tab">DEEPER</button>
-                <button class="mode-tab" data-mode="explore" role="tab">EXPLORE</button>
-                <button class="mode-tab" data-mode="why" role="tab">WHY</button>
-                <button class="mode-tab" data-mode="soWhat" role="tab">SO WHAT</button>
-              </div>
-
-              <div class="mode-output" id="mode-output">
-                <h4>Go deeper</h4>
-                <p>
-                  Study feedback loops, evaluation methods, and agentic
-                  workflow design. Your next exercise is to map one real task
-                  into inputs, decisions, actions, and review points.
-                </p>
-              </div>
-            </article>
-          </div>
-        </section>
-      </main>
-    </div>
-
-    <script src="./app.js"></script>
-  </body>
-</html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="ROBOV.ai，找到知识的方向，拓展认知的边界。"><title>ROBOV.ai | Navigate Knowledge. Expand Your Mind.</title><link rel="stylesheet" href="./styles.css"></head>
+<body><div class="app-shell">
+<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><span class="journey-label">你的私人学习旅程</span></header>
+<main>
+<ol class="journey-progress" aria-label="学习旅程"><li aria-current="step">认识你</li><li>认知小测</li><li>你的方向</li><li>开始学习</li></ol>
+<section id="intro" class="journey-screen">
+<p class="eyebrow">PROFILE SCAN</p><h1>先从你自己说起。</h1><p class="guide-copy">你好，我是 ROBOV。你最近在做什么？对什么感兴趣？有什么想弄懂、却一直没找到方向的事？</p>
+<form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="alert"></p><button class="primary-button" type="submit">继续，开始我的小测 →</button></form>
+<p class="brand-promise">Navigate Knowledge. Expand Your Mind.<br>找到知识的方向，拓展认知的边界。</p>
+</section>
+<section id="assessment" class="journey-screen" hidden>
+<p class="eyebrow" id="question-count"></p><h1 id="question-title" tabindex="-1"></h1><p class="guide-copy" id="question-context"></p>
+<form id="question-form"><fieldset id="question-options"><legend class="sr-only">选择最接近你想法的一项</legend></fieldset><p id="question-error" class="form-error" role="alert"></p><div class="journey-actions"><button id="question-back" class="secondary-button" type="button">← 上一步</button><button class="primary-button" type="submit" id="question-next">下一题 →</button></div></form>
+</section>
+<section id="results" class="journey-screen results-screen" hidden>
+<p class="eyebrow">DYNAMIC COGNITIVE PROFILE</p><h1 tabindex="-1">你的起点，已经清晰了一些。</h1><p class="guide-copy" id="result-guidance"></p>
+<div class="profile-card"><h2 id="profile-title"></h2><p id="profile-summary"></p><div class="metric-list"><div><span>小测掌握</span><strong id="metric-depth"></strong></div><div><span>学习起点</span><strong id="metric-range"></strong></div><div><span>本次方向</span><strong id="metric-goal"></strong></div></div></div>
+<p class="result-note">这是基于你的描述与三道小测的初步方向，不是完整能力评估。随着学习，我们会继续调整。</p>
+<div id="map"><h2>你的知识地图</h2><div class="knowledge-map" aria-label="知识地图"><button class="map-node" data-topic="ai-systems"><span>系统</span>AI 系统思维</button><button class="map-node" data-topic="learning-design"><span>学习</span>学习架构</button><button class="map-node" data-topic="decision-science"><span>判断</span>决策科学</button><button class="map-node" data-topic="creative-tech"><span>创造</span>创意技术</button></div></div>
+<div class="next-route"><span class="eyebrow">NEXT BEST KNOWLEDGE</span><h2 id="route-title"></h2><p id="route-reason"></p><button id="start-learning" class="primary-button">带我开始第一段学习 →</button></div><button class="text-button" id="edit-description">修改我的描述</button>
+</section>
+<section id="learning" class="journey-screen" hidden>
+<div class="network-heading"><span class="eyebrow">PERSONAL KNOWLEDGE NETWORK</span><h2>从一个点，连接新的理解。</h2><p id="network-guidance" aria-live="polite"></p></div>
+<div class="network-tool"><svg id="network-edges" aria-hidden="true"></svg><div id="knowledge-network" aria-label="可延伸的知识网络"></div></div>
+<div id="node-path" class="node-path" aria-label="当前知识路径"></div>
+<div id="node-detail" class="node-detail" aria-live="polite"></div>
+<button id="extend-node" class="primary-button">延伸这个知识点 →</button>
+<p class="eyebrow">你的第一段学习 · 约 3 分钟</p><article id="explore" class="insight-panel"><div class="panel-topline"><span class="card-label">NEXT BEST KNOWLEDGE</span><span id="confidence" class="confidence"></span></div><h1 id="topic-title" tabindex="-1"></h1><p id="topic-summary"></p><div class="boundary-box"><span>你的知识边界</span><p id="topic-boundary"></p></div>
+<div class="mode-tabs" role="tablist" aria-label="探索方向"><button class="mode-tab" data-mode="deeper" role="tab">DEEPER</button><button class="mode-tab" data-mode="explore" role="tab">EXPLORE</button><button class="mode-tab" data-mode="why" role="tab">WHY</button><button class="mode-tab" data-mode="soWhat" role="tab">SO WHAT</button></div><div class="mode-output" id="mode-output" role="tabpanel" aria-live="polite"></div>
+<label class="description-label" for="reflection">把这个想法用到你自己的生活里，你会怎么做？</label><textarea id="reflection" rows="3" maxlength="1000" placeholder="写一个你想尝试的小行动……"></textarea><p class="form-error" id="reflection-error" role="alert"></p><p id="learning-feedback" aria-live="polite"></p>
+<div class="journey-actions"><button class="secondary-button" id="widen">带我探索相邻主题 →</button><button class="primary-button" id="complete-learning">完成这一步，继续深入 →</button></div></article><button class="text-button" id="back-map">← 回到我的地图</button>
+</section>
+</main></div><script src="./network.js"></script><script src="./app.js"></script></body></html>

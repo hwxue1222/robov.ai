@@ -1,5 +1,9 @@
 const english = {
   "我的画像": "My profile",
+  "兴趣信号": "Interests", "当前目标": "Current goal", "学习时间": "Study time", "自述起点": "Starting point",
+  "尚未明确，可以在自我描述中补充": "Not specified yet; add it to your description",
+  "尚未提供": "Not provided yet", "从基础开始": "Start with foundations", "有深入经验": "Experienced in depth",
+  "通过小测继续了解": "Explore through the quick check",
   "你的知识地图会随着探索更新。选择一个知识点，继续你的学习路径。": "Your map evolves as you explore. Choose an idea to continue your learning path.",
   "生成我的初步画像 →": "Create my initial profile →",
   "你的画像，随探索一起成长。": "Your profile grows as you explore.",
@@ -157,7 +161,7 @@ function translate(source) {
   if (english[source]) return english[source];
   const patterns = [
     [/^你目前关注「(.+)」。这份画像会随着你的自我描述、答题和知识探索持续更新。$/, m => "Your current direction is " + translate(m[1]) + ". Your profile keeps updating through your descriptions, answers, and knowledge exploration."],
-    [/^(.+) · (\d+) 次打开$/, m => translate(m[1]) + " · opened " + m[2] + " times"],
+    [/^(.+) · (\d+) 次打开$/, m => translate(m[1]) + " · opened " + m[2] + (m[2] === "1" ? " time" : " times")],
     [/^认知小测 · (\d) \/ 3$/, m => "Quick check · " + m[1] + " / 3"],
     [/^学习阶段 (\d) · 约 3 分钟$/, m => "Learning stage " + m[1] + " · about 3 minutes"],
     [/^第 (\d) 段$/, m => "Stage " + m[1]],

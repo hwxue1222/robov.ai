@@ -31,6 +31,10 @@ body {
 
 [hidden] { display: none !important; }
 .living-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 28px 0; }
+.profile-signals { border-top: 1px solid var(--line); padding-top: 12px; }
+.profile-signals div { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 12px; padding: 10px 0; }
+.profile-signals dt { color: var(--muted); font-size: 14px; }
+.profile-signals dd { margin: 0; line-height: 1.7; font-size: 14px; overflow-wrap: anywhere; }
 .living-metrics div { padding: 18px 12px; background: white; border: 1px solid var(--line); border-radius: 6px; }
 .living-metrics span, .living-metrics small { display: block; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .living-metrics strong { display: block; font-size: 30px; margin: 12px 0; }

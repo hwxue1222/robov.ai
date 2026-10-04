@@ -29,6 +29,19 @@ function renderLivingProfile() {
   $("#open-profile").hidden = !description;
   $("#live-summary").textContent = "你目前关注「" + topics[activeTopic].title + "」。这份画像会随着你的自我描述、答题和知识探索持续更新。";
   $("#live-description").textContent = "你说：「" + description + "」";
+  const interests = Object.keys(topics).filter(id => topics[id].keywords.test(description));
+  $("#signal-interests").replaceChildren();
+  (interests.length ? interests : [activeTopic]).forEach((id, i) => {
+    const span = document.createElement("span"); span.textContent = topics[id].title;
+    if (i) $("#signal-interests").append(document.createTextNode(" / "));
+    $("#signal-interests").append(span);
+  });
+  const goalMatch = description.match(/(?:希望|想要|想学|想|目标是|want to|hope to|my goal is)[^。！？.!?\n]*/i);
+  $("#signal-goal").textContent = goalMatch ? goalMatch[0].trim() : "尚未明确，可以在自我描述中补充";
+  const timeMatch = description.match(/(?:每天|每日|每周|daily|each day|per day)?\s*(?:\d+|[零一二两三四五六七八九十百]+|ten|twenty|thirty|one|two|half)\s*(?:分钟|小时|minutes?|hours?)(?:\s*(?:a day|each day|daily|per day))?/i);
+  $("#signal-time").textContent = timeMatch ? timeMatch[0].trim() : "尚未提供";
+  const start = /初学|入门|不太懂|不懂|beginner|new to/i.test(description) ? "从基础开始" : /熟练|专业|精通|advanced|expert/i.test(description) ? "有深入经验" : "通过小测继续了解";
+  $("#signal-start").textContent = start;
   $("#live-breadth").textContent = String(breadth);
   $("#live-depth").textContent = String(depth);
   $("#live-count").textContent = String(visits.length);

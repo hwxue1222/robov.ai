@@ -46,7 +46,8 @@ test('API protects credentials, validates inputs and parses Kimi JSON', async ()
       assert.equal(request.direction, undefined);
       assert.equal(request.requiredStructure.totalNodes, 9);
       assert.equal(request.focus.title.en, 'Extraction');
-      return { ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify(fixture()) } }] }) };
+      assert.equal(JSON.parse(options.body).tool_choice.function.name, 'submit_graph');
+      return { ok: true, json: async () => ({ choices: [{ message: { content: null, tool_calls: [{ function: { name: 'submit_graph', arguments: JSON.stringify(fixture()) } }] } }] }) };
     };
     await handler({ method: 'POST', body: { description: 'I want to understand coffee extraction.', focus: fixture().nodes[0] } }, res);
     assert.equal(status, 200);

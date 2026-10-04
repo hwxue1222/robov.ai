@@ -49,8 +49,8 @@ $('#recenter-node').addEventListener('click', () => {
   const focus = personalizedGraph?.nodes.find(n => n.id === selectedNode);
   if (focus) generateNetwork(description, focus);
 });
-$('#return-network').addEventListener('click', returnToNetwork);
-$('#forward-network').addEventListener('click', forwardToNetwork);
+$('#return-network').addEventListener('click', () => returnToNetwork());
+$('#forward-network').addEventListener('click', () => forwardToNetwork());
 $('#back-node').addEventListener('click', backToNode);
 window.addEventListener('resize', drawEdges);
 $('#start-learning').addEventListener('click', () => { setTopic(activeTopic); showScreen('learning'); });

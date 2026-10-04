@@ -9,9 +9,12 @@ module.exports = async (req, res) => {
     if (!response.ok) throw new Error('Research unavailable');
     const data = await response.json();
     const seen = new Set();
+    const titles = new Set();
     const articles = (data.message?.items || []).filter(item => {
       if (typeof item.title?.[0] !== 'string' || item.title[0].length > 600 || typeof item.DOI !== 'string' || !/^10\.\d{4,9}\/\S+$/i.test(item.DOI) || seen.has(item.DOI)) return false;
-      seen.add(item.DOI); return true;
+      const title = item.title[0].trim().toLowerCase();
+      if (titles.has(title)) return false;
+      seen.add(item.DOI); titles.add(title); return true;
     }).map(item => ({ title: item.title[0], url: 'https://doi.org/' + item.DOI, source: typeof item.publisher === 'string' ? item.publisher : 'Crossref', year: Number.isInteger(item.published?.['date-parts']?.[0]?.[0]) ? String(item.published['date-parts'][0][0]) : '' }));
     res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=3600');
     return res.status(200).json({ articles });

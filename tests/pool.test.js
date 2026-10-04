@@ -23,7 +23,7 @@ test('pool generation uses a distinct contract and real research metadata stays 
       if (url instanceof URL && url.hostname === 'en.wikipedia.org') return { ok: true, json: async () => ({ query: { pages: Object.fromEntries(entries.slice(1).map((entry, i) => [i + 1, { pageid: i + 1, ns: 0, title: entry.referenceTitle }])) } }) };
       const request = JSON.parse(JSON.parse(options.body).messages[1].content);
       assert.equal(request.mode, 'pool'); assert.equal(request.requiredStructure, undefined);
-      return { ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify({ entries }) } }] }) };
+      return { ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify({ entries, researchQuery: 'coffee particle-size' }) } }] }) };
     };
     await knowledge({ method: 'POST', body: { mode: 'pool', description: 'I want to learn coffee extraction.', focus: { id: 'n1', title: text, body: text } } }, res);
     assert.equal(status, 200); assert.equal(payload.entries.length, 4);

@@ -10,8 +10,8 @@ const poolLabels = { topic: '课题', news: '新闻', person: '人物', event: '
 const channelLabels = { science: '科学研究', history: '历史', culture: '社会文化', practice: '实践' };
 function currentPoolKey() { return personalizedGraph.sessionId + ':' + selectedNode; }
 function poolResearchQuery() {
-  const node = personalizedGraph.nodes.find(n => n.id === selectedNode);
-  return (node.title.en + ' ' + personalizedGraph.profile.goal.en).slice(0, 180);
+  const query = personalizedGraph.poolSearch?.[selectedNode];
+  return typeof query === 'string' && query.length >= 3 && query.length <= 80 ? query : '';
 }
 function poolQuery() {
   const node = personalizedGraph.nodes.find(n => n.id === selectedNode);
@@ -87,7 +87,7 @@ function renderPoolItems() {
   if (showNews && state?.error) status.textContent = localText({ zh: '新闻暂不可用。你仍可以选择其他线索继续探索。', en: 'News is unavailable. Other leads remain available.' });
   else if (showNews && state && !state.articles.length) status.textContent = localText({ zh: '暂时没有找到相关新闻。', en: 'No related news was found.' });
   $('#retry-news').hidden = !showNews || !state?.error;
-  const showIdeas = !['news', 'research'].includes(poolFilter), failed = ideaErrors.has(currentPoolKey());
+  const showIdeas = poolFilter !== 'news', failed = ideaErrors.has(currentPoolKey());
   const ideaStatus = $('#pool-ideas-status'); ideaStatus.textContent = '';
   ideaStatus.classList.toggle('pool-loading', showIdeas && !entries && !failed);
   ideaStatus.setAttribute('aria-busy', String(showIdeas && !entries && !failed));
@@ -95,8 +95,8 @@ function renderPoolItems() {
   else if (showIdeas && entries && poolFilter !== 'all' && poolFilter !== 'topic' && !entries.some(e => e.kind === poolFilter)) ideaStatus.textContent = localText({ zh: '当前知识点没有此类线索。', en: 'No leads of this type for the current idea.' });
   $('#retry-ideas').hidden = !showIdeas || !failed;
   const showResearch = ['all', 'research'].includes(poolFilter), researchStatus = $('#pool-research-status'); researchStatus.textContent = '';
-  researchStatus.classList.toggle('pool-loading', showResearch && (!research || research.pending));
-  researchStatus.setAttribute('aria-busy', String(showResearch && (!research || research.pending)));
+  researchStatus.classList.toggle('pool-loading', showResearch && (!research || research.pending) && !failed);
+  researchStatus.setAttribute('aria-busy', String(showResearch && (!research || research.pending) && !failed));
   if (showResearch && research?.error) researchStatus.textContent = localText({ zh: '文献渠道暂不可用。', en: 'Research sources are unavailable.' });
   else if (showResearch && research && !research.pending && !research.articles.length) researchStatus.textContent = localText({ zh: '没有找到相关文献。', en: 'No related research was found.' });
   $('#retry-research').hidden = !showResearch || !research?.error;
@@ -105,7 +105,7 @@ function renderPoolItems() {
 function renderPool() {
   if (!personalizedGraph) return;
   renderPoolItems();
-  if (!['news', 'research'].includes(poolFilter)) loadPoolIdeas();
+  if (poolFilter !== 'news') loadPoolIdeas();
   if (['all', 'news'].includes(poolFilter)) loadPoolNews();
   if (['all', 'research'].includes(poolFilter)) loadPoolResearch();
 }
@@ -120,18 +120,22 @@ async function loadPoolIdeas() {
     const result = await response.json();
     if (!response.ok) throw new Error('Pool unavailable');
     const entries = validatePool(result.entries);
+    if (typeof result.researchQuery !== 'string' || result.researchQuery.length < 3 || result.researchQuery.length > 80) throw new Error('Invalid research query');
     entries.forEach(entry => { localText(entry.title); localText(entry.body); });
-    (graph.pools ||= {})[id] = entries; graph.poolVersion = 2; saveProgress();
+    (graph.pools ||= {})[id] = entries;
+    (graph.poolSearch ||= {})[id] = result.researchQuery;
+    graph.poolVersion = 3; saveProgress();
   } catch (error) {
     if (error.name !== 'AbortError' || ideaKey === key) ideaErrors.add(key);
   } finally {
     clearTimeout(timeout);
     if (ideaRequest === controller) ideaRequest = null;
-    if (currentPoolKey() === key) renderPoolItems();
+    if (currentPoolKey() === key) { renderPoolItems(); if (['all', 'research'].includes(poolFilter)) loadPoolResearch(); }
   }
 }
 async function loadPoolResearch() {
   const query = poolResearchQuery();
+  if (!query) return;
   if (researchCache.has(query)) return;
   researchCache.set(query, { pending: true, articles: [] });
   try {

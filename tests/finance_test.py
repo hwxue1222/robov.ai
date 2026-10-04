@@ -8,7 +8,7 @@ from api.finance import finance_response, normalize_articles, retrieve
 class FinanceTests(unittest.TestCase):
     def test_metadata_is_safe_deduplicated_and_not_full_text(self):
         row = {"新闻标题": "<em>利率</em> &amp; 经济", "新闻链接": "http://finance.eastmoney.com/a/202610041234.html", "发布时间": "2026-10-04 12:00:00", "文章来源": "Example publisher", "新闻内容": "Must not republish"}
-        records = [row, row, {**row, "新闻链接": "javascript:alert(1)"}, {**row, "新闻链接": "https://finance.eastmoney.com.evil/a/123.html"}]
+        records = [row, row, {**row, "新闻链接": "https://finance.eastmoney.com/a/202610045678.html"}, {**row, "新闻链接": "javascript:alert(1)"}, {**row, "新闻链接": "https://finance.eastmoney.com.evil/a/123.html"}]
         articles = normalize_articles(records)
         self.assertEqual(len(articles), 1)
         self.assertEqual(articles[0]["title"], "利率 & 经济")

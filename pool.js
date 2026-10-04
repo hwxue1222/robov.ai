@@ -111,7 +111,7 @@ function renderPoolItems() {
   const showNews = ['all', 'news'].includes(poolFilter);
   status.classList.toggle('pool-loading', showNews && !state);
   status.setAttribute('aria-busy', String(showNews && !state));
-  if (showNews && state?.error) status.textContent = localText({ zh: '新闻暂不可用。你仍可以选择其他线索继续探索。', en: 'News is unavailable. Other leads remain available.' });
+  if (showNews && state?.error) status.textContent = localText({ zh: '综合新闻来源暂不可用。其他线索仍可继续探索。', en: 'General news sources are unavailable. Other leads remain available.' });
   else if (showNews && state && !state.articles.length) status.textContent = localText({ zh: '暂时没有找到相关新闻。', en: 'No related news was found.' });
   $('#retry-news').hidden = !showNews || !state?.error;
   const showIdeas = !['news', 'finance'].includes(poolFilter), failed = ideaErrors.has(currentPoolKey());

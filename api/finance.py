@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 
 
 def normalize_articles(records):
-    articles, seen = [], set()
+    articles, seen, titles = [], set(), set()
     for record in records:
         title = record.get("新闻标题")
         link = record.get("新闻链接")
@@ -29,9 +29,10 @@ def normalize_articles(records):
         except ValueError:
             continue
         link = "https://finance.eastmoney.com" + url.path
-        if not title or len(title) > 400 or link in seen:
+        if not title or len(title) > 400 or link in seen or title.casefold() in titles:
             continue
         seen.add(link)
+        titles.add(title.casefold())
         published = ""
         try:
             published = datetime.strptime(str(record.get("发布时间", "")), "%Y-%m-%d %H:%M:%S").replace(tzinfo=ZoneInfo("Asia/Shanghai")).isoformat()

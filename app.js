@@ -132,6 +132,7 @@ function setTopic(id) {
   setMode(activeMode);
   selectNode(id + "-" + (levels[id] || 0));
   renderNetwork();
+  $("#learning > .eyebrow").textContent = "学习阶段 " + ((levels[id] || 0) + 1) + " · 约 3 分钟";
 }
 function setMode(mode) {
   activeMode = mode;
@@ -150,6 +151,12 @@ function setMode(mode) {
     el.textContent = text; $("#mode-output").append(el);
   });
   $$(".mode-tab").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.mode === mode)));
+  $$(".mode-tab").forEach(tab => {
+    tab.id = "tab-" + tab.dataset.mode;
+    tab.setAttribute("aria-controls", "mode-output");
+    tab.tabIndex = tab.dataset.mode === mode ? 0 : -1;
+  });
+  $("#mode-output").setAttribute("aria-labelledby", "tab-" + mode);
   $$(".mode-tab").forEach(tab => tab.classList.toggle("active", tab.dataset.mode === mode));
 }
 $("#intro-form").addEventListener("submit", event => {
@@ -162,6 +169,7 @@ $("#intro-form").addEventListener("submit", event => {
   Object.keys(networks).forEach(key => delete networks[key]);
   renderQuestion();
 });
+$$(".journey-screen h1").forEach(heading => heading.tabIndex = -1);
 $("#question-form").addEventListener("submit", event => {
   event.preventDefault();
   const answer = new FormData(event.currentTarget).get("answer");

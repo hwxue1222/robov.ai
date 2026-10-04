@@ -40,6 +40,18 @@ test('API protects credentials, validates inputs and parses Kimi JSON', async ()
     };
     await handler({ method: 'POST', body: { description: 'I want to understand coffee extraction.' } }, res);
     assert.equal(status, 200); assert.equal(payload.graph.nodes.length, 6); assert.equal(JSON.stringify(payload).includes('test-only'), false);
+    global.fetch = async (url, options) => {
+      const request = JSON.parse(JSON.parse(options.body).messages[1].content);
+      assert.equal(request.mode, 'focused-network');
+      assert.equal(request.direction, undefined);
+      assert.equal(request.requiredStructure.totalNodes, 9);
+      assert.equal(request.focus.title.en, 'Extraction');
+      return { ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify(fixture()) } }] }) };
+    };
+    await handler({ method: 'POST', body: { description: 'I want to understand coffee extraction.', focus: fixture().nodes[0] } }, res);
+    assert.equal(status, 200);
+    await handler({ method: 'POST', body: { description: 'I want to understand coffee extraction.', focus: { id: 'bad' } } }, res);
+    assert.equal(status, 400);
     global.fetch = async () => ({ ok: false, status: 402 });
     await handler({ method: 'POST', body: { description: 'I want to understand coffee extraction.' } }, res);
     assert.equal(payload.error, 'MODEL_CREDITS_REQUIRED');

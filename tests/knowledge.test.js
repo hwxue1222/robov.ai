@@ -45,3 +45,9 @@ test('API protects credentials, validates inputs and parses Kimi JSON', async ()
     assert.equal(payload.error, 'MODEL_CREDITS_REQUIRED');
   } finally { global.fetch = oldFetch; if (key === undefined) delete process.env.AI_GATEWAY_API_KEY; else process.env.AI_GATEWAY_API_KEY = key; }
 });
+test('wide exploration creates a connected new domain', () => {
+  const g = fixture(), parent = g.nodes[1];
+  const wide = { ...g, domains: [g.domains[1]], nodes: g.nodes.filter(n => n.domain === 'd2'), edges: [{ from: parent.id, to: 'd2', reason: text }], next: { id: 'd2-1', reason: text } };
+  assert.equal(validateGraph(wide, parent).domains.length, 1);
+  wide.nodes[1].parent = 'absent'; assert.throws(() => validateGraph(wide, parent));
+});

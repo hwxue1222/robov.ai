@@ -34,6 +34,14 @@ personalized fallback: failures are shown explicitly and previous data is kept.
 Generated bilingual graphs are validated for structure, references, and cycles.
 Descriptions, recent exploration and optional reflections inform new branches.
 Network size is limited to about 150 nodes per profile revision.
+Deeper exploration adds specific concepts under the selected node. Wider
+exploration adds a new domain and connects it to the selected node. Recommendations
+update after generation; opening new domains updates observed breadth.
+Generation sends the description, selected idea, relevant exploration history
+and optional reflection to the model service. Do not enter confidential data.
+Content is AI-generated educational material, not verified research or advice.
+
+Run focused API and graph tests with `node --test tests/knowledge.test.js`.
 
 ## Run
 

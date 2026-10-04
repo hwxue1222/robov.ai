@@ -151,6 +151,7 @@ const topicEnglish = {
   }
 };
 english['生成我的知识网络 →'] = 'Generate my knowledge network →';
+english['学习内容由 AI 生成，可能有误；重要结论请核对可靠资料。'] = 'Learning content is AI-generated and may contain errors. Verify important claims with reliable sources.';
 english['生成时，你的描述、相关探索记录和所选节点的想法会发送给 Kimi 服务。请勿填写隐私或机密信息。'] = 'Generation sends your description, relevant exploration history and thoughts on the selected idea to Kimi. Do not enter private or confidential information.';
 english['这个点还没有跨领域关联。选择延伸，生成新的连接方向。'] = 'This idea has no cross-field links yet. Expand it to generate new directions.';
 let language = "zh";

@@ -62,7 +62,7 @@ async function generateBranches(node, direction) {
     const branch = await requestGraph({ description, node, direction, reflection: reflections[reflectionKey(node.id)] || '', existing: personalizedGraph.nodes.map(n => ({ id: n.id, title: n.title })), history: Object.values(knowledgeVisits).sort((a, b) => b.lastAt - a.lastAt).slice(0, 12) });
     if (branch.nodes.some(n => personalizedGraph.nodes.some(old => old.id === n.id))) throw new Error('DUPLICATE_NODE');
     const currentDomain = activeTopic, currentId = selectedNode;
-    registerGraph(validateGraph({ ...personalizedGraph, nodes: [...personalizedGraph.nodes, ...branch.nodes], edges: [...personalizedGraph.edges, ...branch.edges], next: branch.next }, null, 168));
+    registerGraph(validateGraph({ ...personalizedGraph, domains: [...personalizedGraph.domains, ...branch.domains], nodes: [...personalizedGraph.nodes, ...branch.nodes], edges: [...personalizedGraph.edges, ...branch.edges], next: branch.next }, null, 168));
     setTopic(currentDomain, currentId); saveProgress(); $('#learning-feedback').textContent = branch.next.reason.zh;
     if (currentId === node.id) $('#branch-choices').scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (error) { $('#learning-feedback').textContent = generationError(error); }

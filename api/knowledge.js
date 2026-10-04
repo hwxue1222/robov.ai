@@ -7,7 +7,9 @@ Each node must teach a specific real concept, not generic advice. Explain its me
 All text fields are bilingual objects {"zh":"简体中文","en":"English"}. Keep titles under 18 Chinese characters/50 English characters, explanations about 60 Chinese characters/45 English words, other fields concise.
 Schema: {"domains":[{"id":"d1","title":TEXT,"summary":TEXT}],"nodes":[{"id":"n1","domain":"d1","parent":null,"title":TEXT,"body":TEXT,"why":TEXT,"exercise":TEXT,"boundary":TEXT}],"edges":[{"from":"n1","to":"n2","reason":TEXT}],"next":{"id":"n2","reason":TEXT},"profile":{"goal":TEXT,"start":TEXT,"time":TEXT}}.
 Initial generation: choose 3 distinct relevant domains, each with a root node and 2 specific child concepts (9 total nodes). Root id equals domain id. Child parent is its domain root. Include 2-4 meaningful cross-domain edges, with a reason explaining the real relationship. Select one child as the best next concept and explain the choice. Infer only supported profile signals, mark unspecified signals as not provided.
-Branch generation: domains must be [], generate 3 new concept nodes with unique ids, domain and parent from the supplied selected node. Differentiate deeper mechanism, prerequisite/boundary, and a useful cross-disciplinary connection. Every branch must be substantively different from existing nodes. Include the selected parent-to-child edges. next.id must be one of the new nodes. Include profile fields, but do not alter the user's stated goals. Never generate a generic "application of X" or "boundary of X" label when a named concept exists.`;
+Branch generation with direction deeper: domains must be [], generate 3 new concept nodes with unique ids, domain and parent from the supplied selected node. Differentiate deeper mechanism, prerequisite/boundary, and a useful cross-disciplinary connection.
+Branch generation with direction cross-disciplinary: generate one genuinely new related domain, its root (id equals domain id, parent null) and 2 specific child concepts (parent equals new root id). Include an edge from the selected existing node to the new root, explaining the actual intellectual connection. Do not reuse an existing domain.
+Every branch must be substantively different from existing nodes. Use only existing or new ids in edges. next.id must be one of the new nodes. Include profile fields, but do not alter the user's stated goals. Never generate a generic "application of X" or "boundary of X" label when a named concept exists.`;
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
@@ -42,7 +44,8 @@ module.exports = async (req, res) => {
     if (branch) {
       const prefix = 'b-' + randomUUID();
       const ids = new Map(graph.nodes.map((node, index) => [node.id, prefix + '-' + index]));
-      graph.nodes.forEach(node => node.id = ids.get(node.id));
+      graph.domains.forEach(domain => domain.id = ids.get(domain.id));
+      graph.nodes.forEach(node => { node.id = ids.get(node.id); node.parent = ids.get(node.parent) || node.parent; node.domain = ids.get(node.domain) || node.domain; });
       graph.edges.forEach(edge => { edge.from = ids.get(edge.from) || edge.from; edge.to = ids.get(edge.to) || edge.to; });
       graph.next.id = ids.get(graph.next.id);
     }

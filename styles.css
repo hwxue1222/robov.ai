@@ -64,6 +64,7 @@ body {
 .language-switch button[aria-pressed="true"] { background: var(--ink); color: white; }
 .journey-screen button { overflow-wrap: anywhere; }
 .network-heading p { line-height: 1.8; color: var(--muted); }
+.knowledge-disclaimer { max-width: 760px; margin-left: auto; margin-right: auto; }
 .network-tool { position: relative; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 20px; overflow: auto; max-height: 450px; }
 #knowledge-network { position: relative; display: grid; gap: 36px; }
 #network-edges { position: absolute; inset: 0; pointer-events: none; width: 100%; height: 100%; }

@@ -13,6 +13,12 @@ function localText(value) {
   return value.zh;
 }
 function registerGraph(graph) {
+  if (graph.pools && typeof graph.pools === 'object') {
+    for (const id of Object.keys(graph.pools)) {
+      try { graph.pools[id] = validatePool(graph.pools[id]); }
+      catch { delete graph.pools[id]; }
+    }
+  } else delete graph.pools;
   normalizeRecommendation(graph);
   const register = value => {
     if (value && typeof value === 'object') {
@@ -59,7 +65,7 @@ async function generateNetwork(input, focus = null) {
   try {
     const graph = await requestGraph({ description: input, focus, reflection: focus ? reflections[reflectionKey(focus.id)] || '' : '', history: Object.values(knowledgeVisits).sort((a, b) => b.lastAt - a.lastAt).slice(0, 12) });
     if (focus) {
-      const source = personalizedGraph.nodes.find(n => n.id === focus.id) || personalizedGraph.nodes.find(n => n.id === selectedNode);
+    const source = personalizedGraph.nodes.find(n => n.id === focus.id) || personalizedGraph.nodes.find(n => n.id === selectedNode);
       networkTrail.push({ graph: personalizedGraph, selectedNode: source.id, activeMode });
       graph.originTitle = focus.title;
       graph.baseDepth = (personalizedGraph.baseDepth || 0) + (networks[source.domain].find(n => n.id === source.id)?.depth || 0);

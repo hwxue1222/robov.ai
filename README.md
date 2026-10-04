@@ -24,6 +24,12 @@ news from GDELT, rather than numbered learning stages or mandatory exercises.
 News availability depends on the source; failures never produce invented news.
 Choosing a headline generates related concepts, not a summary of an unread report.
 
+Pool mixes topics, people, historical events, timelines, research and news.
+Bilingual AI knowledge leads offer science, history, cultural and practical
+perspectives, clearly separate from retrieved sources. Crossref supplies real
+publication metadata and DOI links; no unread paper is summarized. News remains
+from GDELT and depends on provider availability. Generated leads persist per node.
+
 Chinese and English include the interface, content, and knowledge nodes. A
 language change preserves the current path and profile. Descriptions retain
 their original wording.

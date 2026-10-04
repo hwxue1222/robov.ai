@@ -29,7 +29,14 @@ connections to other fields. Content is presented at each node, not as a report.
 The Chinese / English switch translates the full interface, assessment, lesson
 content, and knowledge nodes while preserving current answers and expanded paths.
 User-written descriptions are kept in their original language. Only the language
-preference is stored locally.
+preference and learning snapshot are stored locally.
+
+Self-description creates an initial editable profile before the quick check.
+Visited topics and node depths update observed exploration breadth and depth;
+these measures are not treated as mastery scores. Profiles, expanded networks,
+reflections, and visit history persist in this browser, can be resumed after a
+reload, and can be cleared from the profile view. Updating the description
+preserves exploration history. There is no cross-device account synchronization.
 
 Content is generated instantly from curated local templates and the user's
 description. This version does not call an AI service or persist personal data
@@ -63,3 +70,4 @@ http://localhost:4173
 - `app.js` - demo data and interactive behavior
 - `network.js` - expandable knowledge nodes and connections
 - `i18n.js` - complete Chinese / English content and language switching
+- `profile.js` - living profile, observed learning history, and local persistence

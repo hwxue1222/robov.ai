@@ -2,13 +2,22 @@
 <html lang="zh-CN">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="ROBOV.ai，找到知识的方向，拓展认知的边界。"><title>ROBOV.ai | Navigate Knowledge. Expand Your Mind.</title><link rel="stylesheet" href="./styles.css"></head>
 <body><div class="app-shell">
-<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
+<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><button id="open-profile" class="text-button" hidden>我的画像</button><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
 <main>
 <ol class="journey-progress" aria-label="学习旅程"><li aria-current="step">认识你</li><li>认知小测</li><li>你的方向</li><li>开始学习</li></ol>
 <section id="intro" class="journey-screen">
 <p class="eyebrow">PROFILE SCAN</p><h1>先从你自己说起。</h1><p class="guide-copy">你好，我是 ROBOV。你最近在做什么？对什么感兴趣？有什么想弄懂、却一直没找到方向的事？</p>
-<form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="alert"></p><button class="primary-button" type="submit">继续，开始我的小测 →</button></form>
+<form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="alert"></p><button class="primary-button" type="submit">生成我的初步画像 →</button></form>
 <p class="brand-promise">Navigate Knowledge. Expand Your Mind.<br>找到知识的方向，拓展认知的边界。</p>
+</section>
+<section id="profile-review" class="journey-screen" hidden>
+<p class="eyebrow">DYNAMIC COGNITIVE PROFILE</p><h1 tabindex="-1">你的画像，随探索一起成长。</h1>
+<p class="guide-copy" id="live-summary"></p><p id="live-description"></p>
+<div class="living-metrics"><div><span>探索宽度</span><strong id="live-breadth">0</strong><small>已探索的领域</small></div><div><span>探索深度</span><strong id="live-depth">0</strong><small>最深的延伸层数</small></div><div><span>知识足迹</span><strong id="live-count">0</strong><small>已打开的知识点</small></div></div>
+<p class="result-note" id="profile-storage">探索记录反映你走过的路径，不等于已掌握。画像和学习记录保存在当前浏览器，刷新后可以继续。</p>
+<h2>最近的知识足迹</h2><ul id="profile-history" class="profile-history"></ul>
+<div class="journey-actions"><button id="begin-check" class="primary-button">开始小测，校准我的起点 →</button><button id="resume-learning" class="secondary-button" hidden>继续我的知识链 →</button></div>
+<button id="update-profile" class="text-button">更新我的自我描述</button><button id="clear-progress" class="text-button">清除本机学习记录</button>
 </section>
 <section id="assessment" class="journey-screen" hidden>
 <p class="eyebrow" id="question-count"></p><h1 id="question-title" tabindex="-1"></h1><p class="guide-copy" id="question-context"></p>
@@ -16,7 +25,7 @@
 </section>
 <section id="results" class="journey-screen results-screen" hidden>
 <p class="eyebrow">DYNAMIC COGNITIVE PROFILE</p><h1 tabindex="-1">你的起点，已经清晰了一些。</h1><p class="guide-copy" id="result-guidance"></p>
-<div class="profile-card"><h2 id="profile-title"></h2><p id="profile-summary"></p><div class="metric-list"><div><span>小测掌握</span><strong id="metric-depth"></strong></div><div><span>学习起点</span><strong id="metric-range"></strong></div><div><span>本次方向</span><strong id="metric-goal"></strong></div></div></div>
+<div class="profile-card"><h2 id="profile-title"></h2><p id="profile-summary"></p><div class="metric-list"><div><span>探索深度</span><strong id="metric-depth"></strong></div><div><span>探索宽度</span><strong id="metric-range"></strong></div><div><span>知识足迹</span><strong id="metric-goal"></strong></div></div></div>
 <p class="result-note">这是基于你的描述与三道小测的初步方向，不是完整能力评估。随着学习，我们会继续调整。</p>
 <div id="map"><h2>你的知识地图</h2><div class="knowledge-map" aria-label="知识地图"><button class="map-node" data-topic="ai-systems"><span>系统</span>AI 系统思维</button><button class="map-node" data-topic="learning-design"><span>学习</span>学习架构</button><button class="map-node" data-topic="decision-science"><span>判断</span>决策科学</button><button class="map-node" data-topic="creative-tech"><span>创造</span>创意技术</button></div></div>
 <div class="next-route"><span class="eyebrow">NEXT BEST KNOWLEDGE</span><h2 id="route-title"></h2><p id="route-reason"></p><button id="start-learning" class="primary-button">带我开始第一段学习 →</button></div><button class="text-button" id="edit-description">修改我的描述</button>
@@ -33,4 +42,4 @@
 <label class="description-label" for="reflection">把这个想法用到你自己的生活里，你会怎么做？</label><textarea id="reflection" rows="3" maxlength="1000" placeholder="写一个你想尝试的小行动……"></textarea><p class="form-error" id="reflection-error" role="alert"></p><p id="learning-feedback" aria-live="polite"></p>
 <div class="journey-actions"><button class="secondary-button" id="widen">带我探索相邻主题 →</button><button class="primary-button" id="complete-learning">完成这一步，继续深入 →</button></div></article><button class="text-button" id="back-map">← 回到我的地图</button>
 </section>
-</main></div><script src="./network.js"></script><script src="./app.js"></script><script src="./i18n.js"></script></body></html>
+</main></div><script src="./network.js"></script><script src="./app.js"></script><script src="./profile.js"></script><script src="./i18n.js"></script></body></html>

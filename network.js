@@ -66,6 +66,7 @@ function selectNode(id) {
     }
   }
   setMode(activeMode);
+  if (!$("#learning").hidden) recordKnowledge(id);
 }
 function renderNetwork() {
   const nodes = getNetwork();
@@ -106,5 +107,6 @@ function extendNode() {
     children = content.map((c, i) => ({ id: node.id + "-" + i, parent: node.id, title: c[0], body: c[1], depth: node.depth + 1, index: node.index })); nodes.push(...children);
   }
   selectNode(node.id); renderNetwork();
+  saveProgress();
   $("#branch-choices").scrollIntoView({ behavior: "smooth", block: "center" });
 }

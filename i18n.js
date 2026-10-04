@@ -1,4 +1,16 @@
 const english = {
+  "我的画像": "My profile",
+  "你的知识地图会随着探索更新。选择一个知识点，继续你的学习路径。": "Your map evolves as you explore. Choose an idea to continue your learning path.",
+  "生成我的初步画像 →": "Create my initial profile →",
+  "你的画像，随探索一起成长。": "Your profile grows as you explore.",
+  "探索宽度": "Breadth", "已探索的领域": "Fields explored", "探索深度": "Depth", "最深的延伸层数": "Deepest connection level",
+  "知识足迹": "Knowledge trail", "已打开的知识点": "Ideas opened", "最近的知识足迹": "Recent knowledge trail",
+  "探索记录反映你走过的路径，不等于已掌握。画像和学习记录保存在当前浏览器，刷新后可以继续。": "Your trail shows exploration, not proven mastery. Your profile and learning history are saved in this browser so you can continue after a reload.",
+  "探索记录不等于已掌握。当前浏览器无法保存记录，本次关闭页面后进度将丢失。": "Exploration is not proven mastery. This browser cannot save your history; progress will be lost when this page closes.",
+  "开始小测，校准我的起点 →": "Calibrate my starting point →",
+  "继续我的知识链 →": "Continue my knowledge chain →", "更新我的自我描述": "Update my description",
+  "清除本机学习记录": "Clear local learning history",
+  "从小测开始，你的第一条知识路径会在这里留下足迹。": "Start with a quick check. Your first knowledge trail will appear here.",
   "你的私人学习旅程": "Your personal learning journey",
   "学习旅程": "Learning journey", "认识你": "About you", "认知小测": "Quick check", "你的方向": "Your direction", "开始学习": "Start learning",
   "先从你自己说起。": "Let's start with you.",
@@ -144,6 +156,8 @@ try { language = localStorage.getItem("robov-language") === "en" ? "en" : "zh"; 
 function translate(source) {
   if (english[source]) return english[source];
   const patterns = [
+    [/^你目前关注「(.+)」。这份画像会随着你的自我描述、答题和知识探索持续更新。$/, m => "Your current direction is " + translate(m[1]) + ". Your profile keeps updating through your descriptions, answers, and knowledge exploration."],
+    [/^(.+) · (\d+) 次打开$/, m => translate(m[1]) + " · opened " + m[2] + " times"],
     [/^认知小测 · (\d) \/ 3$/, m => "Quick check · " + m[1] + " / 3"],
     [/^学习阶段 (\d) · 约 3 分钟$/, m => "Learning stage " + m[1] + " · about 3 minutes"],
     [/^第 (\d) 段$/, m => "Stage " + m[1]],

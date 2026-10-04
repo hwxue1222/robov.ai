@@ -30,6 +30,15 @@ body {
 }
 
 [hidden] { display: none !important; }
+.living-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 28px 0; }
+.living-metrics div { padding: 18px 12px; background: white; border: 1px solid var(--line); border-radius: 6px; }
+.living-metrics span, .living-metrics small { display: block; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.living-metrics strong { display: block; font-size: 30px; margin: 12px 0; }
+.profile-history { padding-left: 20px; color: var(--muted); line-height: 2; }
+#clear-progress { margin-left: 24px; color: var(--muted); }
+#live-description { line-height: 1.8; overflow-wrap: anywhere; }
+#open-profile { padding: 6px; white-space: nowrap; margin-left: auto; font-size: 13px; }
+@media (max-width: 560px) { .topbar { gap: 6px; } .living-metrics { gap: 6px; } .living-metrics span, .living-metrics small { font-size: 11px; } }
 .language-switch { display: flex; gap: 2px; border: 1px solid var(--line); border-radius: 6px; padding: 3px; }
 .language-switch button { background: transparent; border: 0; border-radius: 3px; color: var(--muted); padding: 7px 10px; font: inherit; font-size: 13px; }
 .language-switch button[aria-pressed="true"] { background: var(--ink); color: white; }

@@ -67,15 +67,17 @@ let score = 0;
 const levels = {};
 const reflections = {};
 function showScreen(id) {
-  const ids = ["intro", "assessment", "results", "learning"];
+  const ids = ["intro", "profile-review", "assessment", "results", "learning"];
   ids.forEach(name => $("#" + name).hidden = name !== id);
   $$(".journey-progress li").forEach((li, i) => {
-    if (i === ids.indexOf(id)) li.setAttribute("aria-current", "step");
+    if (i === Math.max(0, ids.indexOf(id) - (id === "intro" ? 0 : 1))) li.setAttribute("aria-current", "step");
     else li.removeAttribute("aria-current");
   });
   window.scrollTo({ top: 0, behavior: "instant" });
   $("#" + id + " h1").focus({ preventScroll: true });
   if (id === "learning") requestAnimationFrame(drawEdges);
+  if (id === "learning") recordKnowledge(selectedNode);
+  if (description) saveProgress();
 }
 function inferTopic(text) {
   // Route using explicit interest signals; users can adjust the proposed topic.
@@ -110,6 +112,7 @@ function renderResults() {
   $("#metric-goal").textContent = topics[activeTopic].title;
   $("#result-guidance").textContent = "根据你提到的兴趣，我们从「" + topics[activeTopic].title + "」出发。你答对了 " + score + " 道题，接下来我会带你学一个概念，并用你自己的场景练习。";
   setTopic(activeTopic);
+  renderLivingProfile();
   showScreen("results");
 }
 function setTopic(id) {
@@ -164,10 +167,8 @@ $("#intro-form").addEventListener("submit", event => {
   description = $("#self-description").value.trim();
   if (description.length < 10) { $("#intro-error").textContent = "再多说一点吧，至少 10 个字，让我更了解你的起点。"; return; }
   activeTopic = inferTopic(description); answers = []; questionIndex = 0;
-  Object.keys(levels).forEach(key => delete levels[key]);
-  Object.keys(reflections).forEach(key => delete reflections[key]);
-  Object.keys(networks).forEach(key => delete networks[key]);
-  renderQuestion();
+  renderLivingProfile();
+  showScreen("profile-review");
 });
 $$(".journey-screen h1").forEach(heading => heading.tabIndex = -1);
 $("#question-form").addEventListener("submit", event => {
@@ -199,7 +200,7 @@ $$(".mode-tab").forEach(tab => {
     event.preventDefault(); tabs[index].focus(); setMode(tabs[index].dataset.mode);
   });
 });
-$("#reflection").addEventListener("input", () => { reflections[activeTopic + ":" + (levels[activeTopic] || 0)] = $("#reflection").value; });
+$("#reflection").addEventListener("input", () => { reflections[activeTopic + ":" + (levels[activeTopic] || 0)] = $("#reflection").value; saveProgress(); });
 $("#widen").addEventListener("click", () => {
   activeMode = "deeper"; setTopic(topics[activeTopic].adjacent); showScreen("learning");
   $("#learning-feedback").textContent = "我们来到相邻领域。先读这个概念，再把它与你刚才学的知识连接。";

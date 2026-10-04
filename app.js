@@ -19,26 +19,13 @@ function setTopic(id, nodeId) {
   selectNode(nodeId || getNetwork().find(n => n.parent !== null)?.id || id);
   renderNetwork();
 }
-function setMode(mode) {
-  activeMode = mode;
+function setMode() {
+  activeMode = 'deeper';
   const node = getNetwork().find(n => n.id === selectedNode);
   if (!node) return;
-  const links = (personalizedGraph?.edges || []).filter(e => e.from === node.id || e.to === node.id);
-  const content = {
-    deeper: ['核心原理', node.body, '适用边界', node.boundary],
-    explore: ['两个方向如何连接', ...links.map(e => e.reason.zh)],
-    why: ['为什么现在值得学', node.why],
-    soWhat: ['现在就做一个小练习', node.exercise]
-  }[mode];
-  if (mode === 'explore' && !links.length) content.push('这个点还没有跨领域关联。选择延伸，生成新的连接方向。');
+  const content = ['核心原理', node.body, '适用边界', node.boundary];
   $('#mode-output').replaceChildren();
   content.forEach((text, i) => { const el = document.createElement(i === 0 ? 'h4' : 'p'); el.textContent = text; $('#mode-output').append(el); });
-  $$('.mode-tab').forEach(tab => {
-    const selected = tab.dataset.mode === mode;
-    tab.setAttribute('aria-selected', String(selected)); tab.classList.toggle('active', selected);
-    tab.id = 'tab-' + tab.dataset.mode; tab.setAttribute('aria-controls', 'mode-output'); tab.tabIndex = selected ? 0 : -1;
-  });
-  $('#mode-output').setAttribute('aria-labelledby', 'tab-' + mode);
 }
 $('#intro-form').addEventListener('submit', event => { event.preventDefault(); generateNetwork($('#self-description').value.trim()); });
 $$('.journey-screen h1').forEach(h => h.tabIndex = -1);
@@ -55,13 +42,5 @@ $('#back-node').addEventListener('click', backToNode);
 window.addEventListener('resize', drawEdges);
 $('#start-learning').addEventListener('click', () => { setTopic(activeTopic); showScreen('learning'); });
 $('#back-map').addEventListener('click', () => { renderLivingProfile(); showScreen('profile-review'); });
-$$('.mode-tab').forEach(tab => {
-  tab.addEventListener('click', () => setMode(tab.dataset.mode));
-  tab.addEventListener('keydown', event => {
-    if (!['ArrowRight', 'ArrowLeft'].includes(event.key)) return;
-    const tabs = $$('.mode-tab'), i = (tabs.indexOf(tab) + (event.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
-    event.preventDefault(); tabs[i].focus(); setMode(tabs[i].dataset.mode);
-  });
-});
 $('#reflection').addEventListener('input', () => { reflections[reflectionKey(selectedNode)] = $('#reflection').value; saveProgress(); });
 $('#complete-learning').addEventListener('click', () => { reflections[reflectionKey(selectedNode)] = $('#reflection').value; saveProgress(); $('#learning-feedback').textContent = localText({ zh: '已保存', en: 'Saved' }); });

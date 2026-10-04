@@ -609,27 +609,6 @@ input {
   margin-bottom: 0;
 }
 
-.mode-tabs {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.mode-tab {
-  min-height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  color: var(--muted);
-  background: rgba(255, 255, 255, 0.72);
-  font-weight: 800;
-}
-
-.mode-tab.active {
-  color: white;
-  background: var(--ink);
-  border-color: var(--ink);
-}
-
 .mode-output h4 {
   margin: 0 0 8px;
   font-size: 21px;
@@ -723,9 +702,6 @@ input {
     font-size: 13px;
   }
 
-  .mode-tabs {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 .pool-choice { overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: reduce) { .pool-loading::after { animation: none; } }

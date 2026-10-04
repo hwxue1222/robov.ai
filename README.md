@@ -36,6 +36,30 @@ Chinese and English include the interface, content, and knowledge nodes. A
 language change preserves the current path and profile. Descriptions retain
 their original wording.
 
+### AKShare Financial Sources
+
+The Finance tab uses the pinned Python package AKShare 1.19.1 and its
+`stock_news_em` interface (Eastmoney news search). Finance-related node titles
+automatically select a Chinese financial keyword or A-share code. Non-financial
+nodes do not load unrelated market headlines. Results also appear under All and
+News; selecting one opens a fresh conceptual network with previous-network navigation.
+Retrieved headlines stay in their original language; the interface and generated
+network are bilingual. Publication times are interpreted as Asia/Shanghai, not
+confused with retrieval times. Publisher, AKShare attribution and original links
+remain visible. Full article text is neither returned nor summarized.
+
+AKShare's MIT code license does not grant rights to upstream data. Its project
+statement limits data to academic research: this integration is a research
+prototype, not a commercial redistribution license or investment advice. Obtain
+appropriate upstream authorization before commercial use. The upstream can
+change or block access; failure and empty results are explicit, never fabricated.
+The Python function isolates retrieval in a 30-second worker and caches successful
+responses at the CDN for ten minutes. No API key is needed for this interface.
+
+Install `requirements.txt` in Python 3.12+ for local Vercel development. Run Python
+adapter tests with `python3 -m unittest discover -s tests -p '*_test.py'` and browser
+logic/API tests with `node --test tests/*.test.js`.
+
 Profiles, reflections, expanded branches, and knowledge visits persist in the
 current browser. Actual visits update observed breadth and depth, not mastery
 scores. Updating a description preserves exploration history. Records can be
@@ -76,6 +100,7 @@ Open http://localhost:4173. Production: https://robov.ai.
 - `app.js`: content and exploration modes
 - `generation.js`: personalized generation and error states
 - `api/knowledge.js`: server-side Kimi integration
+- `api/finance.py`: bounded, read-only AKShare news adapter
 - `lib/graph.js`: shared graph validation
 - `network.js`: knowledge nodes and selectable branches
 - `scene.js`: Three.js rendering, labels, picking, and camera controls

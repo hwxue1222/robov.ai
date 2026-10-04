@@ -196,7 +196,7 @@ function applyLanguage() {
     const value = language === "en" ? translate(source) : source;
     if (node.nodeValue !== value) node.nodeValue = value;
   }
-  document.querySelectorAll("[placeholder], [aria-label], .scene-toolbar [title]").forEach(el => {
+  document.querySelectorAll("[placeholder], [aria-label], [title]").forEach(el => {
     if (!attributeSources.has(el)) attributeSources.set(el, {});
     const source = attributeSources.get(el);
     ["placeholder", "aria-label", "title"].forEach(attr => {

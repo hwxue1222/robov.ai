@@ -4,6 +4,7 @@ const topics = Object.create(null);
 let activeTopic = '', activeMode = 'deeper', description = '';
 const levels = {}, reflections = {};
 let personalizedGraph = null;
+function reflectionKey(id) { return personalizedGraph.sessionId + ':' + id; }
 function showScreen(id) {
   ['intro', 'profile-review', 'results', 'learning'].forEach(name => $('#' + name).hidden = name !== id);
   $$('.journey-progress li').forEach((li, i) => i === (id === 'learning' ? 1 : 0) ? li.setAttribute('aria-current', 'step') : li.removeAttribute('aria-current'));
@@ -54,6 +55,6 @@ $$('.mode-tab').forEach(tab => {
     event.preventDefault(); tabs[i].focus(); setMode(tabs[i].dataset.mode);
   });
 });
-$('#reflection').addEventListener('input', () => { reflections[selectedNode] = $('#reflection').value; saveProgress(); });
+$('#reflection').addEventListener('input', () => { reflections[reflectionKey(selectedNode)] = $('#reflection').value; saveProgress(); });
 $('#widen').addEventListener('click', () => extendNode('explore'));
-$('#complete-learning').addEventListener('click', async () => { reflections[selectedNode] = $('#reflection').value; saveProgress(); await extendNode(); });
+$('#complete-learning').addEventListener('click', async () => { reflections[reflectionKey(selectedNode)] = $('#reflection').value; saveProgress(); await extendNode(); });

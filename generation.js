@@ -5,7 +5,11 @@ const errors = {
   MODEL_CREDITS_REQUIRED: ['模型服务余额不足，暂时无法生成。你的描述和记录不会丢失。', 'The model service needs credits. Your description and history are preserved.'],
   MODEL_BUSY: ['Kimi 当前繁忙，请稍后再试。', 'Kimi is busy. Please try again shortly.']
 };
-function localText(value) { return typeof value === 'string' ? value : document.documentElement.lang === 'en' ? value.en : value.zh; }
+function localText(value) {
+  if (typeof value === 'string') return value;
+  english[value.zh] = value.en;
+  return value.zh;
+}
 function registerGraph(graph) {
   const register = value => {
     if (value && typeof value === 'object') {
@@ -55,10 +59,10 @@ async function generateNetwork(input) {
 async function generateBranches(node, direction) {
   setBusy(true); $('#learning-feedback').textContent = localText({ zh: 'Kimi 正在生成新的知识方向……', en: 'Kimi is generating new knowledge directions…' });
   try {
-    const branch = await requestGraph({ description, node, direction, reflection: reflections[node.id] || '', existing: personalizedGraph.nodes.map(n => ({ id: n.id, title: n.title })), history: Object.values(knowledgeVisits).slice(-12) });
+    const branch = await requestGraph({ description, node, direction, reflection: reflections[reflectionKey(node.id)] || '', existing: personalizedGraph.nodes.map(n => ({ id: n.id, title: n.title })), history: Object.values(knowledgeVisits).sort((a, b) => b.lastAt - a.lastAt).slice(0, 12) });
     if (branch.nodes.some(n => personalizedGraph.nodes.some(old => old.id === n.id))) throw new Error('DUPLICATE_NODE');
     const currentDomain = activeTopic, currentId = selectedNode;
-    registerGraph(validateGraph({ ...personalizedGraph, nodes: [...personalizedGraph.nodes, ...branch.nodes], edges: [...personalizedGraph.edges, ...branch.edges] }, null, 168));
+    registerGraph(validateGraph({ ...personalizedGraph, nodes: [...personalizedGraph.nodes, ...branch.nodes], edges: [...personalizedGraph.edges, ...branch.edges], next: branch.next }, null, 168));
     setTopic(currentDomain, currentId); saveProgress(); $('#learning-feedback').textContent = branch.next.reason.zh;
     if (currentId === node.id) $('#branch-choices').scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (error) { $('#learning-feedback').textContent = generationError(error); }

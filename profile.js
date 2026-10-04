@@ -42,7 +42,8 @@ $('#open-profile').addEventListener('click', () => { renderLivingProfile(); show
 $('#update-profile').addEventListener('click', () => { $('#self-description').value = description; showScreen('intro'); $('#self-description').focus(); });
 $('#self-description').addEventListener('input', saveProgress);
 $('#clear-progress').addEventListener('click', () => {
-  if (window.confirm(localText({ zh: '清除当前浏览器中的画像和学习记录？', en: 'Clear your profile and learning history from this browser?' }))) {
+  const message = localText({ zh: '清除当前浏览器中的画像和学习记录？', en: 'Clear your profile and learning history from this browser?' });
+  if (window.confirm(document.documentElement.lang === 'en' ? translate(message) : message)) {
     try { localStorage.removeItem(progressKey); } catch {} window.location.reload();
   }
 });
@@ -57,6 +58,7 @@ try {
     if (saved.version === 2 && saved.graph) {
       registerGraph(validateGraph(saved.graph, null, 168));
       personalizedGraph.sessionId ||= crypto.randomUUID();
+      personalizedGraph.nodes.forEach(node => { if (reflections[node.id]) reflections[reflectionKey(node.id)] ||= reflections[node.id]; });
       activeMode = ['deeper', 'explore', 'why', 'soWhat'].includes(saved.activeMode) ? saved.activeMode : 'deeper';
       const node = personalizedGraph.nodes.find(n => n.id === saved.selectedNode) || personalizedGraph.nodes.find(n => n.id === personalizedGraph.next.id);
       setTopic(node.domain, node.id); renderLivingProfile(); showScreen('learning');

@@ -10,7 +10,7 @@ function selectNode(id) {
   $('#topic-boundary').textContent = node.boundary;
   $('#confidence').textContent = '第 ' + (node.depth + 1) + ' 段';
   $('#learning > .eyebrow').textContent = '学习阶段 ' + (node.depth + 1) + ' · 约 3 分钟';
-  $('#reflection').value = reflections[id] || '';
+  $('#reflection').value = reflections[reflectionKey(id)] || '';
   $('#node-detail').replaceChildren();
   const title = document.createElement('h3'), body = document.createElement('p');
   title.textContent = node.title; body.textContent = node.body; $('#node-detail').append(title, body);
@@ -50,7 +50,13 @@ function renderNetwork() {
     }); $('#knowledge-network').append(row);
   });
   if (nodes.length) $('#network-guidance').textContent = '已连接 ' + personalizedGraph.nodes.length + ' 个知识点。当前知识点：' + nodes.find(n => n.id === selectedNode).title;
-  $('#next-direction').textContent = personalizedGraph.next.reason.zh;
+  $('#next-direction').replaceChildren();
+  const next = personalizedGraph.nodes.find(n => n.id === personalizedGraph.next.id);
+  const label = document.createElement('span'); label.className = 'eyebrow'; label.textContent = 'NEXT BEST KNOWLEDGE';
+  const button = document.createElement('button'); button.className = 'text-button'; button.textContent = next.title.zh + ' →';
+  button.addEventListener('click', () => { setTopic(next.domain, next.id); $('#node-detail').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+  const reason = document.createElement('p'); reason.textContent = personalizedGraph.next.reason.zh;
+  $('#next-direction').append(label, button, reason);
   requestAnimationFrame(drawEdges);
 }
 function drawEdges() { window.robovScene?.sync(); }

@@ -18,6 +18,11 @@ test('branches must stay attached to the selected node', () => {
   const g = fixture(), parent = g.nodes[1];
   const branch = { ...g, domains: [], nodes: g.nodes.slice(0, 2).map((n, i) => ({ ...n, id: 'branch-' + i, domain: parent.domain, parent: parent.id })), edges: [], next: { id: 'branch-0', reason: text } };
   assert.equal(validateGraph(branch, parent).nodes.length, 2);
+  branch.edges.push({ from: 'branch-0', to: parent.id, reason: text });
+  assert.equal(validateGraph(branch, parent).edges.length, 1);
+  branch.edges.push({ from: 'branch-1', to: 'existing-node', reason: text });
+  assert.throws(() => validateGraph(branch, parent));
+  assert.equal(validateGraph(branch, parent, 18, ['existing-node']).edges.length, 2);
   branch.nodes[0].parent = 'unrelated'; assert.throws(() => validateGraph(branch, parent));
 });
 test('API protects credentials, validates inputs and parses Kimi JSON', async () => {

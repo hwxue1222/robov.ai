@@ -8,6 +8,7 @@
 <section id="intro" class="journey-screen">
 <p class="eyebrow">PROFILE SCAN</p><h1>先从你自己说起。</h1><p class="guide-copy">你好，我是 ROBOV。你最近在做什么？对什么感兴趣？有什么想弄懂、却一直没找到方向的事？</p>
 <form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="status" aria-live="polite"></p><button class="primary-button" type="submit">生成我的知识网络 →</button></form>
+<p class="result-note">生成时，你的描述、相关探索记录和所选节点的想法会发送给 Kimi 服务。请勿填写隐私或机密信息。</p>
 <p class="brand-promise">Navigate Knowledge. Expand Your Mind.<br>找到知识的方向，拓展认知的边界。</p>
 </section>
 <section id="profile-review" class="journey-screen" hidden>
@@ -28,7 +29,7 @@
 <div class="next-route"><span class="eyebrow">NEXT BEST KNOWLEDGE</span><h2 id="route-title"></h2><p id="route-reason"></p><button id="start-learning" class="primary-button">带我开始第一段学习 →</button></div><button class="text-button" id="edit-description">修改我的描述</button>
 </section>
 <section id="learning" class="journey-screen" hidden>
-<div class="network-heading"><span class="eyebrow">PERSONAL KNOWLEDGE NETWORK</span><h2>从一个点，连接新的理解。</h2><p id="network-guidance" aria-live="polite"></p></div>
+<div class="network-heading"><span class="eyebrow">PERSONAL KNOWLEDGE NETWORK · KIMI</span><h2>从一个点，连接新的理解。</h2><p id="network-guidance" aria-live="polite"></p><p id="next-direction"></p></div>
 <div class="network-scene" id="network-scene"><canvas id="network-canvas" aria-label="三维知识网络" tabindex="0"></canvas><div id="scene-labels"></div><div class="scene-toolbar"><button id="scene-home" title="重置视角" aria-label="重置视角">↺</button><button id="scene-in" title="放大" aria-label="放大">+</button><button id="scene-out" title="缩小" aria-label="缩小">−</button><label><input id="scene-rotate" type="checkbox" checked>自动旋转</label></div><p id="scene-status" role="status"></p></div>
 <details class="network-list"><summary>知识节点列表</summary><div id="knowledge-network" aria-label="可延伸的知识网络"></div></details>
 <div id="node-path" class="node-path" aria-label="当前知识路径"></div>

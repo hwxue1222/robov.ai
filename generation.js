@@ -26,7 +26,7 @@ async function requestGraph(payload) {
   const response = await fetch('/api/knowledge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(115000) });
   const result = await response.json();
   if (!response.ok || !result.graph) throw new Error(result.error || 'MODEL_UNAVAILABLE');
-  return validateGraph(result.graph, payload.node || null);
+  return validateGraph(result.graph, payload.node || null, 18, (payload.existing || []).map(n => n.id));
 }
 function setBusy(value) {
   generating = value;
@@ -57,9 +57,10 @@ async function generateBranches(node, direction) {
   try {
     const branch = await requestGraph({ description, node, direction, reflection: reflections[node.id] || '', existing: personalizedGraph.nodes.map(n => ({ id: n.id, title: n.title })), history: Object.values(knowledgeVisits).slice(-12) });
     if (branch.nodes.some(n => personalizedGraph.nodes.some(old => old.id === n.id))) throw new Error('DUPLICATE_NODE');
+    const currentDomain = activeTopic, currentId = selectedNode;
     registerGraph(validateGraph({ ...personalizedGraph, nodes: [...personalizedGraph.nodes, ...branch.nodes], edges: [...personalizedGraph.edges, ...branch.edges] }, null, 168));
-    setTopic(node.domain, node.id); saveProgress(); $('#learning-feedback').textContent = branch.next.reason.zh;
-    $('#branch-choices').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTopic(currentDomain, currentId); saveProgress(); $('#learning-feedback').textContent = branch.next.reason.zh;
+    if (currentId === node.id) $('#branch-choices').scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch (error) { $('#learning-feedback').textContent = generationError(error); }
   finally { setBusy(false); }
 }

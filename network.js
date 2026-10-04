@@ -50,6 +50,7 @@ function renderNetwork() {
     }); $('#knowledge-network').append(row);
   });
   if (nodes.length) $('#network-guidance').textContent = '已连接 ' + personalizedGraph.nodes.length + ' 个知识点。当前知识点：' + nodes.find(n => n.id === selectedNode).title;
+  $('#next-direction').textContent = personalizedGraph.next.reason.zh;
   requestAnimationFrame(drawEdges);
 }
 function drawEdges() { window.robovScene?.sync(); }

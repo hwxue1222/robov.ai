@@ -9,6 +9,10 @@ let ideaKey = '';
 const poolLabels = { topic: '课题', news: '新闻', person: '人物', event: '重大事件', timeline: '时间线', research: '文献' };
 const channelLabels = { science: '科学研究', history: '历史', culture: '社会文化', practice: '实践' };
 function currentPoolKey() { return personalizedGraph.sessionId + ':' + selectedNode; }
+function poolResearchQuery() {
+  const node = personalizedGraph.nodes.find(n => n.id === selectedNode);
+  return (node.title.en + ' ' + personalizedGraph.profile.goal.en).slice(0, 180);
+}
 function poolQuery() {
   const node = personalizedGraph.nodes.find(n => n.id === selectedNode);
   const domain = personalizedGraph.domains.find(d => d.id === node.domain);
@@ -48,7 +52,7 @@ function renderPoolItems() {
     localText({ zh: channel.textContent, en: 'AI knowledge lead · ' + ({ science: 'Science', history: 'History', culture: 'Society & culture', practice: 'Practice' })[entry.channel] });
     row.append(channel); items.append(row);
   });
-  const research = researchCache.get(poolQuery());
+  const research = researchCache.get(poolResearchQuery());
   if (['all', 'research'].includes(poolFilter)) (research?.articles || []).forEach((article, index) => {
     const row = poolItem('research', article.title, article.source + (article.year ? ' · ' + article.year : ''), () => {
       const title = { zh: article.title, en: article.title };
@@ -123,7 +127,7 @@ async function loadPoolIdeas() {
   }
 }
 async function loadPoolResearch() {
-  const query = poolQuery();
+  const query = poolResearchQuery();
   if (researchCache.has(query)) return;
   researchCache.set(query, { pending: true, articles: [] });
   try {
@@ -132,7 +136,7 @@ async function loadPoolResearch() {
     if (!response.ok || !Array.isArray(result.articles)) throw new Error('Research unavailable');
     researchCache.set(query, { articles: result.articles });
   } catch { researchCache.set(query, { articles: [], error: true }); }
-  if (poolQuery() === query) renderPoolItems();
+  if (poolResearchQuery() === query) renderPoolItems();
 }
 async function loadPoolNews() {
   if (!personalizedGraph) return;
@@ -165,4 +169,4 @@ $$('[data-pool-filter]').forEach(button => {
 });
 $('#retry-news').addEventListener('click', () => { newsCache.delete(poolQuery()); renderPool(); });
 $('#retry-ideas').addEventListener('click', () => { ideaErrors.delete(currentPoolKey()); renderPool(); });
-$('#retry-research').addEventListener('click', () => { researchCache.delete(poolQuery()); renderPool(); });
+$('#retry-research').addEventListener('click', () => { researchCache.delete(poolResearchQuery()); renderPool(); });

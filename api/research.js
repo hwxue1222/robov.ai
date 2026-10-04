@@ -1,7 +1,7 @@
 module.exports = async (req, res) => {
   if (req.method !== 'GET') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   const query = typeof req.query?.q === 'string' ? req.query.q.trim() : '';
-  if (query.length < 3 || query.length > 80) return res.status(400).json({ error: 'INVALID_QUERY' });
+  if (query.length < 3 || query.length > 180) return res.status(400).json({ error: 'INVALID_QUERY' });
   try {
     const url = new URL('https://api.crossref.org/works');
     url.search = new URLSearchParams({ 'query.bibliographic': query, rows: '4', select: 'title,DOI,publisher,published' }).toString();

@@ -68,7 +68,8 @@ function renderNetwork() {
 function backToNode() {
   if (generating) return;
   const trail = nodeHistory[personalizedGraph.sessionId] || [];
-  const node = personalizedGraph.nodes.find(n => n.id === trail.pop());
+  const previousId = trail.pop();
+  const node = personalizedGraph.nodes.find(n => n.id === previousId);
   if (!node) return;
   restoringNode = true;
   try { setTopic(node.domain, node.id); } finally { restoringNode = false; }

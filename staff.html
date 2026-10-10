@@ -52,7 +52,7 @@
           <button class="primary-button" type="submit">请求会员确认</button>
         </form>
       </section>
-      <section id="reward-admin" hidden class="points-panel"><h2>注册奖励管理</h2><form id="reward-settings-form"><label><input type="checkbox" id="signup-enabled"> 启用注册赠分</label><label for="signup-points">注册赠送积分</label><input id="signup-points" type="number" min="0" max="10000" step="1" required><button class="primary-button" type="submit">保存设置</button><p id="reward-settings-status" role="status"></p></form><h3>最近注册奖励</h3><ul id="signup-credits"></ul></section>
+      <section id="reward-admin" hidden class="points-panel"><h2>奖励活动管理</h2><form id="reward-settings-form"><label><input type="checkbox" id="signup-enabled"> 启用注册赠分</label><label for="signup-points">注册赠送积分</label><input id="signup-points" type="number" min="0" max="10000" step="1" required><label for="signup-ends-at">注册奖励截止时间</label><input id="signup-ends-at" type="datetime-local"><label for="review-ends-at">Google Review 截止时间</label><input id="review-ends-at" type="datetime-local"><label for="voucher-ends-at">RM5 活动截止时间</label><input id="voucher-ends-at" type="datetime-local"><button class="primary-button" type="submit">保存设置</button><p id="reward-settings-status" role="status"></p></form><h3>最近注册奖励</h3><ul id="signup-credits"></ul></section>
       <section id="member-activity-panel" hidden class="points-panel">
         <h2>会员活动</h2><p>账号与积分活动</p>
         <div class="activity-tabs" role="tablist" aria-label="会员视图"><button type="button" role="tab" aria-selected="true" data-activity-view="activity">活动记录</button><button type="button" role="tab" aria-selected="false" data-activity-view="members">所有会员</button></div>

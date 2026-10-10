@@ -1,5 +1,12 @@
 // Shared interface translations. Brand names and user-entered text remain intact.
 const localeRows = [
+  ['奖励活动','Reward activities','Aktiviti ganjaran'], ['奖励活动管理','Reward activity management','Pengurusan aktiviti ganjaran'],
+  ['会员注册奖励','Member registration award','Ganjaran pendaftaran ahli'], ['新会员专享，每个账号一次。','For new members. Once per account.','Untuk ahli baharu. Sekali bagi setiap akaun.'],
+  ['进行中','Ongoing','Sedang berlangsung'], ['已结束','Expired','Tamat tempoh'], ['已暂停','Paused','Dijeda'], ['暂未开放','Unavailable','Belum tersedia'],
+  ['RM5 折扣券','RM5 discount voucher','Baucar diskaun RM5'], ['截止时间','Ends at','Tamat pada'], ['活动已结束','Activity expired','Aktiviti tamat tempoh'],
+  ['注册奖励截止时间','Registration award ends at','Ganjaran pendaftaran tamat pada'], ['Google Review 截止时间','Google Review ends at','Ulasan Google tamat pada'], ['RM5 活动截止时间','RM5 activity ends at','Aktiviti RM5 tamat pada'],
+  ['INVALID_ACTIVITY_DATE','Enter a valid activity end date.','Masukkan tarikh tamat aktiviti yang sah.'], ['ACTIVITY_EXPIRED','This reward activity has expired.','Aktiviti ganjaran ini telah tamat tempoh.'],
+  ['TOO_MANY_REQUESTS','Too many attempts. Please wait and try again.','Terlalu banyak percubaan. Sila tunggu dan cuba lagi.'],
   ['超级管理员', 'Super administrator', 'Pentadbir super'], ['门店管理员', 'Store administrator', 'Pentadbir kedai'],
   ['会员活动', 'Member activity', 'Aktiviti ahli'], ['账号与积分活动', 'Account and points activity', 'Aktiviti akaun dan mata'],
   ['会员视图', 'Member views', 'Paparan ahli'], ['活动记录', 'Activity log', 'Log aktiviti'], ['所有会员', 'All members', 'Semua ahli'],

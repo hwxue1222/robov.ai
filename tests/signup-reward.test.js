@@ -33,3 +33,8 @@ test('voucher rejects incorrect point amount, low spend, takeaway and combined p
   const input = { points:100,amount:50,receiptNo:'RCP-123',dineIn:true,otherPromotion:false };
   for (const patch of [{points:99},{amount:49.99},{dineIn:false},{otherPromotion:true}]) await assert.rejects(requestRedemption({}, { ...input,...patch }), /VOUCHER_/);
 });
+test('expired registration activity creates a zero-balance wallet without bonus',async()=>{
+  const db=fixture({signupEnabled:true,signupPoints:100,signupEndsAt:'2000-01-01T00:00:00.000Z'});
+  await createMember(db,{id:'expired',email:'expired@example.invalid',name:'Expired'});
+  assert.equal(db.results().saved.member.pointBalance,0);assert.equal(db.results().credit,undefined);
+});

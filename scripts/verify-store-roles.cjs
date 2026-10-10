@@ -22,8 +22,8 @@ async function call(route,method,body,cookie,url) {
     await assert.rejects(earnPoints(db,input),/STAFF_FORBIDDEN/);
     assert.equal((await earnPoints(db,{...input,actorUserId:superadmin.id})).transaction.points,3);
     for (const [username,file,role] of [['admin',process.env.ROBOV_ADMIN_CREDENTIAL_FILE,'ADMIN'],['superadmin',process.env.ROBOV_SUPERADMIN_CREDENTIAL_FILE,'SUPERADMIN']]) {
-      const password=fs.readFileSync(file,'utf8').match(/Password: (.+)/)[1];
-      const login=await call('session','POST',{action:'login',mode:'employee',identifier:username,password});assert.equal(login.code,200,JSON.stringify(login.data));
+      const credentials=fs.readFileSync(file,'utf8'),password=credentials.match(/Password: (.+)/)[1];
+      const login=await call('session','POST',{action:'login',mode:'employee',identifier:credentials.match(/Email: (.+)/)[1],password});assert.equal(login.code,200,JSON.stringify(login.data));
       assert.equal(login.data.user.role,role);
       const cookie=login.headers['set-cookie'].map(s=>s.split(';')[0]).join('; ');
       assert.equal((await call('settings','GET',null,cookie)).code,role==='SUPERADMIN'?200:403);

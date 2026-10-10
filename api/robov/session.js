@@ -21,14 +21,16 @@ module.exports = async (req, res) => {
       path = 'sign-up/email'; body = { email: typeof email === 'string' ? email.trim().toLowerCase() : '', password, name: displayName || 'ROBOV Member' };
     } else if (action === 'login') {
       const clean = typeof identifier === 'string' ? identifier.trim().toLowerCase() : '';
-      if (!clean || typeof password !== 'string') return res.status(400).json({ error: 'LOGIN_FIELDS_REQUIRED' });
-      const alias = clean.includes('@') ? null : await getPrisma().robovUser.findUnique({ where: { username: clean }, include: { authUser: true } });
-      path = 'sign-in/email'; body = { email: clean.includes('@') ? clean : alias?.authUser?.email || 'unknown@accounts.robov.invalid', password };
+      if (!clean.includes('@') || typeof password !== 'string') return res.status(400).json({ error: 'INVALID_EMAIL' });
+      path = 'sign-in/email'; body = { email: clean, password };
     } else return res.status(400).json({ error: 'UNKNOWN_ACTION' });
     headers.set('Content-Type', 'application/json');
     const response = await auth.handler(new Request(new URL('/api/auth/' + path, authBaseUrl()), { method: 'POST', headers, body: JSON.stringify(body) }));
     const result = await response.json();
-    if (!response.ok) return res.status(response.status).json({ error: result.code || 'LOGIN_FAILED' });
+    if (!response.ok) {
+      if (response.headers.get('retry-after')) res.setHeader('Retry-After',response.headers.get('retry-after'));
+      return res.status(response.status).json({ error: response.status === 429 ? 'TOO_MANY_REQUESTS' : result.code || 'LOGIN_FAILED' });
+    }
     let actor = null;
     if (result.user) {
       await ensureRobovUser(result.user);

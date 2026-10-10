@@ -104,6 +104,11 @@ sessions backed by Prisma. Caller-supplied identity headers cannot authenticate.
 The homepage links to login, not Store Console; wallets require a session.
 Administrator access is assigned server-side only. ADMIN is limited to active
 StoreStaff assignments (the same account may administer several stores).
+All account types sign in by email; username aliases are not accepted. Member
+registration requires 12-character passwords. Existing test employee accounts
+can sign in with their explicitly configured 8-character passwords; use distinct
+strong passwords before production. configure-test-accounts.cjs accepts secret
+configuration through non-echoing standard input and revokes previous sessions.
 Only SUPERADMIN bypasses assignments and discovers all active stores, including
 newly created stores. Ledger authorization applies the same distinction.
 BETTER_AUTH_SECRET (32+ characters) is required. ROBOV_AUTH_BASE_URL is optional;
@@ -116,7 +121,13 @@ New member accounts atomically receive the configured registration reward
 (default 100 points), with a unique signup credit and audit. Repeated login or
 provisioning does not grant it again. Admin-only /api/robov/settings manages the
 enabled flag and points (0-10000) and lists recent credits. Changes affect new
-members only. Global reward settings require SUPERADMIN; local admins cannot
+members only. Optional signupEndsAt, reviewEndsAt and voucherEndsAt determine
+Ongoing/Expired status; disabling registration yields Paused. Registration credit
+and new voucher holds check the end date server-side. Already issued holds can
+still be confirmed. Clearing an end date removes the time limit. /rewards.html
+groups registration awards, RM5 vouchers and three voluntary review links;
+expired activities stay visible without participation links. Activity dates and
+signup amount are editable by SUPERADMIN and audited. Global reward settings require SUPERADMIN; local admins cannot
 read or alter them. /api/robov/offer exposes only the public campaign configuration.
 
 SUPERADMIN can use /api/robov/activity to browse all member wallets and recorded

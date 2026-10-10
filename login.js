@@ -6,7 +6,9 @@
     document.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.mode === mode)));
     $('#login-title').textContent = signup ? '注册会员' : mode === 'employee' ? '员工登录' : '会员登录';
     $('#login-submit').textContent = signup ? '创建会员账号' : '登录';
-    $('#identifier-label').textContent = signup ? '邮箱' : '邮箱或用户名';
+    $('#identifier-label').textContent = '邮箱';
+    $('#login-identifier').type = 'email';
+    $('#login-password').minLength = signup ? 12 : 8;
     $('#signup-name').hidden = !signup;
     $('#signup-toggle').hidden = mode === 'employee';
     $('#signup-toggle').textContent = signup ? '已有账号，返回登录' : '注册会员';

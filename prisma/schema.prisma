@@ -49,6 +49,9 @@ model RewardSettings {
   id String @id @default("default")
   signupEnabled Boolean @default(true)
   signupPoints Int @default(100)
+  signupEndsAt DateTime?
+  reviewEndsAt DateTime?
+  voucherEndsAt DateTime?
   updatedAt DateTime @updatedAt
 }
 

@@ -17,3 +17,19 @@
 #review-status { margin-bottom: 0; }
 @media (max-width: 800px) { .review-tasks { grid-template-columns: 1fr; } }
 @media (max-width: 680px) { .rewards-shell { margin-top: 34px; } .rewards-shell > h1 { font-size: 32px; } .review-task { max-width: none; padding: 22px; } }
+.reward-campaigns { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:32px 0; }
+.reward-campaign { min-width:0; position:relative; border:1px solid #cdd5cc; border-radius:6px; background:#fff; padding:24px; display:flex; flex-direction:column; align-items:flex-start; }
+.reward-campaign h2 { font-size:24px; margin:22px 0 12px; }
+.reward-campaign p { line-height:1.7; }
+.campaign-value { font-size:24px; color:#075b4c; }
+.campaign-value strong { font-size:64px; line-height:1; }
+.campaign-dish { width:100%; height:200px; object-fit:contain; margin-top:18px; }
+.activity-badge { display:inline-block; padding:5px 9px; border-radius:3px; font-size:12px; font-weight:600; background:#e4e9e6; color:#4e5953; white-space:nowrap; }
+.activity-ongoing { color:#086049; background:#d8f3e6; }
+.activity-expired { color:#813d32; background:#fae8e3; }
+.activity-paused { color:#735900; background:#faf1cf; }
+.reward-campaign .home-primary { display:inline-flex; gap:16px; margin-top:auto; padding:14px 18px; border-radius:4px; background:#c9fa76; color:#152019; text-decoration:none; }
+.campaign-terms { margin-bottom:24px; font-size:13px; line-height:1.7; }
+.campaign-terms summary { cursor:pointer; }
+.campaign-end { font-size:12px; color:#59635f; }
+@media(max-width:680px) { .reward-campaigns { grid-template-columns:1fr; } }

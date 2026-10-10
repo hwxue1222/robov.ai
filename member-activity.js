@@ -26,10 +26,10 @@
         const item = document.createElement('article'); item.className='activity-row';item.dataset.recordId=row.id;
         const identity = document.createElement('div'), title=document.createElement('strong'), detail=document.createElement('small');
         const member = view === 'members' ? row : row.member;
-        title.textContent=member?.displayName || member?.email || row.memberUserId;
-        detail.textContent=member?.email || '';
+        title.textContent=member?.email || member?.displayName || row.memberUserId;
+        detail.textContent=member?.displayName && member.displayName !== 'ROBOV Member' && member.displayName !== member.email ? member.displayName : '';
         detail.dataset.noTranslate=''; title.dataset.noTranslate='';
-        identity.append(title,detail); item.append(identity);
+        identity.append(title); if(detail.textContent)identity.append(detail); item.append(identity);
         const description=document.createElement('div');
         if (view === 'members') {
           const balance=document.createElement('span'), hold=document.createElement('small'), label=document.createElement('span');

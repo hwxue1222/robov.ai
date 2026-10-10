@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RobovRole {
+  MEMBER
+  STAFF
+  MANAGER
+  ADMIN
+}
+
+enum PointTransactionType {
+  EARN
+  REDEEM_HOLD
+  REDEEM_SETTLE
+  REDEEM_RELEASE
+  REFUND_REVERSAL
+  ADJUSTMENT
+}
+
+enum PointTransactionStatus {
+  PENDING_MEMBER_CONFIRMATION
+  POSTED
+  REVERSED
+  VOIDED
+}
+
+enum AuditAction {
+  MEMBER_LOGIN
+  QR_ISSUED
+  QR_SCANNED
+  POINTS_EARNED
+  REDEMPTION_REQUESTED
+  REDEMPTION_CONFIRMED
+  REDEMPTION_CANCELLED
+  REFUND_REVERSED
+  STAFF_DENIED
+}
+
+model RobovUser {
+  id          String       @id @default(cuid())
+  email       String?      @unique
+  phone       String?      @unique
+  displayName String?
+  role        RobovRole    @default(MEMBER)
+  member      MemberWallet?
+  staffStores StoreStaff[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([role])
+}
+
+model MemberWallet {
+  id             String             @id @default(cuid())
+  userId         String             @unique
+  user           RobovUser          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  pointBalance   Int                @default(0)
+  pointsOnHold   Int                @default(0)
+  transactions   PointTransaction[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+model Store {
+  id           String             @id @default(cuid())
+  name         String
+  slug         String             @unique
+  active       Boolean            @default(true)
+  staff        StoreStaff[]
+  transactions PointTransaction[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model StoreStaff {
+  id        String    @id @default(cuid())
+  storeId   String
+  userId    String
+  role      RobovRole @default(STAFF)
+  active    Boolean   @default(true)
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  user      RobovUser @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([storeId, userId])
+  @@index([userId, active])
+}
+
+model PointTransaction {
+  id                    String                 @id @default(cuid())
+  walletId              String
+  wallet                MemberWallet           @relation(fields: [walletId], references: [id], onDelete: Restrict)
+  storeId               String?
+  store                 Store?                 @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  actorUserId           String?
+  type                  PointTransactionType
+  status                PointTransactionStatus @default(POSTED)
+  points                Int
+  amountCents           Int?
+  currency              String                 @default("SGD")
+  receiptNo             String?
+  idempotencyKey        String                 @unique
+  relatedTransactionId  String?
+  memberConfirmedAt     DateTime?
+  metadata              Json?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  @@unique([storeId, receiptNo, type])
+  @@index([walletId, createdAt])
+  @@index([relatedTransactionId])
+}
+
+model AuditLog {
+  id            String      @id @default(cuid())
+  actorUserId   String?
+  memberUserId  String?
+  storeId       String?
+  action        AuditAction
+  targetType    String
+  targetId      String?
+  idempotencyKey String?
+  metadata      Json?
+  createdAt     DateTime    @default(now())
+
+  @@index([actorUserId, createdAt])
+  @@index([memberUserId, createdAt])
+  @@index([storeId, createdAt])
+}

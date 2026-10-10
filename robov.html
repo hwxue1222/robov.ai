@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ROBOV Points 会员钱包与店员积分操作。">
+  <title>ROBOV Points | 会员钱包</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a>
+      <nav class="nav-links" aria-label="ROBOV Points">
+        <a href="./robov.html">会员钱包</a>
+        <a href="./staff.html">店员操作</a>
+      </nav>
+    </header>
+    <main class="points-shell">
+      <section class="points-hero">
+        <p class="eyebrow">ROBOV POINTS</p>
+        <h1>会员钱包</h1>
+        <p class="guide-copy">查看 ROBOV Points 余额、积分流水，并生成 60 秒动态会员码供店员扫码。</p>
+      </section>
+      <section class="points-grid">
+        <form id="member-login" class="points-panel">
+          <h2>会员登录</h2>
+          <label for="member-email">邮箱</label>
+          <input id="member-email" name="email" type="email" autocomplete="email" placeholder="member@example.com">
+          <label for="member-phone">手机号</label>
+          <input id="member-phone" name="phone" type="tel" autocomplete="tel" placeholder="+65 8888 8888">
+          <button class="primary-button" type="submit">进入钱包</button>
+          <p id="member-status" class="result-note" role="status"></p>
+        </form>
+        <section class="points-panel wallet-panel" aria-live="polite">
+          <div class="wallet-balance">
+            <span>可用积分</span>
+            <strong id="available-points">0</strong>
+            <small><span id="total-points">0</span> 总积分 · <span id="hold-points">0</span> 冻结中</small>
+          </div>
+          <button id="refresh-qr" class="secondary-button" type="button" disabled>刷新动态码</button>
+          <div id="qr-card" class="qr-card" aria-label="60秒动态会员码">
+            <div id="qr-pattern" class="qr-pattern"></div>
+            <code id="qr-token">请先登录</code>
+            <span id="qr-countdown">--</span>
+          </div>
+        </section>
+      </section>
+      <section class="points-panel">
+        <h2>积分流水</h2>
+        <div id="ledger-list" class="ledger-list"></div>
+      </section>
+    </main>
+  </div>
+  <script src="./robov.js"></script>
+</body>
+</html>

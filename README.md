@@ -65,6 +65,30 @@ current browser. Actual visits update observed breadth and depth, not mastery
 scores. Updating a description preserves exploration history. Records can be
 cleared in the profile view. Cross-device synchronization is not implemented.
 
+### ROBOV Points V1
+
+ROBOV Points adds three reviewable modules without Supabase:
+
+- Member wallet at `/robov.html`: member login bootstrap, balance, recent ledger
+  entries, and a 60-second signed dynamic member code.
+- Staff console at `/staff.html`: scan or paste the member code, enter amount and
+  unique receipt number, issue points at 3%, request redemption, and reverse
+  points after refunds.
+- PostgreSQL ledger with Prisma: atomic transactions, idempotency keys, unique
+  store receipt protection, refund reversal records, audit logs, and store staff
+  role checks.
+
+Set these environment variables before enabling the module in Vercel:
+
+```sh
+DATABASE_URL=postgresql://...
+ROBOV_QR_SECRET=long-random-secret
+```
+
+Run `npm install`, `npx prisma generate`, and `npx prisma migrate deploy` against
+the independently hosted PostgreSQL database. Do not run destructive migrations
+against production member data without an explicit backup and approval.
+
 The server calls Kimi through Vercel AI Gateway by default (`moonshotai/kimi-k2`).
 Authentication uses `AI_GATEWAY_API_KEY` or Vercel's deployment OIDC token.
 Alternatively configure `MOONSHOT_API_KEY` for direct Moonshot calls; `KIMI_MODEL`

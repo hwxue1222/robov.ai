@@ -137,6 +137,152 @@ textarea:focus-visible, button:focus-visible, input:focus-visible { outline: 3px
   .metric-list div { flex-wrap: wrap; }
 }
 
+.points-shell {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 12px 0 72px;
+}
+
+.points-hero h1 {
+  margin: 10px 0;
+  font-size: 46px;
+  line-height: 1.08;
+}
+
+.points-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 18px 0;
+}
+
+.points-panel {
+  display: grid;
+  gap: 13px;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-strong);
+}
+
+.points-panel h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.points-panel label {
+  display: block;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.points-panel input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #bfcacc;
+  border-radius: 8px;
+  background: white;
+}
+
+.wallet-panel {
+  align-content: start;
+}
+
+.wallet-balance {
+  display: grid;
+  gap: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.wallet-balance span,
+.wallet-balance small {
+  color: var(--muted);
+}
+
+.wallet-balance strong {
+  font-size: 52px;
+  line-height: 1;
+}
+
+.qr-card {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7faf9;
+}
+
+.qr-pattern {
+  display: grid;
+  grid-template-columns: repeat(9, 12px);
+  gap: 3px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: white;
+}
+
+.qr-pattern span {
+  width: 12px;
+  height: 12px;
+  background: #edf1f1;
+}
+
+.qr-pattern span.on {
+  background: var(--ink);
+}
+
+#qr-token {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+#qr-countdown {
+  font-weight: 800;
+  color: var(--accent-dark);
+}
+
+.ledger-list {
+  display: grid;
+  gap: 8px;
+}
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 4px 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.ledger-row span,
+.ledger-row small {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.ledger-row small {
+  grid-column: 2;
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .points-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .points-hero h1 {
+    font-size: 34px;
+  }
+}
+
 button,
 input {
   font: inherit;

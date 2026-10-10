@@ -253,6 +253,40 @@ textarea:focus-visible, button:focus-visible, input:focus-visible { outline: 3px
 .records-pagination button { min-height:44px; min-width:84px; }
 .records-pagination span { font-size:14px; text-align:center; flex:1 1 120px; }
 #signup-credits li { padding:8px 0; overflow-wrap:anywhere; font-size:14px; line-height:1.5; }
+#staff-main > .reward-management,
+#staff-main > #member-activity-panel,
+#staff-main > #refund-form {
+  --section-accent: #08775e;
+  margin: 28px 0 0;
+  padding: 24px;
+  border: 0;
+  border-top: 3px solid var(--section-accent);
+  border-bottom: 1px solid #ccd7d3;
+  border-radius: 0;
+  background: #ffffff;
+}
+#staff-main > #earn-policy-panel { --section-accent: #315c99; background: #edf3fa; }
+#staff-main > #reward-admin { --section-accent: #64715d; background: #f1f4ef; }
+#staff-main > #member-activity-panel { --section-accent: #08775e; background: #edf7f3; }
+#staff-main > #refund-form { --section-accent: #9d4350; background: #fbf0f2; }
+#staff-main > .reward-management > h2,
+#staff-main > #member-activity-panel > h2,
+#staff-main > #refund-form > h2 {
+  padding: 0 0 16px;
+  margin: 0 0 20px;
+  border-bottom: 1px solid #cbd6d2;
+  color: var(--section-accent);
+  line-height: 1.4;
+}
+#activity-management > .activity-filter { margin-bottom: 16px; }
+#campaign-editor { margin-top: 24px; padding-top: 20px; border-top: 2px solid #b8ccc3; }
+#staff-main .points-grid { align-items: start; }
+#staff-main .points-grid > .points-panel { align-content: start; }
+@media (max-width:640px) {
+  #staff-main > .reward-management,
+  #staff-main > #member-activity-panel,
+  #staff-main > #refund-form { margin-top: 24px; padding: 20px 16px; }
+}
 @media (max-width:640px) { .campaign-row { align-items:flex-start; flex-direction:column; } }
 @media (max-width: 640px) { .earn-tier { grid-template-columns: 1fr; } }
 

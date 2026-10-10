@@ -1,0 +1,21 @@
+#staff-main [data-console-inactive] { display: none !important; }
+#staff-main .points-hero { padding-bottom: 12px; }
+.console-context { display: grid; grid-template-columns: 1fr minmax(240px, 440px); gap: 24px; align-items: center; padding: 16px 0; }
+.console-context h2 { font-size: 16px; margin: 0 0 4px; }
+.console-context p { margin: 0; overflow-wrap: anywhere; }
+.console-context label { display: block; font-size: 14px; margin-bottom: 6px; }
+.console-context select { width: 100%; min-height: 44px; }
+.console-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 0 0; border-bottom: 1px solid #b6c9c0; margin-bottom: 20px; }
+.console-tabs button { flex: 0 0 auto; min-height: 48px; padding: 10px 16px; background: transparent; border: 0; border-bottom: 3px solid transparent; border-radius: 0; box-shadow: none; color: #43564e; font-size: 15px; font-weight: 600; }
+.console-tabs button[aria-selected="true"] { color: #066d54; background: #e3f3eb; border-bottom-color: #08775e; }
+.console-tabs button:hover { background: #eaf0ed; }
+.console-tabs button:focus-visible { outline: 2px solid #08775e; outline-offset: -2px; }
+#staff-main > [role="tabpanel"] { margin-top: 0; }
+#console-scan { grid-template-columns: minmax(0, 1fr); margin-bottom: 20px; }
+#console-scan textarea { min-height: 80px; }
+#console-scan .camera-tools { margin-bottom: 12px; }
+@media (max-width: 640px) {
+  .console-context { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .console-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
+  .console-tabs button { padding: 10px 12px; white-space: nowrap; }
+}

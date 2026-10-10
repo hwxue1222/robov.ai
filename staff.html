@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./home.css">
   <link rel="stylesheet" href="./login.css">
+  <link rel="stylesheet" href="./console-tabs.css">
 </head>
 <body>
   <div class="app-shell">
@@ -24,11 +25,21 @@
         <h1>店员扫码操作</h1>
         <p class="guide-copy">门店服务与会员奖励</p>
       </section>
+      <section class="console-context"><div><h2>门店身份</h2><p id="staff-identity"></p></div><div><label for="staff-store">门店</label><select id="staff-store" disabled></select></div></section>
+      <nav class="console-tabs" role="tablist" aria-label="后台导航">
+        <button id="console-tab-operations" type="button" role="tab" aria-selected="true" data-console-tab="operations">会员操作</button>
+        <button id="console-tab-activities" type="button" role="tab" aria-selected="false" data-console-tab="activities" hidden>活动管理</button>
+        <button id="console-tab-policy" type="button" role="tab" aria-selected="false" data-console-tab="policy" hidden>消费积分规则</button>
+        <button id="console-tab-invitations" type="button" role="tab" aria-selected="false" data-console-tab="invitations" hidden>邀请码管理</button>
+        <button id="console-tab-members" type="button" role="tab" aria-selected="false" data-console-tab="members" hidden>会员记录</button>
+        <button id="console-tab-users" type="button" role="tab" aria-selected="false" data-console-tab="users" hidden>用户管理</button>
+        <button id="console-tab-refunds" type="button" role="tab" aria-selected="false" data-console-tab="refunds">退款冲回</button>
+        <button id="console-tab-profile" type="button" role="tab" aria-selected="false" data-console-tab="profile">用户资料</button>
+      </nav>
       <section id="user-profile" class="reward-management">
         <h2>用户资料</h2><dl class="profile-details"><div><dt>姓名</dt><dd id="profile-name" data-no-translate></dd></div><div><dt>邮箱</dt><dd id="profile-email" data-no-translate></dd></div><div><dt>角色</dt><dd id="profile-role"></dd></div><div><dt>注册时间</dt><dd id="profile-created" data-no-translate></dd></div></dl><h3>授权门店</h3><ul id="profile-stores" data-no-translate></ul>
       </section>
-      <section class="points-grid">
-        <section class="points-panel"><h2>门店身份</h2><p id="staff-identity"></p><label for="staff-store">门店</label><select id="staff-store" disabled></select></section>
+      <section id="console-scan" class="points-grid">
         <section class="points-panel">
           <h2>会员码</h2>
           <div class="camera-tools"><button id="start-camera" class="secondary-button" type="button" title="启动摄像头"><i data-lucide="camera" aria-hidden="true"></i><span>启动摄像头</span></button><button id="stop-camera" class="secondary-button" type="button" title="停止摄像头" disabled><i data-lucide="square" aria-hidden="true"></i><span>停止</span></button><button id="read-qr-image" class="secondary-button" type="button" title="选择二维码图片"><i data-lucide="image-up" aria-hidden="true"></i><span>二维码图片</span></button></div>
@@ -42,7 +53,7 @@
           <p id="staff-status" class="result-note" role="status"></p>
         </section>
       </section>
-      <section class="points-grid">
+      <section id="console-transactions" class="points-grid">
         <form id="earn-form" class="points-panel">
           <h2>发放积分</h2>
           <label for="amount">消费金额</label>
@@ -103,6 +114,7 @@
     </main>
   </div>
   <script src="./tab-session.js"></script><script src="./locale-data.js"></script><script src="./i18n.js"></script>
+  <script src="./console-tabs.js"></script>
   <script src="./staff.js"></script>
   <script src="./assets/robov-qr.js"></script><script src="./camera-scanner.js"></script><script src="./staff-camera.js"></script>
   <script src="./account.js"></script>

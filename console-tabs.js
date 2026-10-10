@@ -6,6 +6,7 @@
     invitations: ['invitation-management'],
     members: ['member-activity-panel', 'reward-admin'],
     users: ['staff-account-management'],
+    stores: ['store-management'],
     refunds: ['refund-form'],
     profile: ['user-profile']
   };

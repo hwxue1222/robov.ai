@@ -35,7 +35,7 @@
     $('#scan-token').value = '';
     $('#scanned-member').textContent = result.member.displayName || 'ROBOV Member';
     $('#staff-status').textContent = '';
-    window.RobovSelectedMember.set(result.memberSessionToken);
+    window.RobovSelectedMember.set(result.memberSessionToken, result.expiresAt);
     show('会员码已验证，摄像头已关闭');
     } finally { window.RobovSelectedMember.verifying(false); }
   }

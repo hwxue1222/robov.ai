@@ -4,7 +4,7 @@ const { requireTestMode } = require('../../lib/robov/config');
 const { getPrisma } = require('../../lib/robov/prisma');
 const { earnPoints, requestRedemption, reverseRefund, awardActivity } = require('../../lib/robov/ledger');
 const { verifyMemberQrToken } = require('../../lib/robov/security');
-const { selectMember, selectedMember, clearMember } = require('../../lib/robov/member-selection');
+const { selectMember, selectedMember, clearMember, SELECTION_TTL_MS } = require('../../lib/robov/member-selection');
 
 function idempotencyKey(req) {
   return req.headers['idempotency-key'] || req.body?.idempotencyKey || crypto.randomUUID();
@@ -17,9 +17,6 @@ module.exports = async (req, res) => {
   try {
     const user = await requireActor(req, res, true);
     if (!user) return;
-    const storeId = req.body?.storeId;
-    if (!user.stores.some(store => store.id === storeId)) return res.status(403).json({ error: 'STAFF_FORBIDDEN' });
-    const actor = { userId: user.id, storeId };
     const prisma = getPrisma();
     const action = req.body?.action;
     const proof = req.headers['x-robov-tab-proof'];
@@ -27,17 +24,21 @@ module.exports = async (req, res) => {
       await clearMember(prisma, { actorUserId: user.id, proof });
       return res.status(200).json({ cleared: true });
     }
+    const storeId = req.body?.storeId;
+    if (!user.stores.some(store => store.id === storeId)) return res.status(403).json({ error: 'STAFF_FORBIDDEN' });
+    const actor = { userId: user.id, storeId };
     let memberUserId;
     if (action === 'scan' && !req.body?.qrToken) throw new Error('INVALID_QR_TOKEN');
-    if (req.body?.qrToken && action !== 'refund') {
+    if (req.body?.qrToken && action === 'scan') {
       const scanned = verifyMemberQrToken(req.body.qrToken);
       memberUserId = scanned.memberUserId;
       const member = await prisma.robovUser.findUnique({ where: { id: memberUserId }, select: { displayName: true, member: { select: { id: true } } } });
       if (!member?.member) throw new Error('INVALID_MEMBER');
       await prisma.auditLog.create({ data: { actorUserId: actor.userId, memberUserId, storeId: actor.storeId, action: 'QR_SCANNED', targetType: 'RobovUser', targetId: memberUserId } });
       if (action === 'scan') {
-        const memberSessionToken = await selectMember(prisma, { actorUserId: user.id, proof, memberUserId, storeId });
-        return res.status(200).json({ member: { displayName: member.displayName }, memberSessionToken, expiresAt: scanned.expiresAt });
+        const selectedAt = Date.now();
+        const memberSessionToken = await selectMember(prisma, { actorUserId: user.id, proof, memberUserId, storeId }, selectedAt);
+        return res.status(200).json({ member: { displayName: member.displayName }, memberSessionToken, expiresAt: selectedAt + SELECTION_TTL_MS });
       }
     }
     if (['earn', 'redeem', 'activity', 'quote'].includes(action) && !memberUserId) {

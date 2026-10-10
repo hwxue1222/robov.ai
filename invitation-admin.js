@@ -81,4 +81,5 @@
     finally { busy = false; for (const input of $('invitation-editor').querySelectorAll('input,select,button')) input.disabled = false; $('invitation-owner').disabled = !!editing; $('new-invitation').disabled = false; $('invitation-store').disabled = false; }
   });
   new MutationObserver(() => { if ($('staff-store').value && !stores.length) { scope = $('staff-store').value; load(); } }).observe($('staff-store'), { childList: true });
+  window.addEventListener('robov-stores-changed', () => { scope = $('staff-store').value; snapshot = null; closeEditor(); load(); });
 })();

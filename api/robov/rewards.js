@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
     ];
     const custom=enabled?await db.rewardActivity.findMany({where:{deletedAt:null,OR:[{storeId:null},{store:{active:true}}]},include:{store:{select:{name:true}}},orderBy:{createdAt:'desc'},take:100}):[];
     const customActivities=custom.map(({store,...row})=>({...row,...(row.kind==='VOUCHER'?{points:5,minimumSpendCents:Math.max(5000,row.minimumSpendCents)}:{}),storeName:store?.name||null,status:require('../../lib/robov/activities').status(row)}));
-    return res.status(200).json({ activities,customActivities,tasks:getReviewTasks().map(task=>({...task,status:reviewStatus,available:task.available && reviewStatus === 'ongoing',url:reviewStatus === 'ongoing'?task.url:null})) });
+    const merchants=enabled?await require('../../lib/robov/store-profiles').publicMerchants(db):require('../../data/merchants.json').merchants;
+    return res.status(200).json({ activities,customActivities,tasks:getReviewTasks(process.env,merchants).map(task=>({...task,status:reviewStatus,available:task.available && reviewStatus === 'ongoing',url:reviewStatus === 'ongoing'?task.url:null})) });
   } catch { return res.status(503).json({ error:'REWARDS_UNAVAILABLE' }); }
 };

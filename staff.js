@@ -4,8 +4,12 @@
     storeId: localStorage.getItem('robovStoreId') || '',
     memberSessionToken: null,
     busy: false,
-    clearPending: false
+    clearPending: false,
+    expiresAt: 0,
+    clearRequested: null
   };
+  let expiryTimer;
+  const expiryMessage = '会员识别已满5分钟，请重新识别会员';
   function selectionControls() {
     for (const form of ['earn-form', 'redeem-form', 'interaction-form']) {
       $(`#${form} button[type="submit"]`).disabled = state.busy || !state.memberSessionToken;
@@ -17,11 +21,11 @@
       $(`#${id}`).disabled = state.busy || state.clearPending || !!state.memberSessionToken;
     }
   }
-  async function clearSelection() {
-    if (state.busy) return;
+  function resetSelection(message) {
+    clearTimeout(expiryTimer);
     state.memberSessionToken = null;
+    state.expiresAt = 0;
     state.clearPending = true;
-    state.busy = true;
     $('#scan-token').value = '';
     $('#scanned-member').textContent = '';
     for (const id of ['amount', 'receipt-no', 'redeem-amount', 'redeem-receipt', 'transaction-id']) $(`#${id}`).value = '';
@@ -30,22 +34,44 @@
     $('#redeem-amount').setAttribute('aria-invalid', 'false');
     $('#interaction-form input[type="checkbox"]').checked = false;
     $('#earn-preview').textContent = '';
-    show('已退出当前会员，请识别下一位会员');
+    show(message);
     window.dispatchEvent(new Event('robov-member-cleared'));
+    selectionControls();
+  }
+  async function clearSelection(message = '已退出当前会员，请识别下一位会员') {
+    if (typeof message !== 'string') message = '已退出当前会员，请识别下一位会员';
+    resetSelection(message);
+    if (state.busy) { state.clearRequested = message; return; }
+    state.busy = true;
     selectionControls();
     try {
       const response = await fetch('/api/robov/staff', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'clear-member', storeId: state.storeId }) });
       if (!response.ok) throw new Error('会员退出失败，请重试或重新登录');
       state.clearPending = false;
     } catch (error) { show(error.message); }
-    finally { state.busy = false; selectionControls(); }
+    finally { state.busy = false; finishSelectionWork(); }
+  }
+  function finishSelectionWork() {
+    if (state.clearRequested) { const message = state.clearRequested; state.clearRequested = null; clearSelection(message); }
+    else selectionControls();
+  }
+  function expireSelection() {
+    if (state.memberSessionToken && state.expiresAt <= Date.now()) { clearSelection(expiryMessage); return true; }
+    return false;
   }
   window.RobovSelectedMember = {
     get busy() { return state.busy || state.clearPending; },
-    get active() { return !!state.memberSessionToken; },
-    verifying(value) { state.busy = value; selectionControls(); },
-    set(token) { state.memberSessionToken = token; selectionControls(); window.dispatchEvent(new Event('robov-member-selected')); },
+    get active() { return !!state.memberSessionToken && state.expiresAt > Date.now(); },
+    verifying(value) { state.busy = value; if (value) selectionControls(); else finishSelectionWork(); },
+    set(token, expiresAt) {
+      clearTimeout(expiryTimer); state.memberSessionToken = token;
+      state.expiresAt = Math.min(Number(expiresAt) || Date.now() + 300000, Date.now() + 300000);
+      state.clearPending = false;
+      expiryTimer = setTimeout(expireSelection, Math.max(0, state.expiresAt - Date.now()));
+      selectionControls(); window.dispatchEvent(new Event('robov-member-selected'));
+    },
     async quote(amount) {
+      if (expireSelection()) throw new Error('MEMBER_NOT_SELECTED');
       const token = state.memberSessionToken, storeId = state.storeId;
       if (!token) throw new Error('MEMBER_NOT_SELECTED');
       const response = await fetch('/api/robov/staff', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'quote', storeId, memberSessionToken: token, amount }) });
@@ -56,12 +82,17 @@
     }
   };
   $('#exit-member').addEventListener('click', clearSelection);
+  window.addEventListener('pagehide', () => {
+    resetSelection('已退出当前会员，请识别下一位会员');
+  });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) expireSelection(); });
 
   function idempotencyKey(prefix) {
     return `${prefix}-${crypto.randomUUID()}`;
   }
 
   async function staffAction(body, keyPrefix) {
+    if (body.action !== 'refund' && expireSelection()) throw new Error('MEMBER_NOT_SELECTED');
     if (state.busy) throw new Error('操作处理中，请稍候');
     if (body.action !== 'refund' && !state.memberSessionToken) throw new Error('MEMBER_NOT_SELECTED');
     state.busy = true;
@@ -81,7 +112,7 @@
         throw new Error(payload.error || '请求失败');
       }
       return payload;
-    } finally { state.busy = false; selectionControls(); }
+    } finally { state.busy = false; finishSelectionWork(); }
   }
 
   function show(message) {

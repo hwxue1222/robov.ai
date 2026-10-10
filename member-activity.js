@@ -9,6 +9,12 @@
   $('member-activity-panel').hidden = false;
   for (const store of user.stores) { const option = document.createElement('option'); option.value=store.id; option.textContent=store.name; $('activity-store').append(option); }
   const storeNames = new Map(user.stores.map(store => [store.id,store.name]));
+  window.addEventListener('robov-stores-changed', event => {
+    const previous = $('activity-store').value;
+    storeNames.clear(); event.detail.stores.forEach(store => storeNames.set(store.id, store.name));
+    $('activity-store').replaceChildren(new Option('全部门店', ''), ...event.detail.stores.map(store => new Option(store.name, store.id)));
+    $('activity-store').value = storeNames.has(previous) ? previous : '';
+  });
   const actionNames = { MEMBER_INVITED:'邀请码注册', MEMBER_LOGIN:'会员登录', QR_ISSUED:'会员码生成', QR_SCANNED:'会员码扫描', POINTS_EARNED:'积分入账', REDEMPTION_REQUESTED:'兑换申请', REDEMPTION_CONFIRMED:'兑换确认', REFUND_REVERSED:'退款冲回' };
   async function load(page = 1) {
     if (busy) return;

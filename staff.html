@@ -34,8 +34,17 @@
         <button id="console-tab-invitations" type="button" role="tab" aria-selected="false" data-console-tab="invitations" hidden>邀请码管理</button>
         <button id="console-tab-members" type="button" role="tab" aria-selected="false" data-console-tab="members" hidden>会员记录</button>
         <button id="console-tab-users" type="button" role="tab" aria-selected="false" data-console-tab="users" hidden>用户管理</button>
+        <button id="console-tab-stores" type="button" role="tab" aria-selected="false" data-console-tab="stores" hidden>门店管理</button>
         <button id="console-tab-refunds" type="button" role="tab" aria-selected="false" data-console-tab="refunds">退款冲回</button>
       </nav>
+      <section id="store-management" class="reward-management" hidden>
+        <h2>门店管理</h2>
+        <div class="activity-tabs" role="tablist" aria-label="门店资料视图"><button id="store-view-outlets" type="button" role="tab" aria-selected="true" aria-controls="store-outlet-view" data-store-view="store">门店资料</button><button id="store-view-merchants" type="button" role="tab" aria-selected="false" aria-controls="store-merchant-view" data-store-view="merchant">商家资料</button></div>
+        <p id="store-management-status" role="status"></p>
+        <div id="store-outlet-view" role="tabpanel" aria-labelledby="store-view-outlets"><button id="new-store-profile" type="button" class="secondary-button">新增门店</button><div id="store-profile-pagination"></div><div id="store-profile-rows"></div></div>
+        <div id="store-merchant-view" role="tabpanel" aria-labelledby="store-view-merchants" hidden><button id="new-merchant-profile" type="button" class="secondary-button">新增商家</button><div id="merchant-profile-rows"></div></div>
+        <form id="store-profile-editor" hidden><h3 id="store-profile-title">门店资料</h3><div id="store-profile-fields" class="store-profile-fields"></div><div class="camera-tools"><button type="submit" class="primary-button">保存资料</button><button id="cancel-store-profile" type="button" class="secondary-button">取消</button></div></form>
+      </section>
       <section id="user-profile" class="reward-management">
         <h2>用户资料</h2><dl class="profile-details"><div><dt>姓名</dt><dd id="profile-name" data-no-translate></dd></div><div><dt>邮箱</dt><dd id="profile-email" data-no-translate></dd></div><div><dt>角色</dt><dd id="profile-role"></dd></div><div><dt>注册时间</dt><dd id="profile-created" data-no-translate></dd></div></dl><h3>授权门店</h3><ul id="profile-stores" data-no-translate></ul>
       </section>
@@ -124,5 +133,6 @@
   <script src="./invitation-admin.js"></script>
   <script src="./staff-account-admin.js"></script>
   <script src="./member-activity.js"></script>
+  <script src="./store-manager.js"></script>
 </body>
 </html>

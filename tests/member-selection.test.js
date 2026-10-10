@@ -17,7 +17,8 @@ test('member selection outlives QR expiry but is bound to employee, store and lo
   for (const changed of [{ actorUserId: 'other' }, { storeId: 'other' }, { proof: 'b'.repeat(43) }, { token: 'x'.repeat(43) }, { token: undefined }]) {
     await assert.rejects(selectedMember(db, { ...input, token, ...changed }, 62000), /MEMBER_NOT_SELECTED/);
   }
-  await assert.rejects(selectedMember(db, { ...input, token }, 1000 + 8 * 60 * 60 * 1000), /MEMBER_NOT_SELECTED/);
+  assert.equal(await selectedMember(db, { ...input, token }, 1000 + 5 * 60 * 1000 - 1), 'member-one');
+  await assert.rejects(selectedMember(db, { ...input, token }, 1000 + 5 * 60 * 1000), /MEMBER_NOT_SELECTED/);
 });
 test('exit revokes the selection and identifying another member replaces the old selection', async () => {
   const db = database();

@@ -49,4 +49,5 @@
     finally { busy = false; for (const input of $('staff-account-editor').querySelectorAll('input,select,button')) input.disabled = false; $('staff-account-role').disabled = !canManageAdmins; }
   });
   new MutationObserver(() => { if ($('staff-store').value && !stores.length) load(); }).observe($('staff-store'), { childList: true });
+  window.addEventListener('robov-stores-changed', () => { close(); snapshot = null; load(); });
 })();

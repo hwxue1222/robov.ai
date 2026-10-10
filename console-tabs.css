@@ -15,6 +15,14 @@
 .console-context p { margin: 0; overflow-wrap: anywhere; }
 .console-context label { display: block; font-size: 14px; margin-bottom: 6px; }
 .console-context select { width: 100%; min-height: 44px; }
+#staff-main > #store-management { --section-accent: #426c78; background: #f1f7f8; }
+#store-profile-editor { margin-top: 24px; padding-top: 20px; border-top: 1px solid #b6c9c0; }
+.store-profile-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+.store-profile-fields > div { min-width: 0; }
+.store-profile-fields label { display: block; margin-bottom: 8px; }
+.store-profile-fields input:not([type="checkbox"]), .store-profile-fields select { width: 100%; min-height: 44px; border: 1px solid #b9c9c4; padding: 10px; border-radius: 4px; background: white; font: inherit; }
+.store-field-wide { grid-column: 1 / -1; }
+.store-profile-preview { display: block; width: 140px; height: 100px; object-fit: contain; margin-top: 10px; background: white; }
 .console-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 0 0; border-bottom: 1px solid #b6c9c0; margin-bottom: 20px; }
 .console-tabs button { flex: 0 0 auto; min-height: 48px; padding: 10px 16px; background: transparent; border: 0; border-bottom: 3px solid transparent; border-radius: 0; box-shadow: none; color: #43564e; font-size: 15px; font-weight: 600; }
 .console-tabs button[aria-selected="true"] { color: #066d54; background: #e3f3eb; border-bottom-color: #08775e; }
@@ -25,6 +33,7 @@
 #console-scan textarea { min-height: 80px; }
 #console-scan .camera-tools { margin-bottom: 12px; }
 @media (max-width: 640px) {
+  .store-profile-fields { grid-template-columns: minmax(0, 1fr); }
   body.store-console .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
   .store-console .topbar .brand { grid-column: 1; grid-row: 1; }
   .store-console .console-profile-button { grid-column: 2; grid-row: 1; }

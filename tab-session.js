@@ -38,6 +38,7 @@
   });
   window.addEventListener('pagehide',()=>{
     const closingProof=proof;proof=null;
+    if(closingProof&&document.getElementById('staff-main'))nativeFetch('/api/robov/staff',{method:'POST',credentials:'same-origin',keepalive:true,headers:{'Content-Type':'application/json','x-robov-tab-proof':closingProof},body:JSON.stringify({action:'clear-member'})}).catch(()=>{});
     const privateView=document.getElementById('staff-main')||document.getElementById('wallet-main');if(privateView)privateView.hidden=true;
     if(!navigating){
       try{sessionStorage.removeItem(key);}catch{}

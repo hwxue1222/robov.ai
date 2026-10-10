@@ -15,7 +15,8 @@ module.exports = async (req, res) => {
     }
     const { action = 'login', mode = 'member', identifier, password, email, displayName } = req.body || {};
     if (action === 'close' || action === 'logout') {
-      if (!await requireActor(req,res)) return;
+      const closingActor = await requireActor(req,res); if (!closingActor) return;
+      await require('../../lib/robov/member-selection').clearMember(getPrisma(), { actorUserId: closingActor.id, proof: req.headers['x-robov-tab-proof'] });
       if (action === 'close') {
         const session = await tabSession(req);
         if (session) await getPrisma().authSession.deleteMany({where:{id:session.session.id}});

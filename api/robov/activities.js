@@ -5,14 +5,15 @@ module.exports=async(req,res)=>{
   if(!['GET','POST'].includes(req.method))return res.status(405).json({error:'METHOD_NOT_ALLOWED'});
   try{
     const actor=await requireActor(req,res,true);if(!actor)return;
-    const requested=req.method==='GET'?req.query?.storeId:req.body?.storeId;
+    const query=new URL(req.url||'/','https://robov.ai').searchParams;
+    const requested=req.method==='GET'?query.get('storeId'):req.body?.storeId;
     const storeId=requested==='global'?null:requested;
     if(storeId!==null&&(typeof storeId!=='string'||!actor.stores.some(s=>s.id===storeId)))return res.status(403).json({error:'STAFF_FORBIDDEN'});
     const db=getPrisma();
     const canManage=await require('../../lib/robov/store-admin').canManageStore(db,actor,storeId);
     if(req.method==='GET'){
       const settings=await require('../../lib/robov/signup-reward').rewardSettings(db);
-      const rows=[...builtinRows(settings),...await db.rewardActivity.findMany({where:{...(req.query?.includeArchived==='true'?{}:{deletedAt:null}),OR:[{storeId:null},...(storeId?[{storeId}]:[])]},orderBy:{createdAt:'desc'},take:200})];
+      const rows=[...builtinRows(settings),...await db.rewardActivity.findMany({where:{...(query.get('includeArchived')==='true'?{}:{deletedAt:null}),OR:[{storeId:null},...(storeId?[{storeId}]:[])]},orderBy:{createdAt:'desc'},take:200})];
       return res.status(200).json({canManageStore:canManage,activities:rows.map(row=>({...row,status:status(row),canManage:actor.role==='SUPERADMIN'||(canManage&&row.storeId===storeId&&storeId!==null)}))});
     }
     if(!canManage)return res.status(403).json({error:'ADMIN_REQUIRED'});

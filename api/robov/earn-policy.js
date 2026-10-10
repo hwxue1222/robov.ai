@@ -9,7 +9,7 @@ module.exports=async(req,res)=>{
   if(!['GET','POST'].includes(req.method))return res.status(405).json({error:'METHOD_NOT_ALLOWED'});
   try{
     const actor=await requireActor(req,res,true);if(!actor)return;
-    const storeId=req.method==='GET'?req.query?.storeId:req.body?.storeId;
+    const storeId=req.method==='GET'?new URL(req.url||'/','https://robov.ai').searchParams.get('storeId'):req.body?.storeId;
     if(typeof storeId!=='string'||!actor.stores.some(s=>s.id===storeId))return res.status(403).json({error:'STAFF_FORBIDDEN'});
     const db=getPrisma();
     const canManage=await require('../../lib/robov/store-admin').canManageStore(db,actor,storeId);

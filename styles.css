@@ -233,6 +233,14 @@ textarea:focus-visible, button:focus-visible, input:focus-visible { outline: 3px
 .camera-preview { width: 100%; aspect-ratio: 4 / 3; background: #111; margin-top: 16px; overflow: hidden; border-radius: 4px; }
 .camera-preview video { width: 100%; height: 100%; object-fit: contain; }
 .reward-management { padding: 24px 0; border-top: 1px solid var(--line); }
+.reward-management h2 { font-size:22px; margin:0 0 18px; }
+.reward-management form { display:grid; gap:12px; }
+.reward-management label { display:block; font-weight:600; line-height:1.5; }
+.reward-management input:not([type="checkbox"]), .reward-management select { width:100%; min-height:44px; padding:10px 12px; border:1px solid #bfcacc; border-radius:4px; background:white; font:inherit; }
+.reward-management input[readonly] { background:#f1f3f2; }
+.reward-management label:has(input[type="checkbox"]) { display:flex; align-items:center; gap:8px; }
+.points-panel input[type="checkbox"], .reward-management input[type="checkbox"] { display:inline-block; width:20px; height:20px; min-height:20px; padding:0; flex:none; vertical-align:middle; accent-color:#08775e; }
+.reward-management .earn-tier label { display:grid; gap:8px; }
 .reward-management details { padding: 16px 0; border-bottom: 1px solid var(--line); }
 .reward-management summary { cursor: pointer; font-weight: 700; }
 .earn-tier { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)) auto; gap: 12px; align-items: end; border-bottom: 1px solid var(--line); padding: 16px 0; }

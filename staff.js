@@ -12,7 +12,7 @@
     }
     $('#exit-member').disabled = state.busy || (!state.memberSessionToken && !state.clearPending);
     $('#refund-form button[type="submit"]').disabled = state.busy;
-    $('#staff-store').disabled = state.busy;
+    $('#staff-store').disabled = state.busy || state.fixedStore;
     for (const id of ['start-camera', 'read-qr-image', 'identify-member', 'scan-token']) {
       $(`#${id}`).disabled = state.busy || state.clearPending || !!state.memberSessionToken;
     }
@@ -42,7 +42,16 @@
     get busy() { return state.busy || state.clearPending; },
     get active() { return !!state.memberSessionToken; },
     verifying(value) { state.busy = value; selectionControls(); },
-    set(token) { state.memberSessionToken = token; selectionControls(); }
+    set(token) { state.memberSessionToken = token; selectionControls(); window.dispatchEvent(new Event('robov-member-selected')); },
+    async quote(amount) {
+      const token = state.memberSessionToken, storeId = state.storeId;
+      if (!token) throw new Error('MEMBER_NOT_SELECTED');
+      const response = await fetch('/api/robov/staff', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'quote', storeId, memberSessionToken: token, amount }) });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'POLICY_UNAVAILABLE');
+      if (token !== state.memberSessionToken || storeId !== state.storeId) return null;
+      return result.reward;
+    }
   };
   $('#exit-member').addEventListener('click', clearSelection);
 
@@ -93,6 +102,7 @@
     $('#staff-store').replaceChildren(...user.stores.map(store => { const option = document.createElement('option'); option.value = store.id; option.textContent = store.name; return option; }));
     state.storeId = user.stores.some(store => store.id === state.storeId) ? state.storeId : user.stores[0]?.id || '';
     $('#staff-store').value = state.storeId; $('#staff-store').disabled = false;
+    state.fixedStore = user.role === 'STAFF';
     selectionControls();
   })().catch(() => location.replace('./login.html?mode=employee'));
 

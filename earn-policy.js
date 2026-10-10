@@ -1,5 +1,5 @@
 (function(){
-  const $=id=>document.getElementById(id);let policy=null,loading=0;
+  const $=id=>document.getElementById(id);let policy=null,loading=0,quoting=0,quoteTimer;
   const make=(tag,text)=>{const el=document.createElement(tag);if(text)el.textContent=text;return el;};
   function addTier(tier={id:crypto.randomUUID(),minCents:0,maxCents:null,rateBps:300}){
     const row=make('div');row.className='earn-tier';row.dataset.id=tier.id;
@@ -9,8 +9,14 @@
     const remove=make('button','删除');remove.type='button';remove.className='secondary-button';remove.title='删除金额区间';remove.addEventListener('click',()=>row.remove());row.append(remove);$('earn-tiers').append(row);
   }
   function preview(){
+    const attempt=++quoting;clearTimeout(quoteTimer);
     const amount=Math.round(Number($('amount').value)*100);if(!policy||!Number.isFinite(amount)||amount<=0){$('earn-preview').textContent='';return;}
     if(!policy.enabled){$('earn-preview').textContent='消费积分已停用';return;}
+    if(window.RobovSelectedMember?.active){
+      $('earn-preview').textContent='正在计算积分…';
+      quoteTimer=setTimeout(async()=>{try{const reward=await window.RobovSelectedMember.quote($('amount').value);if(attempt!==quoting||!reward)return;$('earn-preview').replaceChildren(make('span','本次奖励'),` / ${reward.rateBps/100}% / ${reward.points} points`);}catch(error){if(attempt===quoting)$('earn-preview').textContent=error.message;}},250);
+      return;
+    }
     const tier=policy.tiers.find(t=>amount>=t.minCents&&(t.maxCents===null||amount<t.maxCents)),rate=tier?tier.rateBps:policy.baseRateBps;
     const points=Math.floor(amount*rate/1000000),el=$('earn-preview');el.replaceChildren(make('span','本次奖励'),` / ${rate/100}% / ${points} points`);
   }
@@ -24,6 +30,7 @@
   }
   $('staff-store').addEventListener('change',()=>load().catch(()=>{$('earn-preview').textContent='消费规则暂不可用';}));
   $('amount').addEventListener('input',preview);$('add-earn-tier').addEventListener('click',()=>addTier());
+  window.addEventListener('robov-member-selected',preview);window.addEventListener('robov-member-cleared',preview);
   $('earn-policy-form').addEventListener('submit',async event=>{
     event.preventDefault();if(!policy)return;const storeId=$('staff-store').value,version=policy.version,button=event.submitter;button.disabled=true;
     try{

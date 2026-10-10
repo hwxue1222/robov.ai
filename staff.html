@@ -62,6 +62,27 @@
       <form id="interaction-form" class="reward-management"><h2>互动奖励审核</h2><label for="interaction-activity">互动活动</label><select id="interaction-activity" required></select><label><input type="checkbox" required> 已确认会员完成活动</label><button class="secondary-button" type="submit">审核并发放奖励</button></form>
       <section id="activity-management" class="reward-management" hidden><h2>活动管理</h2><div class="activity-filter"><div><label for="campaign-kind">奖励分类</label><select id="campaign-kind"><option value="SIGNUP">注册奖励</option><option value="VOUCHER">兑换优惠</option><option value="INTERACTION">互动活动</option></select></div><button id="new-campaign" class="secondary-button" type="button">新增活动</button></div><label><input id="show-archived-campaigns" type="checkbox"> 显示已归档活动</label><div id="campaign-list"></div><form id="campaign-editor" hidden><h3>活动设置</h3><label for="campaign-title">活动名称</label><input id="campaign-title" maxlength="100" required><label for="campaign-scope">适用范围</label><select id="campaign-scope"><option value="store">当前门店</option><option value="global">全部门店</option></select><label for="campaign-points">活动积分</label><input id="campaign-points" type="number" min="0" max="10000" required><div id="campaign-voucher-fields"><label for="campaign-discount">抵扣金额（RM）</label><input id="campaign-discount" type="number" min="0.01" step="0.01"><label for="campaign-minimum">最低消费（RM）</label><input id="campaign-minimum" type="number" min="0" step="0.01"></div><div id="campaign-link-field"><label for="campaign-url">活动链接</label><input id="campaign-url" type="url" maxlength="2000"></div><label for="campaign-end">活动截止时间</label><input id="campaign-end" type="datetime-local"><label><input id="campaign-enabled" type="checkbox"> 启用活动</label><div class="camera-tools"><button class="primary-button" type="submit">保存活动</button><button id="cancel-campaign" class="secondary-button" type="button">取消</button></div></form><p id="campaign-manager-status" role="status"></p></section>
       <section id="earn-policy-panel" class="reward-management" hidden><h2>消费积分规则</h2><form id="earn-policy-form"><label><input id="earn-enabled" type="checkbox"> 启用消费积分</label><label for="earn-base-rate">默认奖励比例（%）</label><input id="earn-base-rate" type="number" min="0" max="100" step="0.01" required><div id="earn-tiers"></div><button id="add-earn-tier" class="secondary-button" type="button">新增金额区间</button><button class="primary-button" type="submit">保存消费规则</button><p id="earn-policy-status" role="status"></p></form></section>
+      <section id="invitation-management" class="reward-management" hidden>
+        <h2>邀请码管理</h2>
+        <div class="activity-filter"><div><label for="invitation-store">门店</label><select id="invitation-store"></select></div><button id="new-invitation" type="button" class="secondary-button">新增邀请码</button></div>
+        <div id="invitation-summary" class="invitation-summary"></div><p id="invitation-status" role="status"></p>
+        <div id="invitation-pagination-top"></div><div id="invitation-rows"></div><div id="invitation-pagination-bottom"></div>
+        <form id="invitation-editor" hidden>
+          <h3>邀请码设置</h3><label for="invitation-owner">归属门店</label><select id="invitation-owner" required></select>
+          <label for="invitation-code">邀请码</label><input id="invitation-code" required minlength="3" maxlength="32" pattern="[A-Za-z0-9][A-Za-z0-9_-]{2,31}" autocapitalize="characters" spellcheck="false">
+          <label for="invitation-name">邀请码名称</label><input id="invitation-name" required maxlength="100">
+          <label for="invitation-rate">邀请码奖励比例（%）</label><input id="invitation-rate" type="number" min="0" max="100" step="0.01" value="5" required>
+          <label><input id="invitation-enabled" type="checkbox" checked> 允许新会员使用</label>
+          <label><input id="invitation-reward-enabled" type="checkbox" checked> 启用邀请码消费奖励</label>
+          <div class="camera-tools"><button type="submit" class="primary-button">保存邀请码</button><button id="cancel-invitation" type="button" class="secondary-button">取消</button></div>
+        </form>
+        <div id="invitation-members" hidden><h3>邀请码注册会员</h3><strong id="invitation-member-code"></strong><div id="invitation-member-pagination-top"></div><div id="invitation-member-rows"></div><div id="invitation-member-pagination-bottom"></div></div>
+      </section>
+      <section id="staff-account-management" class="reward-management" hidden>
+        <h2>Staff账号管理</h2><button id="new-staff-account" type="button" class="secondary-button">新增Staff账号</button>
+        <p id="staff-account-status" role="status"></p><div id="staff-account-pagination"></div><div id="staff-account-rows"></div>
+        <form id="staff-account-editor" hidden><h3>Staff账号设置</h3><label for="staff-account-name">姓名</label><input id="staff-account-name" required maxlength="100"><label for="staff-account-email">邮箱</label><input id="staff-account-email" type="email" required maxlength="254"><div id="staff-account-password-field"><label for="staff-account-password">密码</label><input id="staff-account-password" type="password" minlength="12" maxlength="128" autocomplete="new-password"></div><label for="staff-account-store">固定门店</label><select id="staff-account-store" required></select><label><input id="staff-account-active" type="checkbox" checked> 启用账号</label><div class="camera-tools"><button type="submit" class="primary-button">保存Staff账号</button><button id="cancel-staff-account" type="button" class="secondary-button">取消</button></div></form>
+      </section>
       <section id="reward-admin" hidden class="reward-management"><h2>最近注册奖励</h2><div id="signup-pagination-top"></div><p id="signup-records-status" role="status"></p><ul id="signup-credits"></ul><div id="signup-pagination-bottom"></div></section>
       <section id="member-activity-panel" hidden class="points-panel">
         <h2>会员活动</h2><p>账号与积分活动</p>
@@ -84,6 +105,8 @@
   <script src="./pagination.js"></script><script src="./reward-admin.js"></script>
   <script src="./earn-policy.js"></script>
   <script src="./activity-manager.js"></script>
+  <script src="./invitation-admin.js"></script>
+  <script src="./staff-account-admin.js"></script>
   <script src="./member-activity.js"></script>
 </body>
 </html>

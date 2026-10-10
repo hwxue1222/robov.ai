@@ -9,7 +9,7 @@
   $('member-activity-panel').hidden = false;
   for (const store of user.stores) { const option = document.createElement('option'); option.value=store.id; option.textContent=store.name; $('activity-store').append(option); }
   const storeNames = new Map(user.stores.map(store => [store.id,store.name]));
-  const actionNames = { MEMBER_LOGIN:'会员登录', QR_ISSUED:'会员码生成', QR_SCANNED:'会员码扫描', POINTS_EARNED:'积分入账', REDEMPTION_REQUESTED:'兑换申请', REDEMPTION_CONFIRMED:'兑换确认', REFUND_REVERSED:'退款冲回' };
+  const actionNames = { MEMBER_INVITED:'邀请码注册', MEMBER_LOGIN:'会员登录', QR_ISSUED:'会员码生成', QR_SCANNED:'会员码扫描', POINTS_EARNED:'积分入账', REDEMPTION_REQUESTED:'兑换申请', REDEMPTION_CONFIRMED:'兑换确认', REFUND_REVERSED:'退款冲回' };
   async function load(page = 1) {
     if (busy) return;
     busy=true; pager.busy(true);$('activity-filter').querySelector('button').disabled=true;

@@ -27,6 +27,13 @@ module.exports = async (req, res) => {
     else if (action === 'register') {
       if (mode !== 'member') return res.status(403).json({ error: 'STAFF_REGISTRATION_FORBIDDEN' });
       path = 'sign-up/email'; body = { email: typeof email === 'string' ? email.trim().toLowerCase() : '', password, name: displayName || 'ROBOV Member', rememberMe: false };
+      try {
+        const invitation = await require('../../lib/robov/invitations').registrationInvitation(getPrisma(), req.body?.invitationCode);
+        if (invitation) body.invitationCodeId = invitation.id;
+      } catch (error) {
+        if (error.message === 'INVALID_INVITATION_CODE') return res.status(400).json({ error: error.message });
+        throw error;
+      }
     } else if (action === 'login') {
       const clean = typeof identifier === 'string' ? identifier.trim().toLowerCase() : '';
       if (!clean.includes('@') || typeof password !== 'string') return res.status(400).json({ error: 'INVALID_EMAIL' });
@@ -43,7 +50,7 @@ module.exports = async (req, res) => {
     if (result.user) {
       await ensureRobovUser(result.user);
       actor = await actorForAuthUser(result.user.id);
-      if (mode === 'employee' && !actor?.isEmployee) {
+      if ((mode === 'employee' || actor?.role === 'STAFF') && !actor?.isEmployee) {
         if (result.token) await getPrisma().authSession.deleteMany({ where: { token: result.token } });
         return res.status(403).json({ error: 'STAFF_FORBIDDEN' });
       }

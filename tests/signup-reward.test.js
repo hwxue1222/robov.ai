@@ -30,6 +30,14 @@ test('admin custom amount or disabled campaign governs new account credit', asyn
     assert.equal(Boolean(db.results().credit),expected > 0);
   }
 });
+test('signup invitation attribution commits with the wallet once and cannot be replaced by later login', async () => {
+  const db = fixture(null), user = { id: 'auth', email: 'member@example.invalid', name: 'Member', invitationCodeId: 'invite-one' };
+  const member = await createMember(db, user);
+  assert.equal(member.invitationCodeId, 'invite-one');
+  await createMember(db, { ...user, invitationCodeId: 'invite-two' });
+  assert.equal(db.results().saved.invitationCodeId, 'invite-one');
+  assert.equal(db.results().saved.member.pointBalance, 100);
+});
 test('voucher rejects incorrect point amount, low spend, takeaway and combined promotions before writing', async () => {
   const input = { points:100,amount:50,receiptNo:'RCP-123',dineIn:true,otherPromotion:false };
   for (const patch of [{points:99},{amount:49.99},{dineIn:false},{otherPromotion:true}]) await assert.rejects(requestRedemption({}, { ...input,...patch }), /VOUCHER_/);

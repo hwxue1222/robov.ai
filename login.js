@@ -10,6 +10,7 @@
     $('#login-identifier').type = 'email';
     $('#login-password').minLength = signup ? 12 : 8;
     $('#signup-name').hidden = !signup;
+    $('#signup-invitation').hidden = !signup;
     $('#signup-toggle').hidden = mode === 'employee';
     $('#signup-toggle').textContent = signup ? '已有账号，返回登录' : '注册会员';
     $('#login-password').autocomplete = signup ? 'new-password' : 'current-password';
@@ -21,11 +22,11 @@
     event.preventDefault(); $('#login-submit').disabled = true; $('#login-status').textContent = '正在登录…';
     try {
       const identifier = $('#login-identifier').value.trim();
-      const response = await fetch('/api/robov/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: signup ? 'register' : 'login', mode, identifier, email: identifier, password: $('#login-password').value, displayName: $('#login-name').value.trim() }) });
+      const response = await fetch('/api/robov/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: signup ? 'register' : 'login', mode, identifier, email: identifier, password: $('#login-password').value, displayName: $('#login-name').value.trim(), ...(signup ? { invitationCode: $('#login-invitation').value.trim() } : {}) }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'LOGIN_FAILED');
       $('#login-password').value = '';
-      window.RobovSession.navigate(mode === 'employee' ? './staff.html' : './robov.html',result.tabProof);
+      window.RobovSession.navigate(mode === 'employee' || result.user?.isEmployee ? './staff.html' : './robov.html',result.tabProof);
     } catch (error) { $('#login-status').textContent = error.message; $('#login-submit').disabled = false; }
   });
   render();

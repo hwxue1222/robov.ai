@@ -12,7 +12,7 @@ async function main() {
   const run = crypto.randomUUID();
   try {
     const store = await db.store.upsert({ where: { slug: 'robov-test-store' }, update: {}, create: { name: 'ROBOV Test Store', slug: 'robov-test-store' } });
-    const staff = await db.robovUser.upsert({ where: { email: 'robov-test-staff@example.invalid' }, update: {}, create: { email: 'robov-test-staff@example.invalid', displayName: 'Test Staff', role: 'STAFF' } });
+    const staff = await db.robovUser.upsert({ where: { email: 'robov-test-staff@example.invalid' }, update: { staffStoreId: store.id }, create: { email: 'robov-test-staff@example.invalid', displayName: 'Test Staff', role: 'STAFF', staffStoreId: store.id } });
     await db.storeStaff.upsert({ where: { storeId_userId: { storeId: store.id, userId: staff.id } }, update: {}, create: { storeId: store.id, userId: staff.id, role: 'STAFF' } });
     const member = await db.robovUser.create({ data: { email: `robov-test-${run}@example.invalid`, displayName: 'Test Member', member: { create: {} } } });
     const input = { actorUserId: staff.id, storeId: store.id, memberUserId: member.id, amount: '4000', receiptNo: `TEST-${run}`, idempotencyKey: `earn-${run}` };

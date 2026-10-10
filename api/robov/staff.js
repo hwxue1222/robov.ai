@@ -40,8 +40,12 @@ module.exports = async (req, res) => {
         return res.status(200).json({ member: { displayName: member.displayName }, memberSessionToken, expiresAt: scanned.expiresAt });
       }
     }
-    if (['earn', 'redeem', 'activity'].includes(action) && !memberUserId) {
+    if (['earn', 'redeem', 'activity', 'quote'].includes(action) && !memberUserId) {
       memberUserId = await selectedMember(prisma, { actorUserId: user.id, proof, storeId, token: req.body?.memberSessionToken });
+    }
+    if (action === 'quote') {
+      const policy = await require('../../lib/robov/earn-policy').getEarnPolicy(prisma, storeId);
+      return res.status(200).json({ reward: await require('../../lib/robov/invitations').memberReward(prisma, memberUserId, storeId, require('../../lib/robov/ledger').parseAmountCents(req.body.amount), policy) });
     }
     if (action === 'earn') {
       const result = await earnPoints(prisma, { actorUserId: actor.userId, storeId: actor.storeId, memberUserId, amount: req.body.amount, receiptNo: req.body.receiptNo, idempotencyKey: idempotencyKey(req) });

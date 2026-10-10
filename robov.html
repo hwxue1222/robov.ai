@@ -24,6 +24,10 @@
         <h1>会员钱包</h1>
         <p class="guide-copy">查看 ROBOV Points 余额、积分流水，并生成 60 秒动态会员码供店员扫码。</p>
       </section>
+      <dialog id="redemption-dialog" aria-labelledby="redemption-dialog-title"><h2 id="redemption-dialog-title" tabindex="-1">确认兑换</h2><p id="redemption-dialog-store"></p><strong id="redemption-dialog-amount"></strong><p id="redemption-dialog-receipt"></p><div class="camera-tools"><button id="redemption-dialog-confirm" class="primary-button" type="button">确认兑换</button><button id="redemption-dialog-cancel" class="secondary-button" type="button">拒绝兑换</button></div></dialog>
+      <section id="pending-redemptions" class="pending-redemptions" hidden aria-live="polite">
+        <h2>待确认兑换</h2><strong id="pending-redemption-count"></strong><div id="pending-redemption-list"></div>
+      </section>
       <section class="points-grid">
         <section class="points-panel">
           <h2>会员中心</h2><p id="member-name"></p><p id="member-email"></p>
@@ -31,9 +35,9 @@
         </section>
         <section class="points-panel wallet-panel" aria-live="polite">
           <div class="wallet-balance">
-            <span>可用积分</span>
-            <strong id="available-points">0</strong>
-            <small><span id="total-points">0</span> 总积分 · <span id="hold-points">0</span> 冻结中</small>
+            <div class="wallet-balance-heading"><span>积分余额</span><button id="refresh-wallet" class="secondary-button" type="button" title="刷新积分" aria-label="刷新积分"><i data-lucide="refresh-cw" aria-hidden="true"></i></button></div>
+            <strong id="total-points">0</strong>
+            <small><span>可用积分</span> <span id="available-points">0</span> · <span>待确认预留</span> <span id="hold-points">0</span></small>
           </div>
           <button id="refresh-qr" class="secondary-button" type="button" disabled>刷新动态码</button>
           <div id="qr-card" class="qr-card" aria-label="60秒动态会员码">

@@ -19,7 +19,28 @@
     $('#ledger-list').replaceChildren(...(wallet.transactions || []).map(item => {
       const row = document.createElement('article');
       row.className = 'ledger-row';
-      row.innerHTML = `<strong>${item.points > 0 ? '+' : ''}${item.points} RBP</strong><span>${item.type} · ${item.status}</span><small>${item.receiptNo || item.id}</small>`;
+      const amount = document.createElement('strong');
+      amount.textContent = `${item.points > 0 ? '+' : ''}${item.points} RBP`;
+      const status = document.createElement('span');
+      status.textContent = `${item.type} · ${item.status}`;
+      const receipt = document.createElement('small');
+      receipt.textContent = item.receiptNo || item.id;
+      row.append(amount, status, receipt);
+      if (item.type === 'REDEEM_HOLD' && item.status === 'PENDING_MEMBER_CONFIRMATION') {
+        const confirm = document.createElement('button');
+        confirm.type = 'button';
+        confirm.className = 'secondary-button';
+        confirm.textContent = `确认兑换 ${Math.abs(item.points)} RBP`;
+        confirm.addEventListener('click', async () => {
+          confirm.disabled = true;
+          try {
+            await api('/api/robov/redeem', { method: 'POST', headers: { 'idempotency-key': crypto.randomUUID() }, body: JSON.stringify({ transactionId: item.id }) });
+            await refreshWallet();
+            $('#member-status').textContent = '兑换已确认';
+          } catch (error) { $('#member-status').textContent = error.message; confirm.disabled = false; }
+        });
+        row.append(confirm);
+      }
       return row;
     }));
   }
@@ -73,7 +94,10 @@
     }
   });
 
-  $('#refresh-qr').addEventListener('click', refreshQr);
+  $('#refresh-qr').addEventListener('click', () => Promise.all([refreshWallet(), refreshQr()]).catch(error => { $('#member-status').textContent = error.message; }));
+  setInterval(() => {
+    if (state.userId && !document.hidden) refreshWallet().catch(error => { $('#member-status').textContent = error.message; });
+  }, 10000);
   if (state.userId) {
     $('#refresh-qr').disabled = false;
     refreshWallet().catch(error => { $('#member-status').textContent = error.message; });

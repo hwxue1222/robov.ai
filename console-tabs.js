@@ -17,8 +17,9 @@
     if (buttons.find(button => button.dataset.consoleTab === selected).hidden) selected = 'operations';
     for (const button of buttons) {
       const active = button.dataset.consoleTab === selected;
-      button.setAttribute('aria-selected', String(active));
-      button.tabIndex = active ? 0 : -1;
+      const profile = button.dataset.consoleTab === 'profile';
+      button.setAttribute(profile ? 'aria-pressed' : 'aria-selected', String(active));
+      button.tabIndex = profile || active ? 0 : -1;
       for (const panel of panels(button.dataset.consoleTab)) panel.toggleAttribute('data-console-inactive', !active);
     }
   }
@@ -36,15 +37,16 @@
   for (const button of buttons) {
     button.setAttribute('aria-controls', groups[button.dataset.consoleTab].join(' '));
     for (const panel of panels(button.dataset.consoleTab)) {
-      panel.setAttribute('role', 'tabpanel');
+      panel.setAttribute('role', button.dataset.consoleTab === 'profile' ? 'region' : 'tabpanel');
       panel.setAttribute('aria-labelledby', button.id);
       observer.observe(panel, { attributes: true, attributeFilter: ['hidden'] });
     }
     button.addEventListener('click', () => activate(button));
     button.addEventListener('keydown', event => {
+      if (button.dataset.consoleTab === 'profile') return;
       if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
       event.preventDefault();
-      const visible = buttons.filter(item => !item.hidden), index = visible.indexOf(button);
+      const visible = buttons.filter(item => !item.hidden && item.dataset.consoleTab !== 'profile'), index = visible.indexOf(button);
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? visible.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + visible.length) % visible.length;
       visible[next].focus();
       activate(visible[next]);

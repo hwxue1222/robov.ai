@@ -37,14 +37,14 @@ async function call(route, method, body, cookie) {
     assert.equal((await call('session', 'POST', { action: 'login', mode: 'employee', identifier: email, password })).code, 403);
     const store = await db.store.findUnique({ where: { slug: 'puteri-harbour' } });
     const admin = await db.robovUser.findUnique({ where: { username: 'admin' } });
-    const voucher = { actorUserId: admin.id, storeId: store.id, memberUserId: user.id, points: 100, amount: 50, receiptNo: `V-${run}`, dineIn: true, otherPromotion: false, idempotencyKey: `voucher-${run}` };
-    await assert.rejects(requestRedemption(db, { ...voucher, amount: 49 }), /VOUCHER_TERMS_NOT_MET/);
+    const voucher = { actorUserId: admin.id, storeId: store.id, memberUserId: user.id, points: 5, amount: 50, receiptNo: `V-${run}`, dineIn: true, otherPromotion: false, idempotencyKey: `voucher-${run}` };
+    await assert.rejects(requestRedemption(db, { ...voucher, amount: 49 }), /没有满足最低消费金额/);
     await assert.rejects(requestRedemption(db, { ...voucher, dineIn: false }), /VOUCHER_TERMS_NOT_MET/);
     await assert.rejects(requestRedemption(db, { ...voucher, otherPromotion: true }), /VOUCHER_TERMS_NOT_MET/);
     const hold = await requestRedemption(db, voucher);
     assert.equal(hold.transaction.metadata.discountCents, 500);
     await Promise.all([1, 2, 3].map(() => confirmRedemption(db, { transactionId: hold.transaction.id, memberUserId: user.id, idempotencyKey: 'confirm' })));
-    assert.equal((await getWalletSummary(db, user.id)).pointBalance, 0);
+    assert.equal((await getWalletSummary(db, user.id)).pointBalance, 95);
     assert.equal((await getWalletSummary(db, user.id)).pointsOnHold, 0);
     assert.equal(await db.auditLog.count({ where: { targetId: hold.transaction.id, action: 'REDEMPTION_CONFIRMED' } }), 1);
     assert.equal((await call('session', 'POST', { action: 'logout' }, cookie)).code, 200);

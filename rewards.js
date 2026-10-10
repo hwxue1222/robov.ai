@@ -13,7 +13,7 @@
     const voucher=activities.find(item=>item.id==='voucher');
     if(voucher) {
       const section=make('section','reward-campaign reward-promo');section.dataset.activityId='member-reward';
-      const heading=make('div','reward-heading');heading.append(make('p','home-kicker','ROBOV REWARDS / JWD MEE TARIK'),make('h2','','100 points = RM5 折扣券'),badge(voucher.status));
+      const heading=make('div','reward-heading');heading.append(make('p','home-kicker','ROBOV REWARDS / JWD MEE TARIK'),make('h2','','5 ROBOV points = RM5 折扣券'),badge(voucher.status));
       const visual=make('div','reward-voucher'),copy=make('div','voucher-copy'),brand=make('div','voucher-brand');
       const logo=make('img','');logo.src='./assets/jwd/brand-icon.png';logo.alt='JWD Mee Tarik';logo.width=80;logo.height=80;brand.append(logo,make('span','','JWD Mee Tarik'));
       const value=make('p','voucher-value');value.append(make('small','','RM'),document.createTextNode('5'));
@@ -25,9 +25,9 @@
         const signup=registration?.status==='ongoing',link=make('a','home-primary',signup?'注册会员':'会员登录');link.href=signup?'./login.html?mode=member&action=register':'./login.html?mode=member';copy.append(link);
       }
       const food=make('div','voucher-food'),image=make('img','');image.src='./assets/jwd/beef-noodles.jpg';image.alt='JWD Mee Tarik 红烧牛肉面';image.width=1000;image.height=750;food.append(image,make('span','','JWD / HAND-PULLED NOODLES'));visual.append(copy,food);
-      const facts=make('div','voucher-facts');['100 points 兑换 RM5','堂食满 RM50','JWD 所有营业门店通用'].forEach(text=>facts.append(make('span','',text)));
+      const facts=make('div','voucher-facts');['5 ROBOV points 兑换 RM5','堂食满 RM50','JWD 所有营业门店通用'].forEach(text=>facts.append(make('span','',text)));
       const terms=make('details','voucher-terms');terms.append(make('summary','','使用条款'));const list=make('ul','');
-      ['新会员专享，每个账号一次。','仅限堂食，单张账单消费满 RM50。','每张账单限用一张 RM5 折扣券，兑换扣除 100 points。','不可与其他优惠、折扣或折扣券同时使用。','不可兑换现金；须由会员确认后抵用。','注册奖励与 Google Review 无关。'].forEach(text=>list.append(make('li','',text)));terms.append(list);
+      ['新会员专享，每个账号一次。','仅限堂食，单张账单消费满 RM50。','每张账单限用一张 RM5 折扣券，兑换扣除 5 ROBOV points。','不可与其他优惠、折扣或折扣券同时使用。','不可兑换现金；须由会员确认后抵用。','注册奖励与 Google Review 无关。'].forEach(text=>list.append(make('li','',text)));terms.append(list);
       for(const activity of [registration,voucher].filter(item=>item?.endsAt)) { const end=make('p','campaign-end');end.append(make('span','',activity.id==='registration'?'注册奖励截止时间':'RM5 活动截止时间'),' / '+new Date(activity.endsAt).toLocaleString('en-GB',{timeZone:'Asia/Singapore'})+' SGT');terms.append(end); }
       section.append(heading,visual,facts,terms);campaigns.append(section);
     }

@@ -32,6 +32,7 @@ module.exports = async (req, res) => {
       const members = await db.robovUser.findMany({ where: { id: { in: ids } }, select: { id: true, displayName: true, email: true } });
       const lookup = new Map(members.map(member => [member.id, member]));
       rows = rows.map(row => ({ ...row, member: lookup.get(row.memberUserId) || null }));
+      rows = await require('../../lib/robov/activity-details').activityDetails(db, rows);
     }
     await db.auditLog.create({ data: { actorUserId: actor.id, action: 'MEMBER_ACTIVITY_VIEWED', targetType: view === 'members' ? 'MemberDirectory' : 'MemberActivity', metadata: { view, memberId: params.get('memberId'), storeId: params.get('storeId') } } });
     return res.status(200).json({ rows,pagination:meta });

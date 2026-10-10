@@ -14,7 +14,7 @@ module.exports=async(req,res)=>{
     if(req.method==='GET'){
       const settings=await require('../../lib/robov/signup-reward').rewardSettings(db);
       const rows=[...builtinRows(settings),...await db.rewardActivity.findMany({where:{...(query.get('includeArchived')==='true'?{}:{deletedAt:null}),OR:[{storeId:null},...(storeId?[{storeId}]:[])]},orderBy:{createdAt:'desc'},take:200})];
-      return res.status(200).json({canManageStore:canManage,activities:rows.map(row=>({...row,status:status(row),canManage:actor.role==='SUPERADMIN'||(canManage&&row.storeId===storeId&&storeId!==null)}))});
+      return res.status(200).json({canManageStore:canManage,activities:rows.map(row=>({...row,...(row.kind==='VOUCHER'?{points:5,minimumSpendCents:Math.max(5000,row.minimumSpendCents)}:{}),status:status(row),canManage:actor.role==='SUPERADMIN'||(canManage&&row.storeId===storeId&&storeId!==null)}))});
     }
     if(!canManage)return res.status(403).json({error:'ADMIN_REQUIRED'});
     const {action,id,version}=req.body||{};if(!['create','update','archive','restore'].includes(action))throw Error('INVALID_ACTIVITY');

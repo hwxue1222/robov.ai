@@ -26,6 +26,8 @@
     $('#scanned-member').textContent = '';
     for (const id of ['amount', 'receipt-no', 'redeem-amount', 'redeem-receipt', 'transaction-id']) $(`#${id}`).value = '';
     $('#redeem-eligible').checked = false;
+    $('#redeem-minimum-error').hidden = true;
+    $('#redeem-amount').setAttribute('aria-invalid', 'false');
     $('#interaction-form input[type="checkbox"]').checked = false;
     $('#earn-preview').textContent = '';
     show('已退出当前会员，请识别下一位会员');
@@ -120,10 +122,19 @@
     }
   });
 
+  function validateRedemptionAmount() {
+    const amount = $('#redeem-amount'), invalid = amount.value !== '' && Number(amount.value) < Math.max(50, Number(amount.dataset.minimum || 50));
+    $('#redeem-minimum-error').hidden = !invalid;
+    amount.setAttribute('aria-invalid', String(invalid));
+    return !invalid;
+  }
+  $('#redeem-amount').addEventListener('input', validateRedemptionAmount);
+  $('#redeem-activity').addEventListener('change', validateRedemptionAmount);
   $('#redeem-form').addEventListener('submit', async event => {
     event.preventDefault();
+    if (!validateRedemptionAmount()) { show('没有满足最低消费金额'); $('#redeem-amount').focus(); return; }
     try {
-      const result = await staffAction({ action: 'redeem',activityId:$('#redeem-activity').value||undefined, points: Number($('#redeem-points').value), amount: $('#redeem-amount').value, receiptNo: $('#redeem-receipt').value, dineIn: $('#redeem-eligible').checked, otherPromotion: !$('#redeem-eligible').checked }, 'redeem');
+      const result = await staffAction({ action: 'redeem',activityId:$('#redeem-activity').value||undefined, points: 5, amount: $('#redeem-amount').value, receiptNo: $('#redeem-receipt').value, dineIn: $('#redeem-eligible').checked, otherPromotion: !$('#redeem-eligible').checked }, 'redeem');
       show(`已发起兑换 ${Math.abs(result.transaction.points)} RBP，等待会员确认：${result.transaction.id}`);
     } catch (error) {
       show(error.message);

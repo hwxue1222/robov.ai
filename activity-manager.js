@@ -4,8 +4,8 @@
   const session=await fetch('/api/robov/session').then(r=>r.json());role=session.user?.role||'';
   const canManage=['ADMIN','SUPERADMIN'].includes(role);$('activity-management').hidden=!canManage;
   $('campaign-scope').querySelector('[value="global"]').disabled=role!=='SUPERADMIN';
-  function voucherSelection(){const selected=rows.find(row=>row.id===$('redeem-activity').value)||rows.find(row=>row.id==='voucher');if(!selected)return;$('redeem-points').value=selected.points;$('redeem-amount').min=selected.minimumSpendCents/100;}
-  function editorFields(){const kind=$('campaign-kind').value;$('campaign-voucher-fields').hidden=kind!=='VOUCHER';$('campaign-link-field').hidden=kind!=='INTERACTION';$('campaign-discount').required=kind==='VOUCHER';$('campaign-minimum').required=kind==='VOUCHER';$('campaign-scope').disabled=kind==='SIGNUP'||Boolean(editing);}
+  function voucherSelection(){const selected=rows.find(row=>row.id===$('redeem-activity').value)||rows.find(row=>row.id==='voucher');if(!selected)return;$('redeem-points').value=5;$('redeem-amount').dataset.minimum=Math.max(50,selected.minimumSpendCents/100);}
+  function editorFields(){const kind=$('campaign-kind').value;$('campaign-points').readOnly=kind==='VOUCHER'||Boolean(editing?.builtin&&editing.id!=='registration');if(kind==='VOUCHER')$('campaign-points').value=5;$('campaign-voucher-fields').hidden=kind!=='VOUCHER';$('campaign-link-field').hidden=kind!=='INTERACTION';$('campaign-discount').required=kind==='VOUCHER';$('campaign-minimum').required=kind==='VOUCHER';$('campaign-scope').disabled=kind==='SIGNUP'||Boolean(editing);}
   function edit(row=null){
     editing=row;$('campaign-editor').hidden=false;
     $('campaign-title').value=row?.title||'';$('campaign-points').value=row?.points??( $('campaign-kind').value==='SIGNUP'?100:0 );

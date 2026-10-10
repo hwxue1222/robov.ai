@@ -28,6 +28,7 @@
         const member = view === 'members' ? row : row.member;
         title.textContent=member?.displayName || member?.email || row.memberUserId;
         detail.textContent=member?.email || '';
+        detail.dataset.noTranslate=''; title.dataset.noTranslate='';
         identity.append(title,detail); item.append(identity);
         const description=document.createElement('div');
         if (view === 'members') {
@@ -37,6 +38,9 @@
           button.addEventListener('click',() => { if(busy)return;memberId=row.id; $('activity-clear-member').hidden=false; setView('activity'); }); item.append(description,button);
         } else {
           const action=document.createElement('span'),store=document.createElement('small'); action.textContent=actionNames[row.action] || row.action; store.textContent=storeNames.get(row.storeId) || '—'; description.append(action,store); item.append(description);
+          if (Number.isInteger(row.points)) {
+            const points=document.createElement('strong'); points.className='activity-points'; points.textContent=`${row.points > 0 ? '+' : ''}${row.points} ROBOV points`; points.dataset.noTranslate=''; description.insertBefore(points,store);
+          }
         }
         const time=document.createElement('time'); time.dateTime=row.createdAt; time.textContent=new Date(row.createdAt).toLocaleString(); item.append(time); $('activity-rows').append(item);
       }

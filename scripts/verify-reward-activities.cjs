@@ -15,7 +15,7 @@ async function rewards(){const res={setHeader(){},status(code){this.code=code;re
     const authUser=(await(await getAuth()).api.signUpEmail({body:{email:`expired-${crypto.randomUUID()}@example.invalid`,name:'Expired Campaign Test',password:crypto.randomBytes(20).toString('hex')}})).user;
     const member=await ensureRobovUser(authUser);const wallet=await db.memberWallet.findUnique({where:{userId:member.id}});assert.equal(wallet.pointBalance,0);
     const admin=await db.robovUser.findUnique({where:{username:'superadmin'}}),store=await db.store.findUnique({where:{slug:'puteri-harbour'}});
-    await assert.rejects(requestRedemption(db,{actorUserId:admin.id,storeId:store.id,memberUserId:member.id,points:100,amount:50,receiptNo:'EXP-'+crypto.randomUUID(),dineIn:true,otherPromotion:false,idempotencyKey:crypto.randomUUID()}),/ACTIVITY_EXPIRED/);
+    await assert.rejects(requestRedemption(db,{actorUserId:admin.id,storeId:store.id,memberUserId:member.id,points:5,amount:50,receiptNo:'EXP-'+crypto.randomUUID(),dineIn:true,otherPromotion:false,idempotencyKey:crypto.randomUUID()}),/ACTIVITY_EXPIRED/);
     console.log('PASS: centralized ongoing/expired activities, review zero points, expired registration awards zero, expired voucher rejects new requests.');
   }finally{
     if(original)await db.rewardSettings.update({where:{id:'default'},data:{signupEnabled:original.signupEnabled,signupPoints:original.signupPoints,signupEndsAt:original.signupEndsAt,reviewEndsAt:original.reviewEndsAt,voucherEndsAt:original.voucherEndsAt}});

@@ -55,8 +55,9 @@
           <h2>发起兑换</h2>
           <label for="redeem-activity">兑换活动</label><select id="redeem-activity"><option value="">RM5</option></select>
           <label for="redeem-points">兑换积分</label>
-          <input id="redeem-points" required type="number" value="100" readonly>
-          <label for="redeem-amount">账单金额（RM）</label><input id="redeem-amount" required type="number" min="50" step="0.01">
+          <input id="redeem-points" required type="number" value="5" readonly>
+          <label for="redeem-amount">账单金额（RM）</label><input id="redeem-amount" required type="number" min="0" step="0.01" aria-describedby="redeem-minimum-error">
+          <p id="redeem-minimum-error" role="alert" hidden>没有满足最低消费金额</p>
           <label for="redeem-receipt">兑换收据号</label><input id="redeem-receipt" required maxlength="64">
           <label><input id="redeem-eligible" type="checkbox" required> 堂食且未使用其他优惠</label>
           <button class="primary-button" type="submit">请求会员确认</button>

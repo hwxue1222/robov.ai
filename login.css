@@ -20,5 +20,6 @@
 .activity-row { display:grid; grid-template-columns:2fr 2fr 1fr; gap:16px; padding:16px 0; border-bottom:1px solid #dde3de; font-size:14px; }
 .activity-row div,.activity-row time { min-width:0; overflow-wrap:anywhere; }
 .activity-row small { display:block; margin-top:6px; color:#59635f; }
+.activity-row .activity-points { display:block; margin-top:6px; color:#075b51; }
 .activity-row .text-button { grid-column:3; }
 @media(max-width:680px) { .activity-filter { grid-template-columns:1fr; } .activity-row { grid-template-columns:1fr; gap:10px; } .activity-row .text-button { grid-column:auto; } }

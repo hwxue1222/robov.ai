@@ -183,7 +183,7 @@ and never returns credentials or auth IDs. Academy history remains browser-local
 and is not part of this server activity log. setup-test-superadmin.cjs provisions
 the isolated test superadmin and binds admin to the three existing JWD stores;
 verify-store-roles.cjs verifies new-store inheritance and access isolation.
-One 100-point voucher gives RM5 off a dine-in bill of RM50 or more, with one
+One 5-ROBOV-point voucher gives RM5 off a dine-in bill of RM50 or more, with one
 voucher per store receipt and no combined promotion. Staff declare eligibility;
 the API enforces the terms and the member confirms the debit. Confirmation is
 claimed atomically to avoid duplicate debits. This is not a cash instrument.

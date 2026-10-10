@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="ROBOV.ai 会员积分、门店服务与知识探索。"><title>ROBOV.ai | Points & Connections</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./home.css"><script type="module" src="./home-scene.js"></script></head>
 <body class="home-page"><div class="app-shell">
-<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><nav class="home-nav" aria-label="ROBOV"><a href="./robov.html">会员钱包</a><a href="./staff.html">店员操作</a><a href="#intro">知识探索</a></nav><button id="open-profile" class="text-button" hidden>我的画像</button><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
+<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><nav class="home-nav" aria-label="ROBOV"><a href="./robov.html">会员钱包</a><a href="./staff.html">店员操作</a><a href="./academy.html">知识探索</a></nav><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
 <main>
 <section id="home" class="home-experience" aria-label="ROBOV Points">
 <div class="home-hero">
@@ -16,47 +16,7 @@
 <article><span class="home-access-number">03 / COMMUNITY</span><h2>ROBOV Community</h2><p>社区交流</p><span class="home-coming">筹备中</span></article>
 <a href="./merchants.html"><span class="home-access-number">04 / MERCHANT</span><h2>ROBOV Merchant</h2><p>商家管理平台</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
 <article><span class="home-access-number">05 / INTELLIGENCE</span><h2>ROBOV Intelligence</h2><p>AI 经营分析</p><span class="home-coming">筹备中</span></article>
-<a href="#intro"><span class="home-access-number">06 / ACADEMY</span><h2>ROBOV Academy</h2><p>知识网络</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
+<a href="./academy.html"><span class="home-access-number">06 / ACADEMY</span><h2>ROBOV Academy</h2><p>知识网络</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
 </div>
 </section>
-<ol class="journey-progress" aria-label="学习旅程"><li aria-current="step">认识你</li><li>知识网络</li><li>持续探索</li></ol>
-<section id="intro" class="journey-screen">
-<p class="eyebrow">PROFILE SCAN</p><h1>先从你自己说起。</h1><p class="guide-copy">你好，我是 ROBOV。你最近在做什么？对什么感兴趣？有什么想弄懂、却一直没找到方向的事？</p>
-<form id="intro-form"><label class="description-label" for="self-description">用你自己的话，聊聊现在的你</label><textarea id="self-description" required minlength="10" maxlength="2000" rows="6" placeholder="比如：我是做产品的，对 AI 很感兴趣，试过一些工具，但不太懂背后的原理。想学会把 AI 用到工作里，每天大概有 20 分钟。"></textarea><p id="intro-error" class="form-error" role="status" aria-live="polite"></p><button class="primary-button" type="submit">生成我的知识网络 →</button></form>
-<p class="result-note">生成时，你的描述、相关探索记录和所选节点的想法会发送给 Kimi 服务。请勿填写隐私或机密信息。</p>
-<p class="brand-promise">Navigate Knowledge. Expand Your Mind.<br>找到知识的方向，拓展认知的边界。</p>
-</section>
-<section id="profile-review" class="journey-screen" hidden>
-<p class="eyebrow">DYNAMIC COGNITIVE PROFILE</p><h1 tabindex="-1">你的画像，随探索一起成长。</h1>
-<p class="guide-copy" id="live-summary"></p><p id="live-description"></p>
-<dl class="profile-signals"><div><dt>兴趣信号</dt><dd id="signal-interests"></dd></div><div><dt>当前目标</dt><dd id="signal-goal"></dd></div><div><dt>学习时间</dt><dd id="signal-time"></dd></div><div><dt>自述起点</dt><dd id="signal-start"></dd></div></dl>
-<div class="living-metrics"><div><span>探索宽度</span><strong id="live-breadth">0</strong><small>已探索的领域</small></div><div><span>探索深度</span><strong id="live-depth">0</strong><small>最深的延伸层数</small></div><div><span>知识足迹</span><strong id="live-count">0</strong><small>已打开的知识点</small></div></div>
-<p class="result-note" id="profile-storage">探索记录反映你走过的路径，不等于已掌握。画像和学习记录保存在当前浏览器，刷新后可以继续。</p>
-<h2>最近的知识足迹</h2><ul id="profile-history" class="profile-history"></ul>
-<div class="journey-actions"><button id="begin-check" class="primary-button">进入我的三维知识网络 →</button><button id="resume-learning" class="secondary-button" hidden>继续我的知识链 →</button></div>
-<button id="update-profile" class="text-button">更新我的自我描述</button><button id="clear-progress" class="text-button">清除本机学习记录</button>
-</section>
-<section id="results" class="journey-screen results-screen" hidden>
-<p class="eyebrow">DYNAMIC COGNITIVE PROFILE</p><h1 tabindex="-1">你的起点，已经清晰了一些。</h1><p class="guide-copy" id="result-guidance"></p>
-<div class="profile-card"><h2 id="profile-title"></h2><p id="profile-summary"></p><div class="metric-list"><div><span>探索深度</span><strong id="metric-depth"></strong></div><div><span>探索宽度</span><strong id="metric-range"></strong></div><div><span>知识足迹</span><strong id="metric-goal"></strong></div></div></div>
-<p class="result-note">这是基于你的描述与探索记录的初步方向。随着学习，我们会继续调整。</p>
-<div id="map"><h2>你的知识地图</h2><div class="knowledge-map" aria-label="知识地图"><button class="map-node" data-topic="ai-systems"><span>系统</span>AI 系统思维</button><button class="map-node" data-topic="learning-design"><span>学习</span>学习架构</button><button class="map-node" data-topic="decision-science"><span>判断</span>决策科学</button><button class="map-node" data-topic="creative-tech"><span>创造</span>创意技术</button></div></div>
-<div class="next-route"><span class="eyebrow">NEXT BEST KNOWLEDGE</span><h2 id="route-title"></h2><p id="route-reason"></p><button id="start-learning" class="primary-button">带我开始第一段学习 →</button></div><button class="text-button" id="edit-description">修改我的描述</button>
-</section>
-<section id="learning" class="journey-screen" hidden>
-<div class="network-heading"><span class="eyebrow">PERSONAL KNOWLEDGE NETWORK</span><h2>从一个点，连接新的理解。</h2><div class="network-navigation"><button id="return-network" class="text-button" hidden>← 返回上一个网络</button><button id="forward-network" class="text-button" hidden>继续新网络 →</button><span id="network-origin"></span></div><p id="network-guidance" aria-live="polite"></p><div id="next-direction"></div></div>
-<div class="network-scene" id="network-scene"><canvas id="network-canvas" aria-label="三维知识网络" tabindex="0"></canvas><div id="scene-labels"></div><div class="scene-toolbar"><button id="scene-home" title="重置视角" aria-label="重置视角">↺</button><button id="scene-in" title="放大" aria-label="放大">+</button><button id="scene-out" title="缩小" aria-label="缩小">−</button><label><input id="scene-rotate" type="checkbox" checked>自动旋转</label></div><p id="scene-status" role="status"></p></div>
-<details class="network-list"><summary>知识节点列表</summary><div id="knowledge-network" aria-label="可延伸的知识网络"></div></details>
-<div id="node-path" class="node-path" aria-label="当前知识路径"></div>
-<div id="node-detail" class="node-detail" aria-live="polite"></div>
-<p class="result-note knowledge-disclaimer">学习内容由 AI 生成，可能有误；重要结论请核对可靠资料。</p>
-<div id="branch-choices" class="branch-choices" aria-live="polite"></div>
-<div id="node-actions" class="journey-actions"><button id="back-node" class="text-button" hidden>← 上一个节点</button><button id="extend-node" class="primary-button">继续深入 →</button><button id="widen-node" class="secondary-button">向广探索 →</button><button id="recenter-node" class="secondary-button">从这里展开新网络 →</button></div><p id="network-error" class="form-error knowledge-disclaimer" role="alert"></p>
-<section id="explore" class="knowledge-content">
-<div class="mode-output" id="mode-output" aria-live="polite"></div>
-<p id="learning-feedback" aria-live="polite"></p>
-</section>
-<section id="knowledge-pool" aria-label="Pool"><div class="pool-heading"><h2>Pool</h2><div class="pool-filters" role="tablist" aria-label="内容类型"><button data-pool-filter="all" role="tab" aria-selected="true">全部</button><button data-pool-filter="topic" role="tab" aria-selected="false">课题</button><button data-pool-filter="person" role="tab" aria-selected="false">人物</button><button data-pool-filter="event" role="tab" aria-selected="false">重大事件</button><button data-pool-filter="timeline" role="tab" aria-selected="false">时间线</button><button data-pool-filter="research" role="tab" aria-selected="false">文献</button><button data-pool-filter="news" role="tab" aria-selected="false">新闻</button><button data-pool-filter="finance" role="tab" aria-selected="false">财经</button></div></div><div id="pool-items" role="tabpanel"></div><p id="pool-ideas-status" role="status"></p><button id="retry-ideas" class="text-button" hidden>重试知识线索</button><p id="pool-research-status" role="status"></p><button id="retry-research" class="text-button" hidden>重试文献</button><p id="pool-status" role="status"></p><button id="retry-news" class="text-button" hidden>重试新闻</button><p id="pool-finance-status" role="status"></p><button id="retry-finance" class="text-button" hidden>重试财经</button></section>
-<details class="knowledge-notes"><summary>我的想法</summary><label class="description-label" for="reflection">我的想法</label><textarea id="reflection" rows="3" maxlength="1000" placeholder="写下你的想法……"></textarea><button class="secondary-button" id="complete-learning">保存想法</button></details><button class="text-button" id="back-map">← 我的画像</button>
-</section>
-</main></div><script src="./lib/graph.js"></script><script src="./lib/pool.js"></script><script src="./network.js"></script><script src="./app.js"></script><script src="./i18n.js"></script><script src="./generation.js"></script><script src="./pool.js"></script><script src="./profile.js"></script><script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script><script type="module" src="./scene.js"></script></body></html>
+</main></div><script src="./locale-data.js"></script><script src="./i18n.js"></script></body></html>

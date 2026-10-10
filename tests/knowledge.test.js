@@ -9,6 +9,45 @@ function fixture(count = 2) {
   return structuredClone({ domains, nodes, edges: [{ from: 'd1-1', to: 'd2-1', reason: text }], next: { id: 'd1-1', reason: text }, profile: { goal: text, start: text, time: text } });
 }
 test('accepts bilingual personalized graphs', () => assert.equal(validateGraph(fixture()).nodes.length, 6));
+test('new Malay translations are validated while saved bilingual graphs remain compatible', () => {
+  const graph = fixture();
+  const addMalay = value => {
+    if (!value || typeof value !== 'object') return;
+    if (value.zh && value.en) value.ms = 'Pengekstrakan';
+    else Object.values(value).forEach(addMalay);
+  };
+  addMalay(graph);
+  assert.equal(validateGraph(graph).nodes[0].title.ms, 'Pengekstrakan');
+  graph.nodes[0].title.ms = '';
+  assert.throws(() => validateGraph(graph));
+});
+
+test('Malay generation rejects missing translations and uses a trilingual prompt', async () => {
+  const oldFetch = global.fetch, oldKey = process.env.AI_GATEWAY_API_KEY;
+  process.env.AI_GATEWAY_API_KEY = 'test-only';
+  let status, payload;
+  const res = { setHeader() {}, status(value) { status = value; return this; }, json(value) { payload = value; } };
+  try {
+    global.fetch = async (_url, options) => {
+      assert.match(JSON.parse(options.body).messages[0].content, /ms \(Bahasa Melayu\)/);
+      return { ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify(fixture()) } }] }) };
+    };
+    await handler({ method: 'POST', body: { description: 'I want to understand coffee extraction.', language: 'ms' } }, res);
+    assert.equal(status, 502);
+    assert.equal(payload.error, 'INVALID_GENERATION');
+    const graph = fixture();
+    const localize = value => {
+      if (!value || typeof value !== 'object') return;
+      if (value.zh && value.en) value.ms = 'Pengekstrakan';
+      else Object.values(value).forEach(localize);
+    };
+    localize(graph);
+    global.fetch = async () => ({ ok: true, json: async () => ({ choices: [{ message: { content: JSON.stringify(graph) } }] }) });
+    await handler({ method: 'POST', body: { description: 'I want to understand coffee extraction.', language: 'ms' } }, res);
+    assert.equal(status, 200);
+    assert.equal(payload.graph.nodes[0].title.ms, 'Pengekstrakan');
+  } finally { global.fetch = oldFetch; if (oldKey === undefined) delete process.env.AI_GATEWAY_API_KEY; else process.env.AI_GATEWAY_API_KEY = oldKey; }
+});
 test('rejects missing translations, cycles, unknown edges and duplicate ids', () => {
   for (const mutate of [g => delete g.nodes[1].body.en, g => g.nodes[0].parent = 'd1-1', g => g.edges[0].to = 'absent', g => g.nodes[1].id = 'd1']) {
     const g = fixture(); mutate(g); assert.throws(() => validateGraph(g));

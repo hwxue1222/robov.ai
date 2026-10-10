@@ -121,7 +121,7 @@ if (renderer) {
     const hit = raycaster.intersectObjects(visualNodes.map(n => n.mesh))[0];
     const node = hit && visualNodes.find(n => n.id === hit.object.userData.id);
     canvas.style.cursor = node ? "pointer" : "grab";
-    canvas.title = node ? (document.documentElement.lang === "en" ? translate(node.title) : node.title) : "";
+    canvas.title = node ? translate(node.title) : "";
   });
   canvas.addEventListener("pointerup", event => {
     if (!pointerStart || Math.hypot(event.clientX - pointerStart[0], event.clientY - pointerStart[1]) > 6) return;

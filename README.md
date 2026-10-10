@@ -69,6 +69,15 @@ cleared in the profile view. Cross-device synchronization is not implemented.
 
 ROBOV Points adds three reviewable modules without Supabase:
 
+The homepage links to the independent Academy at /academy.html; learning screens
+and existing browser-local learning history live there. All pages share CN, EN,
+and MY controls (Simplified Chinese, English, and Bahasa Melayu). The selected
+language persists between pages. New AI graphs request all three languages;
+older bilingual saved graphs remain readable and fall back to English for
+missing Malay content. External news, original source titles, user input, brand
+names, and addresses are preserved. No database migration is needed for this
+navigation/localization change.
+
 - Member wallet at `/robov.html`: member login bootstrap, balance, recent ledger
   entries, and a 60-second signed dynamic member code.
 - Staff console at `/staff.html`: scan or paste the member code, enter amount and

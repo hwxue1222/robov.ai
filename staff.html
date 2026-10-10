@@ -6,6 +6,7 @@
   <meta name="description" content="ROBOV Points 店员扫码、发放积分、兑换和退款冲回。">
   <title>ROBOV Points | 店员操作</title>
   <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./home.css">
 </head>
 <body>
   <div class="app-shell">
@@ -26,9 +27,9 @@
         <form id="staff-auth" class="points-panel">
           <h2>门店身份</h2>
           <label for="staff-user">店员用户 ID</label>
-          <input id="staff-user" required placeholder="staff user id">
+          <input id="staff-user" required placeholder="店员用户 ID">
           <label for="staff-store">门店 ID</label>
-          <input id="staff-store" required placeholder="store id">
+          <input id="staff-store" required placeholder="门店 ID">
           <button class="secondary-button" type="submit">保存本机身份</button>
           <p class="result-note">生产环境应接入正式员工登录；这里的 ID 只用于联调 API 权限。</p>
         </form>
@@ -58,11 +59,12 @@
       <form id="refund-form" class="points-panel">
         <h2>退款冲回</h2>
         <label for="transaction-id">原积分交易 ID</label>
-        <input id="transaction-id" required placeholder="PointTransaction id">
+        <input id="transaction-id" required placeholder="原积分交易 ID">
         <button class="secondary-button" type="submit">冲回原发放积分</button>
       </form>
     </main>
   </div>
+  <script src="./locale-data.js"></script><script src="./i18n.js"></script>
   <script src="./staff.js"></script>
 </body>
 </html>

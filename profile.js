@@ -43,7 +43,7 @@ $('#update-profile').addEventListener('click', () => { $('#self-description').va
 $('#self-description').addEventListener('input', saveProgress);
 $('#clear-progress').addEventListener('click', () => {
   const message = localText({ zh: '清除当前浏览器中的画像和学习记录？', en: 'Clear your profile and learning history from this browser?' });
-  if (window.confirm(document.documentElement.lang === 'en' ? translate(message) : message)) {
+  if (window.confirm(translate(message))) {
     try { localStorage.removeItem(progressKey); } catch {} window.location.reload();
   }
 });

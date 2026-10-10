@@ -6,7 +6,6 @@ const levels = {}, reflections = {};
 let personalizedGraph = null;
 function reflectionKey(id) { return personalizedGraph.sessionId + ':' + id; }
 function showScreen(id) {
-  $('#home').hidden = id !== 'intro';
   ['intro', 'profile-review', 'results', 'learning'].forEach(name => $('#' + name).hidden = name !== id);
   $$('.journey-progress li').forEach((li, i) => i === (id === 'learning' ? 1 : 0) ? li.setAttribute('aria-current', 'step') : li.removeAttribute('aria-current'));
   window.scrollTo({ top: 0, behavior: 'instant' });

@@ -22,7 +22,11 @@
       const amount = document.createElement('strong');
       amount.textContent = `${item.points > 0 ? '+' : ''}${item.points} RBP`;
       const status = document.createElement('span');
-      status.textContent = `${item.type} · ${item.status}`;
+      const kind = document.createElement('span');
+      kind.textContent = ({ EARN: '消费积分', REDEEM_HOLD: '积分兑换', REFUND_REVERSAL: '退款冲回' })[item.type] || item.type;
+      const stage = document.createElement('span');
+      stage.textContent = ({ POSTED: '已入账', PENDING_MEMBER_CONFIRMATION: '等待会员确认', REVERSED: '已冲回', VOIDED: '已取消' })[item.status] || item.status;
+      status.append(kind, ' · ', stage);
       const receipt = document.createElement('small');
       receipt.textContent = item.receiptNo || item.id;
       row.append(amount, status, receipt);

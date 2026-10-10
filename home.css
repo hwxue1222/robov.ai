@@ -3,7 +3,14 @@
 .home-page a { text-decoration: none; }
 .home-page .brand { color: #151b18; }
 .home-page .brand-mark { background: #19231e; border-radius: 4px; }
-.home-nav { display: flex; gap: 26px; margin-left: auto; font-size: 14px; }
+.home-nav { display: flex; gap: 20px; margin-left: auto; font-size: 14px; flex-wrap: wrap; }
+.home-page .topbar { flex-wrap: wrap; }
+.home-page .language-switch { flex-shrink: 0; }
+.home-page .language-switch button { min-width: 36px; }
+.academy-page .journey-progress { margin-top: 30px; }
+body:not(.home-page) .topbar { flex-wrap: wrap; }
+body:not(.home-page) .nav-links { flex-wrap: wrap; }
+@media (max-width: 680px) { body:not(.home-page) .topbar .nav-links { order: 3; width: 100%; } body:not(.home-page) .language-switch { margin-left: auto; } }
 .home-nav a { color: #3d4741; }
 .home-nav a:hover { color: #08775e; }
 .home-hero { position: relative; height: 560px; overflow: hidden; color: #f6f9f3; background: #101613; }

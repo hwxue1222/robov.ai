@@ -10,6 +10,7 @@ const errors = {
 function localText(value) {
   if (typeof value === 'string') return value;
   english[value.zh] = value.en;
+  if (value.ms) malay[value.zh] = value.ms;
   return value.zh;
 }
 function registerGraph(graph) {
@@ -23,7 +24,7 @@ function registerGraph(graph) {
   normalizeRecommendation(graph);
   const register = value => {
     if (value && typeof value === 'object') {
-      if (typeof value.zh === 'string' && typeof value.en === 'string') english[value.zh] = value.en;
+      if (typeof value.zh === 'string' && typeof value.en === 'string') { english[value.zh] = value.en; if (value.ms) malay[value.zh] = value.ms; }
       else Object.values(value).forEach(register);
     }
   };
@@ -37,7 +38,7 @@ function registerGraph(graph) {
   });
 }
 async function requestGraph(payload) {
-  const response = await fetch('/api/knowledge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(115000) });
+  const response = await fetch('/api/knowledge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, language }), signal: AbortSignal.timeout(115000) });
   const result = await response.json();
   if (!response.ok || !result.graph) throw new Error(result.error || 'MODEL_UNAVAILABLE');
   return validateGraph(result.graph, payload.node || null, 18, (payload.existing || []).map(n => n.id));

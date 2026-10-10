@@ -53,6 +53,12 @@
         </form>
       </section>
       <section id="reward-admin" hidden class="points-panel"><h2>注册奖励管理</h2><form id="reward-settings-form"><label><input type="checkbox" id="signup-enabled"> 启用注册赠分</label><label for="signup-points">注册赠送积分</label><input id="signup-points" type="number" min="0" max="10000" step="1" required><button class="primary-button" type="submit">保存设置</button><p id="reward-settings-status" role="status"></p></form><h3>最近注册奖励</h3><ul id="signup-credits"></ul></section>
+      <section id="member-activity-panel" hidden class="points-panel">
+        <h2>会员活动</h2><p>账号与积分活动</p>
+        <div class="activity-tabs" role="tablist" aria-label="会员视图"><button type="button" role="tab" aria-selected="true" data-activity-view="activity">活动记录</button><button type="button" role="tab" aria-selected="false" data-activity-view="members">所有会员</button></div>
+        <form id="activity-filter" class="activity-filter"><div><label for="activity-store">门店</label><select id="activity-store"><option value="">全部门店</option></select></div><div><label for="activity-search">会员姓名或邮箱</label><input id="activity-search" maxlength="100"></div><button type="submit" class="secondary-button">查询</button></form>
+        <button id="activity-clear-member" type="button" class="text-button" hidden>清除会员筛选</button><p id="activity-status" role="status"></p><div id="activity-rows"></div><button id="activity-next" type="button" class="secondary-button" hidden>下一页</button>
+      </section>
       <form id="refund-form" class="points-panel">
         <h2>退款冲回</h2>
         <label for="transaction-id">原积分交易 ID</label>
@@ -65,5 +71,6 @@
   <script src="./staff.js"></script>
   <script src="./account.js"></script>
   <script src="./reward-admin.js"></script>
+  <script src="./member-activity.js"></script>
 </body>
 </html>

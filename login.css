@@ -13,3 +13,12 @@
 .points-panel select { width: 100%; min-height: 46px; border: 1px solid #b9c9b8; border-radius: 4px; padding: 10px; font: inherit; background: white; }
 @media (max-width: 680px) { .login-shell { margin-top: 28px; } #login-form { padding: 22px; } }
 @media(max-width:680px) { .topbar .nav-links { display: flex; gap: 16px; width: 100%; flex-wrap: wrap; } }
+.activity-tabs { display:flex; gap:4px; border-bottom:1px solid #cdd5cc; margin:20px 0; }
+.activity-tabs button { font:inherit; padding:12px; background:transparent; border:0; color:#59635f; cursor:pointer; }
+.activity-tabs button[aria-selected="true"] { color:#08775e; border-bottom:2px solid #08775e; }
+.activity-filter { display:grid; grid-template-columns:1fr 1fr auto; align-items:end; gap:16px; }
+.activity-row { display:grid; grid-template-columns:2fr 2fr 1fr; gap:16px; padding:16px 0; border-bottom:1px solid #dde3de; font-size:14px; }
+.activity-row div,.activity-row time { min-width:0; overflow-wrap:anywhere; }
+.activity-row small { display:block; margin-top:6px; color:#59635f; }
+.activity-row .text-button { grid-column:3; }
+@media(max-width:680px) { .activity-filter { grid-template-columns:1fr; } .activity-row { grid-template-columns:1fr; gap:10px; } .activity-row .text-button { grid-column:auto; } }

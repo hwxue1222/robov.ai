@@ -102,7 +102,10 @@ against production member data without an explicit backup and approval.
 Member and employee sign-in use Better Auth password accounts and signed cookie
 sessions backed by Prisma. Caller-supplied identity headers cannot authenticate.
 The homepage links to login, not Store Console; wallets require a session.
-Administrator access is assigned server-side only. Staff access is store-scoped.
+Administrator access is assigned server-side only. ADMIN is limited to active
+StoreStaff assignments (the same account may administer several stores).
+Only SUPERADMIN bypasses assignments and discovers all active stores, including
+newly created stores. Ledger authorization applies the same distinction.
 BETTER_AUTH_SECRET (32+ characters) is required. ROBOV_AUTH_BASE_URL is optional;
 on Vercel it defaults to the deployment URL. Production remains deliberately
 blocked by VERCEL_ENV=production. Only protected test previews enable ROBOV_DEMO_MODE.
@@ -113,7 +116,16 @@ New member accounts atomically receive the configured registration reward
 (default 100 points), with a unique signup credit and audit. Repeated login or
 provisioning does not grant it again. Admin-only /api/robov/settings manages the
 enabled flag and points (0-10000) and lists recent credits. Changes affect new
-members only. /api/robov/offer exposes only the public campaign configuration.
+members only. Global reward settings require SUPERADMIN; local admins cannot
+read or alter them. /api/robov/offer exposes only the public campaign configuration.
+
+SUPERADMIN can use /api/robov/activity to browse all member wallets and recorded
+account/points activity, with search, store/member filters and cursor pagination.
+Each viewing request is audited. The endpoint denies local admins and members,
+and never returns credentials or auth IDs. Academy history remains browser-local
+and is not part of this server activity log. setup-test-superadmin.cjs provisions
+the isolated test superadmin and binds admin to the three existing JWD stores;
+verify-store-roles.cjs verifies new-store inheritance and access isolation.
 One 100-point voucher gives RM5 off a dine-in bill of RM50 or more, with one
 voucher per store receipt and no combined promotion. Staff declare eligibility;
 the API enforces the terms and the member confirms the debit. Confirmation is

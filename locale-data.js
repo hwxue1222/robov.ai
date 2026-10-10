@@ -1,5 +1,14 @@
 // Shared interface translations. Brand names and user-entered text remain intact.
 const localeRows = [
+  ['超级管理员', 'Super administrator', 'Pentadbir super'], ['门店管理员', 'Store administrator', 'Pentadbir kedai'],
+  ['会员活动', 'Member activity', 'Aktiviti ahli'], ['账号与积分活动', 'Account and points activity', 'Aktiviti akaun dan mata'],
+  ['会员视图', 'Member views', 'Paparan ahli'], ['活动记录', 'Activity log', 'Log aktiviti'], ['所有会员', 'All members', 'Semua ahli'],
+  ['全部门店', 'All stores', 'Semua kedai'], ['会员姓名或邮箱', 'Member name or email', 'Nama atau e-mel ahli'],
+  ['查询', 'Search', 'Cari'], ['清除会员筛选', 'Clear member filter', 'Kosongkan penapis ahli'], ['下一页', 'Next page', 'Halaman seterusnya'],
+  ['查看活动', 'View activity', 'Lihat aktiviti'], ['暂无记录', 'No records', 'Tiada rekod'], ['会员码生成', 'Member code issued', 'Kod ahli dijana'],
+  ['会员码扫描', 'Member code scanned', 'Kod ahli diimbas'], ['积分入账', 'Points credited', 'Mata dikreditkan'],
+  ['兑换申请', 'Redemption requested', 'Penebusan diminta'], ['兑换确认', 'Redemption confirmed', 'Penebusan disahkan'],
+  ['SUPERADMIN_REQUIRED', 'Super administrator access required.', 'Akses pentadbir super diperlukan.'], ['ACTIVITY_UNAVAILABLE', 'Activity is unavailable.', 'Aktiviti tidak tersedia.'],
   ['注册奖励', 'Signup reward', 'Ganjaran pendaftaran'],
   ['100 points = RM5 折扣券', '100 points = RM5 voucher', '100 mata = baucar RM5'],
   ['折扣券', 'Discount voucher', 'Baucar diskaun'], ['100 points 兑换 RM5', '100 points for RM5', '100 mata untuk RM5'],

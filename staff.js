@@ -36,7 +36,7 @@
     const { user } = await response.json();
     if (!response.ok || !user?.isEmployee) { location.replace('./login.html?mode=employee'); return; }
     $('#staff-main').hidden = false;
-    const role = document.createElement('span'); role.textContent = user.role === 'ADMIN' ? '管理员' : '员工';
+    const role = document.createElement('span'); role.textContent = user.role === 'SUPERADMIN' ? '超级管理员' : user.role === 'ADMIN' ? '门店管理员' : '员工';
     $('#staff-identity').append(document.createTextNode((user.displayName || user.username || '') + ' · '), role);
     $('#staff-store').replaceChildren(...user.stores.map(store => { const option = document.createElement('option'); option.value = store.id; option.textContent = store.name; return option; }));
     state.storeId = user.stores.some(store => store.id === state.storeId) ? state.storeId : user.stores[0]?.id || '';

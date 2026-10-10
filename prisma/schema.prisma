@@ -12,6 +12,7 @@ enum RobovRole {
   STAFF
   MANAGER
   ADMIN
+  SUPERADMIN
 }
 
 enum PointTransactionType {
@@ -31,6 +32,7 @@ enum PointTransactionStatus {
 }
 
 enum AuditAction {
+  MEMBER_ACTIVITY_VIEWED
   REWARD_SETTINGS_UPDATED
   MEMBER_LOGIN
   QR_ISSUED

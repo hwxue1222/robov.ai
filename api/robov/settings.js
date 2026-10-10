@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   try {
     const actor = await requireActor(req, res, true);
     if (!actor) return;
-    if (actor.role !== 'ADMIN') return res.status(403).json({ error: 'ADMIN_REQUIRED' });
+    if (actor.role !== 'SUPERADMIN') return res.status(403).json({ error: 'SUPERADMIN_REQUIRED' });
     const db = getPrisma();
     if (req.method === 'GET') return res.status(200).json({ settings: await rewardSettings(db), credits: await db.pointTransaction.findMany({ where: { idempotencyKey: { startsWith: 'signup:' } }, orderBy: { createdAt: 'desc' }, take: 50, select: { id: true, walletId: true, points: true, createdAt: true } }) });
     const { signupEnabled, signupPoints } = req.body || {};

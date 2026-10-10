@@ -6,9 +6,12 @@
     merchant: [...shared, ['nameZh', '中文名称'], ['category', '商家分类'], ['country', '国家'], ['region', '地区'], ['description', '商家介绍'], ['website', '官方网站'], ['logo', 'Logo 图片链接'], ['sourceUrl', '资料来源链接']],
     store: [...shared, ['merchantId', '所属商家'], ['outletName', '门店展示名称'], ['city', '城市'], ['address', '门店地址'], ['hours', '营业时间'], ['reviewUrl', 'Google Review 链接'], ['active', '启用门店']]
   };
-  let merchants = [], editing = null, kind = 'store', busy = false, snapshot = null;
+  let merchants = [], editing = null, kind = 'store', view = 'store', busy = false, snapshot = null;
   const pager = window.RobovPager([$('store-profile-pagination')], page => load(page));
-  function close() { editing = null; $('store-profile-editor').hidden = true; }
+  function close() {
+    editing = null; $('store-profile-editor').hidden = true;
+    $('store-merchant-view').hidden = view !== 'merchant'; $('store-outlet-view').hidden = view !== 'store';
+  }
   function edit(type, row) {
     if (busy) return;
     kind = type; editing = row || null; $('store-profile-title').textContent = kind === 'merchant' ? '商家资料' : '门店资料';
@@ -32,6 +35,7 @@
       if (['logo', 'image'].includes(key) && row?.[key]) { const image = make('img'); image.src = row[key]; image.alt = row.name; image.className = 'store-profile-preview'; container.append(image); }
       $('store-profile-fields').append(container);
     }
+    $('store-outlet-view').hidden = true; $('store-merchant-view').hidden = true;
     $('store-profile-editor').hidden = false; $('store-profile-name').focus();
   }
   function rowView(row, type) {
@@ -67,7 +71,7 @@
     window.dispatchEvent(new CustomEvent('robov-stores-changed', { detail: { stores } }));
   }
   document.querySelectorAll('[data-store-view]').forEach(button => button.addEventListener('click', () => {
-    if (busy) return; close();
+    if (busy) return; view = button.dataset.storeView; close();
     const merchant = button.dataset.storeView === 'merchant';
     $('store-merchant-view').hidden = !merchant; $('store-outlet-view').hidden = merchant;
     document.querySelectorAll('[data-store-view]').forEach(item => item.setAttribute('aria-selected', String(item === button)));

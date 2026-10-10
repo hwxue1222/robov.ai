@@ -4,7 +4,7 @@
   let signup = new URLSearchParams(location.search).get('action') === 'register' && mode === 'member';
   function render() {
     document.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.mode === mode)));
-    $('#login-title').textContent = signup ? '注册会员' : mode === 'employee' ? '员工登录' : '会员登录';
+    $('#login-title').textContent = signup ? '注册会员' : mode === 'employee' ? '商家登录' : '会员登录';
     $('#login-submit').textContent = signup ? '创建会员账号' : '登录';
     $('#identifier-label').textContent = '邮箱';
     $('#login-identifier').type = 'email';

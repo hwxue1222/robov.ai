@@ -47,6 +47,7 @@ const localeRows = [
   ['兑换申请', 'Redemption requested', 'Penebusan diminta'], ['兑换确认', 'Redemption confirmed', 'Penebusan disahkan'],
   ['SUPERADMIN_REQUIRED', 'Super administrator access required.', 'Akses pentadbir super diperlukan.'], ['ACTIVITY_UNAVAILABLE', 'Activity is unavailable.', 'Aktiviti tidak tersedia.'],
   ['注册奖励', 'Signup reward', 'Ganjaran pendaftaran'],
+  ['普通会员', 'Regular member', 'Ahli biasa'], ['邀请码注册', 'Registered with invitation code', 'Berdaftar dengan kod jemputan'],
   ['5 ROBOV points = RM5 折扣券', '5 ROBOV points = RM5 voucher', '5 ROBOV points = baucar RM5'],
   ['折扣券', 'Discount voucher', 'Baucar diskaun'], ['5 ROBOV points 兑换 RM5', '5 ROBOV points for RM5', '5 ROBOV points untuk RM5'],
   ['堂食满 RM50', 'Dine in, minimum RM50', 'Makan di kedai, minimum RM50'], ['JWD 所有营业门店通用', 'All operating JWD outlets', 'Semua cawangan JWD yang beroperasi'],

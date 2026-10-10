@@ -30,6 +30,11 @@
         detail.textContent=member?.displayName && member.displayName !== 'ROBOV Member' && member.displayName !== member.email ? member.displayName : '';
         detail.dataset.noTranslate=''; title.dataset.noTranslate='';
         identity.append(title); if(detail.textContent)identity.append(detail); item.append(identity);
+        if (view === 'members') {
+          const badge=document.createElement('span'),invited=row.registrationType==='INVITED';
+          badge.className='member-type-badge'+(invited?' member-type-invited':'');
+          badge.textContent=invited?'邀请码注册':'普通会员'; identity.append(badge);
+        }
         const description=document.createElement('div');
         if (view === 'members') {
           const balance=document.createElement('span'), hold=document.createElement('small'), label=document.createElement('span');

@@ -21,7 +21,8 @@ module.exports = async (req, res) => {
       if (search.length > 100) return res.status(400).json({ error: 'INVALID_FILTER' });
       const where={createdAt:{lte:input.asOf},member:{isNot:null},...(search?{OR:[{email:{contains:search,mode:'insensitive'}},{displayName:{contains:search,mode:'insensitive'}}]}:{})};
       meta=pageMeta(input,await db.robovUser.count({where}));
-      rows = await db.robovUser.findMany({ take:meta.pageSize,skip:(meta.page-1)*meta.pageSize,orderBy:[{createdAt:'desc'},{id:'desc'}],where, select: { id: true, email: true, displayName: true, createdAt: true, member: { select: { pointBalance: true, pointsOnHold: true } } } });
+      rows = await db.robovUser.findMany({ take:meta.pageSize,skip:(meta.page-1)*meta.pageSize,orderBy:[{createdAt:'desc'},{id:'desc'}],where, select: { id: true, email: true, displayName: true, invitationCodeId: true, createdAt: true, member: { select: { pointBalance: true, pointsOnHold: true } } } });
+      rows = rows.map(({invitationCodeId,...row}) => ({...row,registrationType:require('../../lib/robov/activity-details').registrationType({invitationCodeId})}));
     } else {
       const memberId = params.get('memberId'), storeId = params.get('storeId');
       if ([memberId, storeId].some(value => value && value.length > 100)) return res.status(400).json({ error: 'INVALID_FILTER' });

@@ -19,7 +19,7 @@
       const active = button.dataset.consoleTab === selected;
       const profile = button.dataset.consoleTab === 'profile';
       button.setAttribute(profile ? 'aria-pressed' : 'aria-selected', String(active));
-      button.tabIndex = profile || active ? 0 : -1;
+      button.tabIndex = profile || active || (selected === 'profile' && button.dataset.consoleTab === 'operations') ? 0 : -1;
       for (const panel of panels(button.dataset.consoleTab)) panel.toggleAttribute('data-console-inactive', !active);
     }
   }

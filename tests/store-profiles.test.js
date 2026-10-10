@@ -17,7 +17,7 @@ test('new store, default policy and audit use a single transaction without grant
   assert.deepEqual(calls, ['store', 'policy', 'audit']);
 });
 test('stale edits and changes to stable store codes are rejected before audit writes', async () => {
-  const tx = { merchant: { findUnique: async () => ({}) }, store: { findUnique: async () => ({ id: 'one', slug: 'new-store' }), updateMany: async () => ({ count: 0 }) } };
+  const tx = { $queryRaw: async () => [], merchant: { findUnique: async () => ({}) }, store: { findUnique: async () => ({ id: 'one', slug: 'new-store' }), updateMany: async () => ({ count: 0 }) } };
   const db = { $transaction: fn => fn(tx) };
   for (const patch of [{ version: 1 }, { version: 1, slug: 'renamed' }]) await assert.rejects(saveProfile(db, { role: 'SUPERADMIN' }, { ...store, id: 'one', ...patch }), /STORE_PROFILE_CONFLICT/);
 });

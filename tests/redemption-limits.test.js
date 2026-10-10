@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict');
 const {requestRedemption}=require('../lib/robov/ledger');
 function fixture(activity=null){
   const wallet={id:'wallet',pointBalance:100,pointsOnHold:0};
-  const tx={store:{findUnique:async()=>({active:true})},robovUser:{findUnique:async()=>({role:'SUPERADMIN'})},pointTransaction:{findUnique:async()=>null,create:async({data})=>({id:'hold',...data})},rewardSettings:{findUnique:async()=>null},rewardActivity:{findUnique:async()=>activity},memberWallet:{findUnique:async()=>wallet,updateMany:async({data})=>{wallet.pointsOnHold+=data.pointsOnHold.increment;return {count:1};}},auditLog:{create:async()=>{}}};
+  const tx={$queryRaw:async()=>[],store:{findUnique:async()=>({active:true})},robovUser:{findUnique:async()=>({role:'SUPERADMIN'})},pointTransaction:{findUnique:async()=>null,create:async({data})=>({id:'hold',...data})},rewardSettings:{findUnique:async()=>null},rewardActivity:{findUnique:async()=>activity},memberWallet:{findUnique:async()=>wallet,updateMany:async({data})=>{wallet.pointsOnHold+=data.pointsOnHold.increment;return {count:1};}},auditLog:{create:async()=>{}}};
   return {wallet,db:{$transaction:fn=>fn(tx)}};
 }
 const input={points:5,amount:50,receiptNo:'TEST-50',dineIn:true,otherPromotion:false};

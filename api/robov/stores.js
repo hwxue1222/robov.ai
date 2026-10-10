@@ -1,7 +1,7 @@
 const { requireActor } = require('../../lib/robov/auth');
 const { requireTestMode } = require('../../lib/robov/config');
 const { getPrisma } = require('../../lib/robov/prisma');
-const { requireSuperadmin, saveProfile } = require('../../lib/robov/store-profiles');
+const { requireSuperadmin, saveProfile, setStoreActive } = require('../../lib/robov/store-profiles');
 const { pagination, pageMeta } = require('../../lib/robov/pagination');
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   try {
     const actor = await requireActor(req, res, true); if (!actor) return;
     requireSuperadmin(actor); const db = getPrisma();
-    if (req.method === 'POST') return res.status(req.body?.id ? 200 : 201).json({ row: await saveProfile(db, actor, req.body || {}) });
+    if (req.method === 'POST') return res.status(req.body?.id ? 200 : 201).json({ row: await (req.body?.action === 'set-active' ? setStoreActive : saveProfile)(db, actor, req.body || {}) });
     const input = pagination(req.url), where = { createdAt: { lte: input.asOf } }, meta = pageMeta(input, await db.store.count({ where }));
     return res.status(200).json({ rows: await db.store.findMany({ where, include: { merchant: { select: { name: true } } }, orderBy: [{ createdAt: 'desc' }, { id: 'desc' }], skip: (meta.page - 1) * meta.pageSize, take: meta.pageSize }), merchants: await db.merchant.findMany({ orderBy: { name: 'asc' } }), pagination: meta });
   } catch (error) {

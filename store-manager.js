@@ -1,12 +1,13 @@
 (function () {
   const $ = id => document.getElementById(id);
   const make = (tag, text) => { const node = document.createElement(tag); if (text) node.textContent = text; return node; };
-  const shared = [['slug', '资料编号'], ['name', '名称'], ['phone', '联系电话'], ['email', '联系邮箱'], ['image', '展示图片链接']];
+  const shared = [['slug', '网址标识'], ['name', '名称'], ['phone', '联系电话'], ['email', '联系邮箱'], ['image', '展示图片链接']];
+  const profileNumber = (row, type) => (type === 'merchant' ? 'M' : 'S') + String(row.number).padStart(6, '0');
   const fields = {
     merchant: [...shared, ['nameZh', '中文名称'], ['category', '商家分类'], ['country', '国家'], ['region', '地区'], ['description', '商家介绍'], ['website', '官方网站'], ['logo', 'Logo 图片链接'], ['sourceUrl', '资料来源链接']],
     store: [...shared, ['merchantId', '所属商家'], ['outletName', '门店展示名称'], ['city', '城市'], ['address', '门店地址'], ['hours', '营业时间'], ['reviewUrl', 'Google Review 链接'], ['active', '启用门店']]
   };
-  let merchants = [], editing = null, kind = 'store', view = 'store', busy = false, snapshot = null;
+  let merchants = [], editing = null, kind = 'store', view = 'store', busy = false, snapshot = null, currentPage = 1;
   const pager = window.RobovPager([$('store-profile-pagination')], page => load(page));
   function close() {
     editing = null; $('store-profile-editor').hidden = true;
@@ -16,6 +17,11 @@
     if (busy) return;
     kind = type; editing = row || null; $('store-profile-title').textContent = kind === 'merchant' ? '商家资料' : '门店资料';
     $('store-profile-fields').replaceChildren();
+    if (row) {
+      const container = make('div'), caption = make('label', type === 'merchant' ? '商家编号' : '门店编号'), input = make('input');
+      input.id = 'profile-number'; caption.htmlFor = input.id; input.value = profileNumber(row, type); input.readOnly = true;
+      container.append(caption, input); $('store-profile-fields').append(container);
+    }
     for (const [key, label] of fields[kind]) {
       const container = make('div'), caption = make('label', label), id = 'store-profile-' + key;
       caption.htmlFor = id;
@@ -40,12 +46,28 @@
   }
   function rowView(row, type) {
     const article = make('article'); article.className = 'campaign-row';
-    const identity = make('div'); identity.dataset.noTranslate = ''; identity.append(make('strong', row.name), make('p', row.slug));
+    const identity = make('div'); identity.dataset.noTranslate = ''; identity.append(make('strong', row.name), make('p', profileNumber(row, type)), make('p', row.slug));
     if (type === 'store') identity.append(make('p', [row.merchant?.name, row.address].filter(Boolean).join(' / ')));
     const actions = make('div'); actions.className = 'camera-tools';
     if (type === 'store') actions.append(make('span', row.active ? '已启用' : '已停用'));
     const button = make('button', '编辑'); button.type = 'button'; button.className = 'secondary-button'; button.addEventListener('click', () => edit(type, row)); actions.append(button);
+    if (type === 'store') {
+      const toggle = make('button', row.active ? '停用门店' : '启用门店'); toggle.type = 'button'; toggle.className = 'secondary-button';
+      toggle.addEventListener('click', () => toggleStore(row, toggle)); actions.append(toggle);
+    }
     article.append(identity, actions); return article;
+  }
+  async function toggleStore(row, button) {
+    if (busy) return;
+    const messages = { zh: '停用后门店将从前台隐藏，不能参与活动，未确认的兑换将取消。确定停用？', en: 'Disable this store? It will be hidden from the public site, excluded from activities, and pending redemptions will be cancelled.', ms: 'Nyahaktifkan kedai ini? Kedai akan disembunyikan daripada laman awam, tidak menyertai aktiviti dan penebusan belum disahkan akan dibatalkan.' };
+    if (row.active && !window.confirm(messages[document.documentElement.lang?.split('-')[0]] || messages.en)) return;
+    busy = true; button.disabled = true;
+    try {
+      const response = await fetch('/api/robov/stores', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'set-active', id: row.id, version: row.version, active: !row.active }) }), result = await response.json();
+      if (!response.ok) throw Error(result.error);
+      snapshot = null; busy = false; await load(currentPage); await refreshStores(); $('store-management-status').textContent = row.active ? '门店已停用' : '门店已启用';
+    } catch (error) { $('store-management-status').textContent = error.message; }
+    finally { busy = false; button.disabled = false; }
   }
   async function load(page = 1) {
     if (busy) return; busy = true; pager.busy(true);
@@ -56,7 +78,7 @@
       $('store-management').hidden = false; merchants = result.merchants; snapshot = result.pagination.asOf;
       $('store-profile-rows').replaceChildren(...result.rows.map(row => rowView(row, 'store')));
       $('merchant-profile-rows').replaceChildren(...merchants.map(row => rowView(row, 'merchant')));
-      pager.update(result.pagination); $('store-management-status').textContent = '';
+      currentPage = result.pagination.page; pager.update(result.pagination); $('store-management-status').textContent = '';
     } catch (error) { $('store-management-status').textContent = error.message; }
     finally { busy = false; pager.busy(false); }
   }

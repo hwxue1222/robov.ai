@@ -93,6 +93,7 @@ model MemberWallet {
 
 model Store {
   id           String             @id @default(cuid())
+  number       Int                @unique @default(autoincrement())
   name         String
   slug         String             @unique
   active       Boolean            @default(true)
@@ -120,6 +121,7 @@ model Store {
 
 model Merchant {
   id String @id @default(cuid())
+  number Int @unique @default(autoincrement())
   slug String @unique
   name String
   nameZh String @default("")

@@ -1,4 +1,13 @@
 const english = {
+  "会员积分钱包": "Member points wallet", "积分任务中心": "Rewards and tasks",
+  "社区交流": "Community", "商家管理平台": "Merchant platform", "AI 经营分析": "AI business insights", "筹备中": "Coming soon",
+  "会员钱包": "Member wallet", "店员操作": "Store console", "知识探索": "Explore",
+  "连接每一次消费。": "Connect every purchase.", "积累每一份价值。": "Build lasting value.",
+  "你的积分、会员身份与消费记录，": "Your points, membership and purchase history,",
+  "从这里开始。": "all start here.", "进入会员钱包": "Open wallet",
+  "我的积分": "My points", "余额、流水与动态会员码": "Balance, history and member code",
+  "门店工作台": "Store workspace", "消费积分、兑换与退款": "Points, redemptions and refunds",
+  "发现兴趣，连接新的理解": "Discover interests and new connections",
   "知识网络": "Knowledge network", "持续探索": "Keep exploring",
   "进入我的三维知识网络 →": "Enter my 3D knowledge network →",
   "三维知识网络": "3D knowledge network", "知识节点列表": "Knowledge node list",

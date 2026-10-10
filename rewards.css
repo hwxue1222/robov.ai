@@ -1,0 +1,19 @@
+.rewards-shell { max-width: 980px; margin: 54px auto 80px; }
+.rewards-shell > h1 { margin: 16px 0; font-size: 44px; overflow-wrap: anywhere; }
+.rewards-subtitle { color: #667368; font-size: 18px; }
+.rewards-section-heading { display: flex; justify-content: space-between; border-bottom: 1px solid #cdd5cc; margin: 42px 0 22px; align-items: center; }
+.rewards-section-heading h2 { font-size: 18px; }
+.rewards-section-heading > span { font-family: monospace; color: #687668; }
+.review-tasks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.review-task { min-width: 0; background: white; border: 1px solid #cdd5cc; border-radius: 6px; padding: 24px; display: flex; flex-direction: column; }
+.review-task-top { display: flex; justify-content: space-between; align-items: center; }
+.review-google { font-size: 38px; color: #2463c9; font-weight: 800; }
+.review-label { color: #6b766e; font-size: 12px; }
+.review-task h2 { font-size: 21px; margin: 26px 0 12px; line-height: 1.4; overflow-wrap: anywhere; }
+.review-task p { font-size: 14px; line-height: 1.8; color: #606d63; }
+.review-task .review-terms { font-size: 12px; }
+.review-task a { display: flex; justify-content: space-between; padding: 14px 12px; margin-top: auto; border-radius: 3px; font-size: 13px; }
+.review-address { flex: 1; padding-bottom: 20px; overflow-wrap: anywhere; }
+#review-status { margin-bottom: 0; }
+@media (max-width: 800px) { .review-tasks { grid-template-columns: 1fr; } }
+@media (max-width: 680px) { .rewards-shell { margin-top: 34px; } .rewards-shell > h1 { font-size: 32px; } .review-task { max-width: none; padding: 22px; } }

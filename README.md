@@ -98,6 +98,28 @@ database. Verified member/staff authentication must replace the bootstrap before
 production activation. The visual member code also needs a real QR encoder and
 camera scanner before it can be used as a scan workflow.
 
+For an isolated test database, run the database flow verification with:
+
+```sh
+ROBOV_TEST_DATABASE_HOST=<direct-test-host> node --env-file=.env.local scripts/verify-points.cjs
+```
+
+This creates synthetic test users and a test store, retains the resulting ledger
+and audit records, and prints test member/staff IDs. The explicit host must match
+the configured database. Use the unpooled connection for migrations by passing
+DATABASE_URL_UNPOOLED as DATABASE_URL to the Prisma migration process. Test
+database credentials belong only in Vercel Preview and Development.
+
+The homepage groups Wallet, Rewards, Community, Merchant, Intelligence, and
+Academy. Community and Intelligence remain planned. Merchant at /merchants.html
+lists JWD Mee Tarik with brand details, three outlets, photographs, and a staff
+console link. The public data/merchants.json catalog supports more merchants;
+it is not an admin onboarding workflow. Rewards at /rewards.html uses the same
+catalog for three independent voluntary Google Review links. Optional
+ROBOV_GOOGLE_REVIEW_PUTERI_HARBOUR, ROBOV_GOOGLE_REVIEW_KULAI_COMMUNE, and
+ROBOV_GOOGLE_REVIEW_LOTUS_MUTIARA_RINI overrides accept HTTPS Google Maps links.
+These actions do not grant points, require a rating, or collect review proof.
+
 The server calls Kimi through Vercel AI Gateway by default (`moonshotai/kimi-k2`).
 Authentication uses `AI_GATEWAY_API_KEY` or Vercel's deployment OIDC token.
 Alternatively configure `MOONSHOT_API_KEY` for direct Moonshot calls; `KIMI_MODEL`

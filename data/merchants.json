@@ -1,0 +1,49 @@
+{
+  "merchants": [
+    {
+      "id": "jwd-mee-tarik",
+      "name": "JWD Mee Tarik",
+      "nameZh": "金味德牛肉拉面",
+      "category": "餐饮 · 兰州拉面",
+      "country": "Malaysia",
+      "region": "Johor",
+      "description": "来自兰州的手工拉面品牌，提供牛肉拉面、烤肉、凉菜与小吃。",
+      "website": "https://www.jwdnoodles.com/",
+      "phone": "+60 17-812 6685",
+      "email": "jinweide.my@gmail.com",
+      "logo": "./assets/jwd/logo.png",
+      "image": "./assets/jwd/puteri-harbour.jpg",
+      "sourceUrl": "https://www.jwdnoodles.com/",
+      "verifiedOn": "2026-10-10",
+      "outlets": [
+        {
+          "id": "puteri-harbour",
+          "name": "Puteri Harbour",
+          "city": "Iskandar Puteri",
+          "address": "RG13A/14 Residensi Encorp, Persiaran Dato Seri Amar Diraja, Puteri Harbour, 79000 Iskandar Puteri, Johor, Malaysia",
+          "hours": "周一至周四 10:00–22:30；周五至周日 10:00–23:00",
+          "image": "./assets/jwd/puteri-harbour.jpg",
+          "reviewUrl": "https://www.google.com/maps/place/JWD+Mee+Tarik@Puteri+Harbour/@1.418102,103.6556273,17z/data=!4m8!3m7!1s0x31da0dbba89c330f:0xd7bd30682b9f73ae!8m2!3d1.418102!4d103.6556273!9m1!1b1!16s%2Fg%2F11vynn4m0y"
+        },
+        {
+          "id": "kulai-commune",
+          "name": "The Commune · Kulai",
+          "city": "Kulai",
+          "address": "Ground Floor, G-06, THE COMMUNE Lifestyle Mall, Pusat Komersial Indah, 291, Jalan Kiambang 10, Bandar Indahpura, 81000 Kulai, Johor",
+          "hours": "每日 10:00–22:00",
+          "image": "./assets/jwd/kulai-commune.jpg",
+          "reviewUrl": "https://www.google.com/maps/place/Restoran+JWD+Mee+Tarik+@The+Commune,+Kulai/@1.6423669,103.6017788,17z/data=!4m8!3m7!1s0x31da79b23d7f5a0d:0x91b7eed054836c79!8m2!3d1.6423669!4d103.6017788!9m1!1b1!16s%2Fg%2F11xzn3fc6r"
+        },
+        {
+          "id": "lotus-mutiara-rini",
+          "name": "Lotus’s Mutiara Rini",
+          "city": "Johor Bahru",
+          "address": "Ground Floor, G4&G5, Lotus's Mutiara Rini, No.1, Jalan Persiaran Jasa 1, Taman Mutiara Rini, 81380 Skudai, Johor Bahru, Johor",
+          "hours": "每日 10:00–22:00",
+          "image": "./assets/jwd/lotus-mutiara-rini.jpg",
+          "reviewUrl": "https://www.google.com/maps/place/JWD+Mee+Tarik@Lotus's+Mutiara+Rini/@1.5133801,103.6337556,17z/data=!4m8!3m7!1s0x31da75b9da239fe5:0xfc4b00ffd78cd9c1!8m2!3d1.5133801!4d103.6337556!9m1!1b1!16s%2Fg%2F11zwqvh8nz"
+        }
+      ]
+    }
+  ]
+}

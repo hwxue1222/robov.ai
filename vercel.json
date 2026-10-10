@@ -1,4 +1,5 @@
 {
+  "regions": ["sin1"],
   "functions": {
     "api/knowledge.js": { "maxDuration": 120 },
     "api/translate.js": { "maxDuration": 60 },

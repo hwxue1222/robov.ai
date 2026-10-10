@@ -35,6 +35,13 @@ test('merchant English uses receipt amount, credit points and redemption request
   }
 });
 
+test('merchant Malay follows the revised English receipt and points terminology', () => {
+  const context = contextFor([], 'ms');
+  for (const [source, expected] of [['消费金额', 'Jumlah resit'], ['发放积分', 'Kreditkan mata'], ['发起兑换', 'Permohonan penebusan']]) {
+    assert.equal(vm.runInContext(`translate(${JSON.stringify(source)})`, context), expected);
+  }
+});
+
 test('translations remain reversible after live text updates and never alter user input', () => {
   const node = { nodeValue: '已登录', parentElement: { closest: () => null } };
   const userText = { nodeValue: '会员钱包', parentElement: { closest: () => ({ tagName: 'TEXTAREA' }) } };

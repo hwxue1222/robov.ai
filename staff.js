@@ -56,7 +56,7 @@
   $('#redeem-form').addEventListener('submit', async event => {
     event.preventDefault();
     try {
-      const result = await staffAction({ action: 'redeem', points: 100, amount: $('#redeem-amount').value, receiptNo: $('#redeem-receipt').value, dineIn: $('#redeem-eligible').checked, otherPromotion: !$('#redeem-eligible').checked }, 'redeem');
+      const result = await staffAction({ action: 'redeem',activityId:$('#redeem-activity').value||undefined, points: Number($('#redeem-points').value), amount: $('#redeem-amount').value, receiptNo: $('#redeem-receipt').value, dineIn: $('#redeem-eligible').checked, otherPromotion: !$('#redeem-eligible').checked }, 'redeem');
       show(`已发起兑换 ${Math.abs(result.transaction.points)} RBP，等待会员确认：${result.transaction.id}`);
     } catch (error) {
       show(error.message);
@@ -72,4 +72,5 @@
       show(error.message);
     }
   });
+  $('#interaction-form').addEventListener('submit',async event=>{event.preventDefault();try{const result=await staffAction({action:'activity',activityId:$('#interaction-activity').value},'activity');show(`已发放 ${result.transaction.points} RBP，交易 ${result.transaction.id}`);}catch(error){show(error.message);}});
 })();

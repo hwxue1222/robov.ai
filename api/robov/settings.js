@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     if (!actor) return;
     if (actor.role !== 'SUPERADMIN') return res.status(403).json({ error: 'SUPERADMIN_REQUIRED' });
     const db = getPrisma();
-    if (req.method === 'GET') return res.status(200).json({ settings: await rewardSettings(db), credits: await db.pointTransaction.findMany({ where: { idempotencyKey: { startsWith: 'signup:' } }, orderBy: { createdAt: 'desc' }, take: 50, select: { id: true, walletId: true, points: true, createdAt: true } }) });
+    if (req.method === 'GET') return res.status(200).json({ settings: await rewardSettings(db), credits: await db.pointTransaction.findMany({ where: { OR:[{idempotencyKey:{startsWith:'signup:'}},{idempotencyKey:{startsWith:'signup-activity:'}}] }, orderBy: { createdAt: 'desc' }, take: 50, select: { id: true, walletId: true, points: true, createdAt: true } }) });
     const { signupEnabled, signupPoints } = req.body || {};
     if (typeof signupEnabled !== 'boolean' || !Number.isInteger(signupPoints) || signupPoints < 0 || signupPoints > 10000) return res.status(400).json({ error: 'INVALID_REWARD_SETTINGS' });
     let dates;

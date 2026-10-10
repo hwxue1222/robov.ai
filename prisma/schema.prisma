@@ -52,6 +52,8 @@ model RewardSettings {
   signupEndsAt DateTime?
   reviewEndsAt DateTime?
   voucherEndsAt DateTime?
+  voucherEnabled Boolean @default(true)
+  reviewEnabled Boolean @default(true)
   updatedAt DateTime @updatedAt
 }
 
@@ -89,9 +91,40 @@ model Store {
   slug         String             @unique
   active       Boolean            @default(true)
   staff        StoreStaff[]
+  earnPolicy   StoreEarnPolicy?
+  rewardActivities RewardActivity[]
   transactions PointTransaction[]
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
+}
+
+model StoreEarnPolicy {
+  storeId String @id
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  enabled Boolean @default(true)
+  baseRateBps Int @default(300)
+  tiers Json @default("[]")
+  version Int @default(1)
+  updatedAt DateTime @updatedAt
+}
+
+model RewardActivity {
+  id String @id @default(cuid())
+  storeId String?
+  store Store? @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  kind String
+  title String
+  points Int @default(0)
+  discountCents Int @default(0)
+  minimumSpendCents Int @default(0)
+  url String?
+  enabled Boolean @default(true)
+  endsAt DateTime?
+  deletedAt DateTime?
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([storeId, kind, deletedAt])
 }
 
 model StoreStaff {

@@ -121,8 +121,33 @@ Set ROBOV_AUTH_BASE_URL=https://robov.ai for public-domain cookie sessions.
 The site displays a CN/EN/MY notice: beta points have no real redemption value.
 Disable ROBOV_PUBLIC_TEST_MODE and redeploy to suspend public beta operations.
 Functions run in sin1 near the database, with bounded transaction wait/timeout.
-Email verification/reset, signup-abuse prevention, a real QR encoder/camera
-scanner and broader ledger concurrency hardening remain production prerequisites.
+Email verification/reset, signup-abuse prevention and broader ledger concurrency
+hardening remain prerequisites for genuine commercial points.
+
+Member QR canvases now encode the complete 60-second signed token using qrcode.
+The merchant camera uses getUserMedia and jsQR, preferring the rear camera with
+device selection, stop/visibility cleanup, permission errors and local image fallback.
+Decoded tokens are authenticated by /api/robov/staff action=scan before use.
+Expired or malformed tokens are rejected server-side; wallet codes refresh at expiry.
+Run npm run build:qr after changing qr-runtime.js; the bundled libraries are served
+locally from assets/robov-qr.js. Automated tests use real decoding on fake camera
+video frames; a physical mobile camera still needs on-site lighting/distance checks.
+
+StoreEarnPolicy provides an enabled flag, default 3% rate and up to 50 nonoverlapping
+amount ranges. Lower bounds are inclusive, upper bounds exclusive (blank = unbounded).
+The whole bill uses its matching rate; gaps use the default. Rates have two decimal
+places, points round down. Assigned ADMIN and SUPERADMIN may edit with version checks
+and audit; STAFF can read only. EARN entries snapshot rate, tier and policy version,
+and new receipts use MYR. Deleting a tier never rewrites old earnings or refunds.
+
+/api/robov/activities manages independent SIGNUP, VOUCHER and INTERACTION activities
+with create/update/archive/restore, expiry, scope, revision checks and audit.
+Only SUPERADMIN manages global or registration activities; ADMIN is store-scoped.
+Additional active registration awards stack once each at new-account creation, never
+on login. Voucher points, discount and minimum spend are server-enforced and snapshotted;
+pending holds remain confirmable after edit/archive. Interactions require merchant
+approval, once per member per activity, with atomic deduplication under concurrent
+approvals. Google review incentives are rejected. Archiving keeps historical ledgers.
 
 New member accounts atomically receive the configured registration reward
 (default 100 points), with a unique signup credit and audit. Repeated login or

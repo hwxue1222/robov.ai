@@ -37,7 +37,7 @@
           </div>
           <button id="refresh-qr" class="secondary-button" type="button" disabled>刷新动态码</button>
           <div id="qr-card" class="qr-card" aria-label="60秒动态会员码">
-            <div id="qr-pattern" class="qr-pattern"></div>
+            <canvas id="qr-pattern" class="qr-pattern" width="512" height="512" role="img" aria-label="会员动态二维码"></canvas>
             <code id="qr-token">请先登录</code>
             <span id="qr-countdown">--</span>
           </div>
@@ -50,7 +50,7 @@
     </main>
   </div>
   <script src="./locale-data.js"></script><script src="./i18n.js"></script>
-  <script src="./robov.js"></script>
+  <script src="./assets/robov-qr.js"></script><script src="./robov.js"></script>
   <script src="./account.js"></script>
 </body>
 </html>

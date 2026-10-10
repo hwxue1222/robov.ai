@@ -6,6 +6,7 @@ function fixture(settings) {
   let saved, credit, log;
   const tx = {
     rewardSettings: { findUnique: async () => settings },
+    rewardActivity: { findMany: async () => [] },
     robovUser: { findUnique: async () => saved, create: async ({ data }) => (saved = { id: 'member', ...data, member: { id: 'wallet', pointBalance: data.member.create.pointBalance } }) },
     pointTransaction: { create: async ({ data }) => (credit = { id: 'credit', ...data }) },
     auditLog: { create: async ({ data }) => (log = data) }

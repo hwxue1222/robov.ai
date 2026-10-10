@@ -28,6 +28,11 @@
         <section class="points-panel"><h2>门店身份</h2><p id="staff-identity"></p><label for="staff-store">门店</label><select id="staff-store" disabled></select></section>
         <section class="points-panel">
           <h2>会员码</h2>
+          <div class="camera-tools"><button id="start-camera" class="secondary-button" type="button" title="启动摄像头"><i data-lucide="camera" aria-hidden="true"></i><span>启动摄像头</span></button><button id="stop-camera" class="secondary-button" type="button" title="停止摄像头" disabled><i data-lucide="square" aria-hidden="true"></i><span>停止</span></button><button id="read-qr-image" class="secondary-button" type="button" title="选择二维码图片"><i data-lucide="image-up" aria-hidden="true"></i><span>二维码图片</span></button></div>
+          <input id="qr-image" type="file" accept="image/*" hidden>
+          <label for="camera-device">摄像头</label><select id="camera-device" disabled></select>
+          <div id="camera-preview" class="camera-preview" hidden><video id="scan-video" autoplay muted playsinline aria-label="摄像头预览"></video></div>
+          <p id="camera-status" role="status" aria-live="polite"></p><p id="scanned-member"></p>
           <label for="scan-token">扫描结果或粘贴动态码</label>
           <textarea id="scan-token" rows="5" placeholder="粘贴会员动态码"></textarea>
           <p id="staff-status" class="result-note" role="status"></p>
@@ -40,10 +45,11 @@
           <input id="amount" required type="number" min="0.01" step="0.01" placeholder="88.00">
           <label for="receipt-no">唯一收据号</label>
           <input id="receipt-no" required placeholder="RCP-10001">
-          <button class="primary-button" type="submit">按 3% 发积分</button>
+          <p id="earn-preview" role="status"></p><button class="primary-button" type="submit">发放积分</button>
         </form>
         <form id="redeem-form" class="points-panel">
           <h2>发起兑换</h2>
+          <label for="redeem-activity">兑换活动</label><select id="redeem-activity"><option value="">RM5</option></select>
           <label for="redeem-points">兑换积分</label>
           <input id="redeem-points" required type="number" value="100" readonly>
           <label for="redeem-amount">账单金额（RM）</label><input id="redeem-amount" required type="number" min="50" step="0.01">
@@ -52,7 +58,10 @@
           <button class="primary-button" type="submit">请求会员确认</button>
         </form>
       </section>
-      <section id="reward-admin" hidden class="points-panel"><h2>奖励活动管理</h2><form id="reward-settings-form"><label><input type="checkbox" id="signup-enabled"> 启用注册赠分</label><label for="signup-points">注册赠送积分</label><input id="signup-points" type="number" min="0" max="10000" step="1" required><label for="signup-ends-at">注册奖励截止时间</label><input id="signup-ends-at" type="datetime-local"><label for="review-ends-at">Google Review 截止时间</label><input id="review-ends-at" type="datetime-local"><label for="voucher-ends-at">RM5 活动截止时间</label><input id="voucher-ends-at" type="datetime-local"><button class="primary-button" type="submit">保存设置</button><p id="reward-settings-status" role="status"></p></form><h3>最近注册奖励</h3><ul id="signup-credits"></ul></section>
+      <form id="interaction-form" class="reward-management"><h2>互动奖励审核</h2><label for="interaction-activity">互动活动</label><select id="interaction-activity" required></select><label><input type="checkbox" required> 已确认会员完成活动</label><button class="secondary-button" type="submit">审核并发放奖励</button></form>
+      <section id="activity-management" class="reward-management" hidden><h2>活动管理</h2><div class="activity-filter"><div><label for="campaign-kind">奖励分类</label><select id="campaign-kind"><option value="SIGNUP">注册奖励</option><option value="VOUCHER">兑换优惠</option><option value="INTERACTION">互动活动</option></select></div><button id="new-campaign" class="secondary-button" type="button">新增活动</button></div><label><input id="show-archived-campaigns" type="checkbox"> 显示已归档活动</label><div id="campaign-list"></div><form id="campaign-editor" hidden><h3>活动设置</h3><label for="campaign-title">活动名称</label><input id="campaign-title" maxlength="100" required><label for="campaign-scope">适用范围</label><select id="campaign-scope"><option value="store">当前门店</option><option value="global">全部门店</option></select><label for="campaign-points">活动积分</label><input id="campaign-points" type="number" min="0" max="10000" required><div id="campaign-voucher-fields"><label for="campaign-discount">抵扣金额（RM）</label><input id="campaign-discount" type="number" min="0.01" step="0.01"><label for="campaign-minimum">最低消费（RM）</label><input id="campaign-minimum" type="number" min="0" step="0.01"></div><div id="campaign-link-field"><label for="campaign-url">活动链接</label><input id="campaign-url" type="url" maxlength="2000"></div><label for="campaign-end">活动截止时间</label><input id="campaign-end" type="datetime-local"><label><input id="campaign-enabled" type="checkbox"> 启用活动</label><div class="camera-tools"><button class="primary-button" type="submit">保存活动</button><button id="cancel-campaign" class="secondary-button" type="button">取消</button></div></form><p id="campaign-manager-status" role="status"></p></section>
+      <section id="earn-policy-panel" class="reward-management" hidden><h2>消费积分规则</h2><form id="earn-policy-form"><label><input id="earn-enabled" type="checkbox"> 启用消费积分</label><label for="earn-base-rate">默认奖励比例（%）</label><input id="earn-base-rate" type="number" min="0" max="100" step="0.01" required><div id="earn-tiers"></div><button id="add-earn-tier" class="secondary-button" type="button">新增金额区间</button><button class="primary-button" type="submit">保存消费规则</button><p id="earn-policy-status" role="status"></p></form></section>
+      <section id="reward-admin" hidden class="reward-management"><h2>最近注册奖励</h2><ul id="signup-credits"></ul></section>
       <section id="member-activity-panel" hidden class="points-panel">
         <h2>会员活动</h2><p>账号与积分活动</p>
         <div class="activity-tabs" role="tablist" aria-label="会员视图"><button type="button" role="tab" aria-selected="true" data-activity-view="activity">活动记录</button><button type="button" role="tab" aria-selected="false" data-activity-view="members">所有会员</button></div>
@@ -69,8 +78,11 @@
   </div>
   <script src="./locale-data.js"></script><script src="./i18n.js"></script>
   <script src="./staff.js"></script>
+  <script src="./assets/robov-qr.js"></script><script src="./camera-scanner.js"></script><script src="./staff-camera.js"></script>
   <script src="./account.js"></script>
   <script src="./reward-admin.js"></script>
+  <script src="./earn-policy.js"></script>
+  <script src="./activity-manager.js"></script>
   <script src="./member-activity.js"></script>
 </body>
 </html>

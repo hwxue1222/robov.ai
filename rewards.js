@@ -7,7 +7,7 @@
   try {
     const response = await fetch('/api/robov/rewards');
     if (!response.ok) throw new Error('UNAVAILABLE');
-    const { tasks,activities=[] } = await response.json();
+    const { tasks,activities=[],customActivities=[] } = await response.json();
     const campaigns=document.querySelector('#reward-campaigns');
     const registration=activities.find(item=>item.id==='registration');
     const voucher=activities.find(item=>item.id==='voucher');
@@ -34,6 +34,17 @@
     const reviewActivity=activities.find(item=>item.id==='google-review');
     document.querySelector('#google-activity-status').replaceWith(Object.assign(badge(reviewActivity?.status || 'ongoing'),{id:'google-activity-status'}));
     document.querySelector('#campaign-status').textContent='';
+    for(const activity of customActivities){
+      const article=make('article','custom-activity'),title=make('h2','',activity.title);title.dataset.noTranslate='';article.dataset.activityId=activity.id;
+      article.append(title,badge(activity.status),make('p','',activity.kind==='SIGNUP'?'注册奖励':activity.kind==='VOUCHER'?'兑换优惠':'互动活动'),make('p','',activity.storeName||'全部门店'),make('p','',`${activity.points} points${activity.kind==='VOUCHER'?` = RM${(activity.discountCents/100).toFixed(2)}`:''}`));
+      if(activity.kind==='VOUCHER'){const minimum=make('p','');minimum.append(make('span','','最低消费'),` / RM${(activity.minimumSpendCents/100).toFixed(2)}`);article.append(minimum,make('p','','堂食且未使用其他优惠'),make('p','','每张账单限用一张优惠券'));}
+      if(activity.kind==='INTERACTION'&&activity.points>0)article.append(make('p','','每活动每会员一次，商家审核发放'));
+      if(activity.status==='ongoing'){
+        const link=make('a','home-primary',activity.kind==='SIGNUP'?'注册会员':activity.url?'参与活动':'会员登录');
+        link.href=activity.kind==='SIGNUP'?'./login.html?action=register':activity.url||'./login.html';
+        if(activity.url&&activity.kind!=='SIGNUP'){link.target='_blank';link.rel='noopener noreferrer';}article.append(link);
+      }document.querySelector('#custom-activities').append(article);
+    }
     for (const task of tasks) {
       const article = make('article', 'review-task');
       const top = make('div', 'review-task-top');

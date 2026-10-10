@@ -1,5 +1,5 @@
 (function () {
-  const state = { userId: null, qrExpiresAt: 0, timer: null };
+  const state = { userId: null, qrExpiresAt: 0, timer: null, refreshing: false };
   const $ = selector => document.querySelector(selector);
 
   async function api(path, options = {}) {
@@ -23,13 +23,14 @@
       amount.textContent = `${item.points > 0 ? '+' : ''}${item.points} RBP`;
       const status = document.createElement('span');
       const kind = document.createElement('span');
-      kind.textContent = item.metadata?.reason === 'SIGNUP_BONUS' ? '注册奖励' : ({ EARN: '消费积分', REDEEM_HOLD: '积分兑换', REFUND_REVERSAL: '退款冲回' })[item.type] || item.type;
+      kind.textContent = item.metadata?.reason === 'SIGNUP_BONUS' ? '注册奖励' : item.metadata?.reason==='INTERACTION_REWARD'?'互动奖励':({ EARN: '消费积分', REDEEM_HOLD: '积分兑换', REFUND_REVERSAL: '退款冲回' })[item.type] || item.type;
       const stage = document.createElement('span');
       stage.textContent = ({ POSTED: '已入账', PENDING_MEMBER_CONFIRMATION: '等待会员确认', REVERSED: '已冲回', VOIDED: '已取消' })[item.status] || item.status;
       status.append(kind, ' · ', stage);
       const receipt = document.createElement('small');
       receipt.textContent = item.receiptNo || item.id;
       row.append(amount, status, receipt);
+      if(item.metadata?.title||item.metadata?.activityTitle){const title=document.createElement('small');title.dataset.noTranslate='';title.textContent=item.metadata.title||item.metadata.activityTitle;row.append(title);}
       if (item.type === 'REDEEM_HOLD' && item.status === 'PENDING_MEMBER_CONFIRMATION') {
         const confirm = document.createElement('button');
         confirm.type = 'button';
@@ -49,15 +50,6 @@
     }));
   }
 
-  function drawPattern(token) {
-    const bits = Array.from(token).slice(0, 81).map(ch => ch.charCodeAt(0) % 2);
-    $('#qr-pattern').replaceChildren(...Array.from({ length: 81 }, (_, index) => {
-      const cell = document.createElement('span');
-      cell.className = bits[index] ? 'on' : '';
-      return cell;
-    }));
-  }
-
   async function refreshWallet() {
     if (!state.userId) return;
     const { wallet } = await api('/api/robov/member');
@@ -65,22 +57,34 @@
   }
 
   async function refreshQr() {
+    if (state.refreshing) return;
+    state.refreshing = true;
+    try {
     const { token, expiresAt } = await api('/api/robov/member', { method: 'POST', body: JSON.stringify({ action: 'qr' }) });
     state.qrExpiresAt = new Date(expiresAt).getTime();
     $('#qr-token').textContent = token;
-    drawPattern(token);
+    await window.RobovQR.render($('#qr-pattern'), token);
     clearInterval(state.timer);
     state.timer = setInterval(updateCountdown, 1000);
     updateCountdown();
+    } finally { state.refreshing = false; }
   }
 
   function updateCountdown() {
     const seconds = Math.max(0, Math.ceil((state.qrExpiresAt - Date.now()) / 1000));
     $('#qr-countdown').textContent = seconds ? `${seconds}s` : '已过期';
-    if (!seconds) clearInterval(state.timer);
+    if (!seconds) {
+      clearInterval(state.timer);
+      $('#qr-pattern').getContext('2d').clearRect(0, 0, 512, 512);
+      $('#qr-token').textContent = '已过期';
+      if (!document.hidden) refreshQr().catch(error => { $('#member-status').textContent = error.message; });
+    }
   }
 
   $('#refresh-qr').addEventListener('click', () => Promise.all([refreshWallet(), refreshQr()]).catch(error => { $('#member-status').textContent = error.message; }));
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && state.userId && state.qrExpiresAt <= Date.now()) refreshQr().catch(error => { $('#member-status').textContent = error.message; });
+  });
   setInterval(() => {
     if (state.userId && !document.hidden) refreshWallet().catch(error => { $('#member-status').textContent = error.message; });
   }, 10000);

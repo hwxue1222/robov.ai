@@ -83,11 +83,20 @@ Set these environment variables before enabling the module in Vercel:
 ```sh
 DATABASE_URL=postgresql://...
 ROBOV_QR_SECRET=long-random-secret
+ROBOV_DEMO_MODE=true
 ```
 
 Run `npm install`, `npx prisma generate`, and `npx prisma migrate deploy` against
 the independently hosted PostgreSQL database. Do not run destructive migrations
 against production member data without an explicit backup and approval.
+
+The current identity bootstrap trusts caller-supplied user IDs and is a test
+prototype, not verified authentication. All points endpoints are disabled by
+default and always blocked when VERCEL_ENV=production. Enable ROBOV_DEMO_MODE
+only in a protected preview/development environment with an isolated test
+database. Verified member/staff authentication must replace the bootstrap before
+production activation. The visual member code also needs a real QR encoder and
+camera scanner before it can be used as a scan workflow.
 
 The server calls Kimi through Vercel AI Gateway by default (`moonshotai/kimi-k2`).
 Authentication uses `AI_GATEWAY_API_KEY` or Vercel's deployment OIDC token.

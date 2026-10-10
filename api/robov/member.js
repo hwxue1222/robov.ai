@@ -1,9 +1,11 @@
 const { getPrisma } = require('../../lib/robov/prisma');
+const { requireTestMode } = require('../../lib/robov/config');
 const { getWalletSummary } = require('../../lib/robov/ledger');
 const { issueMemberQrToken, QR_TTL_SECONDS } = require('../../lib/robov/security');
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
+  if (!requireTestMode(res)) return;
   const memberUserId = req.headers['x-robov-user-id'] || req.query?.userId;
   if (!memberUserId) return res.status(401).json({ error: 'MEMBER_REQUIRED' });
   const prisma = getPrisma();

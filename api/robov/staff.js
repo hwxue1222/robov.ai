@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const { requireTestMode } = require('../../lib/robov/config');
 const { getPrisma } = require('../../lib/robov/prisma');
 const { earnPoints, requestRedemption, reverseRefund } = require('../../lib/robov/ledger');
 const { readActor, verifyMemberQrToken } = require('../../lib/robov/security');
@@ -9,6 +10,7 @@ function idempotencyKey(req) {
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
+  if (!requireTestMode(res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   const actor = readActor(req);
   if (!actor.userId || !actor.storeId) return res.status(401).json({ error: 'STAFF_AUTH_REQUIRED' });

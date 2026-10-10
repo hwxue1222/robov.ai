@@ -1,7 +1,9 @@
 const { getPrisma } = require('../../lib/robov/prisma');
+const { requireTestMode } = require('../../lib/robov/config');
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
+  if (!requireTestMode(res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   const { email, phone, displayName } = req.body || {};
   const cleanEmail = typeof email === 'string' && email.includes('@') ? email.trim().toLowerCase() : null;

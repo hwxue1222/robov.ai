@@ -1,8 +1,10 @@
 const { getPrisma } = require('../../lib/robov/prisma');
+const { requireTestMode } = require('../../lib/robov/config');
 const { confirmRedemption } = require('../../lib/robov/ledger');
 
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
+  if (!requireTestMode(res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
   const memberUserId = req.headers['x-robov-user-id'];
   if (!memberUserId) return res.status(401).json({ error: 'MEMBER_REQUIRED' });

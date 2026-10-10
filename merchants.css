@@ -1,0 +1,26 @@
+.merchant-shell { max-width: 1100px; margin: 42px auto 80px; }
+.merchant-shell h1 { font-size: 44px; margin: 18px 0; line-height: 1.2; overflow-wrap: anywhere; }
+.merchant-toolbar { display: flex; gap: 16px; align-items: center; margin: 30px 0; border-top: 1px solid #cdd5cc; border-bottom: 1px solid #cdd5cc; padding: 18px 0; }
+.merchant-toolbar input { width: min(340px, 100%); min-width: 0; padding: 12px; border: 1px solid #b9c9b8; border-radius: 4px; font: inherit; background: white; }
+#merchant-count { margin-left: auto; color: #687668; font-size: 13px; white-space: nowrap; }
+.merchant-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.merchant-item { color: #18271c; overflow: hidden; border: 1px solid #cdd5cc; border-radius: 6px; background: white; }
+.merchant-item:hover { border-color: #08775e; }
+.merchant-item > img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.merchant-item .merchant-item-copy { padding: 20px; }
+.merchant-item h2 { font-size: 22px; margin: 10px 0; }
+.merchant-item p { font-size: 13px; color: #657365; line-height: 1.8; }
+.merchant-back { color: #08775e; display: inline-block; padding: 8px 0 24px; font-size: 14px; }
+.merchant-profile-heading { border-top: 1px solid #cdd5cc; padding: 32px 0; }
+.merchant-logo { display: block; width: 160px; height: 56px; object-fit: contain; object-position: left; margin-bottom: 18px; }
+.merchant-profile-heading p { color: #647061; max-width: 680px; font-size: 15px; line-height: 1.9; }
+.merchant-profile-links { display: flex; flex-wrap: wrap; gap: 18px; margin: 20px 0 0; }
+.merchant-profile-links a { font-size: 14px; color: #08775e; padding: 8px 0; }
+.merchant-outlet { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 32px; border-top: 1px solid #cdd5cc; padding: 28px 0; }
+.merchant-outlet img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; }
+.merchant-outlet h2 { font-size: 24px; margin: 8px 0 16px; }
+.merchant-outlet p { font-size: 14px; line-height: 1.8; color: #647061; overflow-wrap: anywhere; }
+.merchant-outlet a { color: #08775e; display: inline-block; padding: 8px 0; font-size: 14px; }
+.merchant-source { font-size: 12px !important; }
+@media (max-width: 800px) { .merchant-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } .merchant-outlet { grid-template-columns: 240px minmax(0, 1fr); gap: 22px; } }
+@media (max-width: 600px) { .merchant-shell h1 { font-size: 32px; } .merchant-toolbar { flex-wrap: wrap; gap: 10px; } .merchant-toolbar label { width: 100%; } .merchant-toolbar input { flex: 1; } .merchant-list { grid-template-columns: 1fr; } .merchant-outlet { grid-template-columns: 1fr; gap: 14px; } }

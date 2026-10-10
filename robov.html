@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ROBOV Points 会员钱包与店员积分操作。">
+  <title>ROBOV Points | 会员钱包</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./home.css">
+  <link rel="stylesheet" href="./login.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a>
+      <nav class="nav-links" aria-label="ROBOV Points">
+        <a href="./robov.html">会员钱包</a>
+        <a href="./merchants.html">商家</a><button type="button" class="account-logout">退出登录</button>
+      </nav>
+    </header>
+    <main id="wallet-main" class="points-shell" hidden>
+      <section class="points-hero">
+        <p class="eyebrow">ROBOV POINTS</p>
+        <h1>会员钱包</h1>
+        <p class="guide-copy">查看 ROBOV Points 余额、积分流水，并生成 60 秒动态会员码供店员扫码。</p>
+      </section>
+      <dialog id="redemption-dialog" aria-labelledby="redemption-dialog-title"><h2 id="redemption-dialog-title" tabindex="-1">确认兑换</h2><p id="redemption-dialog-store"></p><strong id="redemption-dialog-amount"></strong><p id="redemption-dialog-receipt"></p><div class="camera-tools"><button id="redemption-dialog-confirm" class="primary-button" type="button">确认兑换</button><button id="redemption-dialog-cancel" class="secondary-button" type="button">拒绝兑换</button></div></dialog>
+      <section id="pending-redemptions" class="pending-redemptions" hidden aria-live="polite">
+        <h2>待确认兑换</h2><strong id="pending-redemption-count"></strong><div id="pending-redemption-list"></div>
+      </section>
+      <section class="points-grid">
+        <section class="points-panel">
+          <h2>会员中心</h2><p id="member-name"></p><p id="member-email"></p>
+          <p id="member-status" class="result-note" role="status"></p>
+        </section>
+        <section class="points-panel wallet-panel" aria-live="polite">
+          <div class="wallet-balance">
+            <div class="wallet-balance-heading"><span>积分余额</span><button id="refresh-wallet" class="secondary-button" type="button" title="刷新积分" aria-label="刷新积分"><i data-lucide="refresh-cw" aria-hidden="true"></i></button></div>
+            <strong id="total-points">0</strong>
+            <small><span>可用积分</span> <span id="available-points">0</span> · <span>待确认预留</span> <span id="hold-points">0</span></small>
+          </div>
+          <button id="refresh-qr" class="secondary-button" type="button" disabled>刷新动态码</button>
+          <div id="qr-card" class="qr-card" aria-label="60秒动态会员码">
+            <canvas id="qr-pattern" class="qr-pattern" width="512" height="512" role="img" aria-label="会员动态二维码"></canvas>
+            <code id="qr-token">请先登录</code>
+            <span id="qr-countdown">--</span>
+          </div>
+        </section>
+      </section>
+      <section class="points-panel">
+        <h2>积分流水</h2>
+        <div id="ledger-list" class="ledger-list"></div>
+      </section>
+    </main>
+  </div>
+  <script src="./tab-session.js"></script><script src="./locale-data.js"></script><script src="./i18n.js"></script>
+  <script src="./assets/robov-qr.js"></script><script src="./robov.js"></script>
+  <script src="./account.js"></script>
+</body>
+</html>

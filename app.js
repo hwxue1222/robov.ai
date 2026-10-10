@@ -28,6 +28,12 @@ function setMode() {
   content.forEach((text, i) => { const el = document.createElement(i === 0 ? 'h4' : 'p'); el.textContent = text; $('#mode-output').append(el); });
 }
 $('#intro-form').addEventListener('submit', event => { event.preventDefault(); generateNetwork($('#self-description').value.trim()); });
+$$('a[href="#intro"]').forEach(link => link.addEventListener('click', event => {
+  event.preventDefault();
+  if ($('#intro').hidden) showScreen('intro');
+  $('#intro').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  $('#self-description').focus({ preventScroll: true });
+}));
 $$('.journey-screen h1').forEach(h => h.tabIndex = -1);
 $('#edit-description').addEventListener('click', () => showScreen('intro'));
 $('#extend-node').addEventListener('click', () => extendNode());

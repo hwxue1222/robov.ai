@@ -1,4 +1,13 @@
 const english = {
+  "会员积分钱包": "Member points wallet", "积分任务中心": "Rewards and tasks",
+  "社区交流": "Community", "商家管理平台": "Merchant platform", "AI 经营分析": "AI business insights", "筹备中": "Coming soon",
+  "会员钱包": "Member wallet", "店员操作": "Store console", "知识探索": "Explore",
+  "连接每一次消费。": "Connect every purchase.", "积累每一份价值。": "Build lasting value.",
+  "你的积分、会员身份与消费记录，": "Your points, membership and purchase history,",
+  "从这里开始。": "all start here.", "进入会员钱包": "Open wallet",
+  "我的积分": "My points", "余额、流水与动态会员码": "Balance, history and member code",
+  "门店工作台": "Store workspace", "消费积分、兑换与退款": "Points, redemptions and refunds",
+  "发现兴趣，连接新的理解": "Discover interests and new connections",
   "知识网络": "Knowledge network", "持续探索": "Keep exploring",
   "进入我的三维知识网络 →": "Enter my 3D knowledge network →",
   "三维知识网络": "3D knowledge network", "知识节点列表": "Knowledge node list",
@@ -163,9 +172,10 @@ english['继续新网络 →'] = 'Return to the new network →';
 english['学习内容由 AI 生成，可能有误；重要结论请核对可靠资料。'] = 'Learning content is AI-generated and may contain errors. Verify important claims with reliable sources.';
 english['生成时，你的描述、相关探索记录和所选节点的想法会发送给 Kimi 服务。请勿填写隐私或机密信息。'] = 'Generation sends your description, relevant exploration history and thoughts on the selected idea to Kimi. Do not enter private or confidential information.';
 english['这个点还没有跨领域关联。选择延伸，生成新的连接方向。'] = 'This idea has no cross-field links yet. Expand it to generate new directions.';
+Object.assign(english, typeof interfaceEnglish === 'undefined' ? {} : interfaceEnglish);
 let language = "zh";
-try { language = localStorage.getItem("robov-language") === "en" ? "en" : "zh"; } catch {}
-function translate(source) {
+try { const saved = localStorage.getItem('robov-language'); language = ['zh', 'en', 'ms'].includes(saved) ? saved : 'zh'; } catch {}
+function translateEnglish(source) {
   if (english[source]) return english[source];
   const patterns = [
     [/^你目前关注「(.+)」。这份画像会随着你的自我描述和知识探索持续更新。$/, m => "Your current direction is " + translate(m[1]) + ". Your profile keeps updating through your descriptions and knowledge exploration."],
@@ -193,43 +203,110 @@ function translate(source) {
   for (const [pattern, replacement] of patterns) { const match = source.match(pattern); if (match) return replacement(match); }
   return source;
 }
+function translate(source, target = language) {
+  if (target === 'zh' || typeof source !== 'string') return source;
+  const text = source.trim();
+  if (target === 'ms' && typeof untranslatedMalay !== 'undefined' && untranslatedMalay.has(text) && !malay[text]) {
+    return typeof malayTranslationFailed !== 'undefined' && malayTranslationFailed ? 'Terjemahan belum tersedia' : 'Sedang diterjemahkan…';
+  }
+  const dictionary = target === 'ms' ? malay : english;
+  let value = dictionary[text];
+  if (!value) {
+    const patterns = [
+      [/^(\d+) 个商家$/, m => target === 'ms' ? `${m[1]} peniaga` : `${m[1]} merchant${m[1] === '1' ? '' : 's'}`],
+      [/^(.+) · (\d+) 家门店$/, m => target === 'ms' ? `${m[1]} · ${m[2]} cawangan` : `${m[1]} · ${m[2]} outlets`],
+      [/^确认兑换 (\d+) RBP$/, m => target === 'ms' ? `Sahkan penebusan ${m[1]} RBP` : `Confirm redemption of ${m[1]} RBP`],
+      [/^已发放 (\d+) RBP，交易 (.+)$/, m => target === 'ms' ? `${m[1]} RBP diberikan · Transaksi ${m[2]}` : `${m[1]} RBP issued · Transaction ${m[2]}`],
+      [/^已发起兑换 (\d+) RBP，等待会员确认：(.+)$/, m => target === 'ms' ? `Penebusan ${m[1]} RBP menunggu pengesahan ahli: ${m[2]}` : `${m[1]} RBP redemption awaiting member confirmation: ${m[2]}`],
+      [/^已冲回 (\d+) RBP，交易 (.+)$/, m => target === 'ms' ? `${m[1]} RBP dibalikkan · Transaksi ${m[2]}` : `${m[1]} RBP reversed · Transaction ${m[2]}`],
+      [/^你目前关注「(.+)」。这份画像会随着你的自我描述和知识探索持续更新。$/, m => target === 'ms' ? `Tumpuan semasa anda ialah ${translate(m[1], target)}. Profil ini berkembang bersama penerangan dan penerokaan anda.` : `Your current focus is ${translate(m[1], target)}. Your profile evolves with your description and exploration.`],
+      [/^你说：「([\s\S]*)」$/, m => target === 'ms' ? `Anda berkata: “${m[1]}”` : `You said: “${m[1]}”`],
+      [/^(.+) · (\d+) 次打开$/, m => target === 'ms' ? `${translate(m[1], target)} · dibuka ${m[2]} kali` : `${translate(m[1], target)} · opened ${m[2]} times`],
+      [/^已连接 (\d+) 个知识点。当前知识点：(.+)$/, m => target === 'ms' ? `${m[1]} idea disambungkan. Idea semasa: ${translate(m[2], target)}` : `${m[1]} connected ideas. Current idea: ${translate(m[2], target)}`],
+      [/^起点：(.+)$/, m => target === 'ms' ? `Titik permulaan: ${translate(m[1], target)}` : `Starting point: ${translate(m[1], target)}`],
+      [/^收录于 (.+)$/, m => target === 'ms' ? `Diindeks ${m[1]}` : `Indexed ${m[1]}`],
+      [/^AI 知识线索 · (.+)$/, m => target === 'ms' ? `Petunjuk ilmu AI · ${translate(m[1], target)}` : `AI knowledge lead · ${translate(m[1], target)}`],
+      [/^(.+) →$/, m => `${translate(m[1], target)} →`],
+      [/^(EARN|REDEEM_HOLD|REFUND_REVERSAL) · (POSTED|PENDING_MEMBER_CONFIRMATION|REVERSED)$/, m => {
+        const labels = target === 'ms' ? { EARN: 'Mata diperoleh', REDEEM_HOLD: 'Penebusan', REFUND_REVERSAL: 'Pembalikan', POSTED: 'Selesai', PENDING_MEMBER_CONFIRMATION: 'Menunggu pengesahan', REVERSED: 'Dibalikkan' } : { EARN: 'Earned', REDEEM_HOLD: 'Redemption', REFUND_REVERSAL: 'Refund reversal', POSTED: 'Completed', PENDING_MEMBER_CONFIRMATION: 'Awaiting confirmation', REVERSED: 'Reversed' };
+        return `${labels[m[1]]} · ${labels[m[2]]}`;
+      }]
+    ];
+    for (const [pattern, replace] of patterns) { const match = text.match(pattern); if (match) { value = replace(match); break; } }
+  }
+  value ||= translateEnglish(text);
+  return source.slice(0, source.length - source.trimStart().length) + value + source.slice(source.trimEnd().length);
+}
 const textSources = new WeakMap();
 const attributeSources = new WeakMap();
+let titleSource = document.title, renderedTitle = document.title;
 function applyLanguage() {
-  document.documentElement.lang = language === "en" ? "en" : "zh-CN";
+  document.documentElement.lang = language === 'zh' ? 'zh-CN' : language;
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   let node;
   while ((node = walker.nextNode())) {
-    if (node.parentElement.closest("script, style, .language-switch, textarea")) continue;
-    if (!textSources.has(node)) textSources.set(node, node.nodeValue);
-    const source = textSources.get(node);
-    const value = language === "en" ? translate(source) : source;
+    if (node.parentElement.closest('script, style, .language-switch, textarea, code, [data-no-translate]')) continue;
+    let record = textSources.get(node);
+    if (!record || node.nodeValue !== record.rendered) record = { source: node.nodeValue };
+    const value = translate(record.source);
     if (node.nodeValue !== value) node.nodeValue = value;
+    record.rendered = value; textSources.set(node, record);
   }
   document.querySelectorAll("[placeholder], [aria-label], [title]").forEach(el => {
     if (!attributeSources.has(el)) attributeSources.set(el, {});
     const source = attributeSources.get(el);
     ["placeholder", "aria-label", "title"].forEach(attr => {
       if (!el.hasAttribute(attr)) return;
-      if (!(attr in source)) source[attr] = el.getAttribute(attr);
-      const value = language === "en" ? translate(source[attr]) : source[attr];
+      if (!(attr in source) || el.getAttribute(attr) !== source[attr].rendered) source[attr] = { source: el.getAttribute(attr) };
+      const value = translate(source[attr].source);
       if (el.getAttribute(attr) !== value) el.setAttribute(attr, value);
+      source[attr].rendered = value;
     });
   });
   document.querySelectorAll("[data-language]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.language === language)));
+  if (document.title !== renderedTitle) titleSource = document.title;
+  renderedTitle = translate(titleSource); if (document.title !== renderedTitle) document.title = renderedTitle;
 }
+let switcher = document.querySelector('.language-switch');
+if (!switcher && document.querySelector('.topbar')) { switcher = document.createElement('div'); switcher.className = 'language-switch'; document.querySelector('.topbar').append(switcher); }
+if (switcher) {
+  switcher.setAttribute('role', 'group'); switcher.setAttribute('aria-label', 'Language');
+  switcher.replaceChildren(...[['zh', 'CN', '简体中文'], ['en', 'EN', 'English'], ['ms', 'MY', 'Bahasa Melayu']].map(([code, label, title]) => {
+    const button = document.createElement('button'); button.type = 'button'; button.dataset.language = code; button.textContent = label; button.title = title; button.setAttribute('aria-label', title); return button;
+  }));
+}
+function refreshLanguageLayout() { if (typeof drawEdges === 'function') requestAnimationFrame(drawEdges); }
 document.querySelectorAll("[data-language]").forEach(button => button.addEventListener("click", () => {
   language = button.dataset.language;
   try { localStorage.setItem("robov-language", language); } catch {}
-  applyLanguage(); requestAnimationFrame(drawEdges);
+  applyLanguage(); refreshLanguageLayout();
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('robov:language'));
 }));
 const languageObserver = new MutationObserver(records => {
-  const relevant = records.some(record => !(record.target.parentElement || record.target).closest?.("svg, script, style, .language-switch"));
+  const relevant = records.some(record => !(record.target.parentElement || record.target).closest?.("svg, script, style, .language-switch, textarea, code, [data-no-translate]"));
   if (!relevant) return;
   languageObserver.disconnect();
   applyLanguage();
   languageObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
-  requestAnimationFrame(drawEdges);
+  languageObserver.observe(document.querySelector('title'), { childList: true, characterData: true, subtree: true });
+  refreshLanguageLayout();
 });
 applyLanguage();
 languageObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+languageObserver.observe(document.querySelector('title'), { childList: true, characterData: true, subtree: true });
+
+if (typeof fetch === 'function') fetch('/api/robov/status').then(response => response.ok ? response.json() : null).then(state => {
+  if (!state?.testMode) return;
+  const banner = document.createElement('aside');
+  banner.className = 'public-test-notice';
+  banner.dataset.noTranslate = '';
+  banner.setAttribute('aria-label', 'Public test');
+  const labels = {
+    zh: '系统目前为 Beta 测试版本。如有任何问题，请联系 jinweide.my@gmail.com。',
+    en: 'The system is in beta version. For any queries, please contact jinweide.my@gmail.com.',
+    ms: 'Sistem ini dalam versi beta. Untuk sebarang pertanyaan, sila hubungi jinweide.my@gmail.com.'
+  };
+  const render = () => { banner.textContent = labels[language] || labels.en; };
+  render(); window.addEventListener('robov:language', render);
+  document.body.prepend(banner);
+}).catch(() => {});

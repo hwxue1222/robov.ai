@@ -65,6 +65,157 @@ current browser. Actual visits update observed breadth and depth, not mastery
 scores. Updating a description preserves exploration history. Records can be
 cleared in the profile view. Cross-device synchronization is not implemented.
 
+### ROBOV Points V1
+
+ROBOV Points adds three reviewable modules without Supabase:
+
+The homepage links to the independent Academy at /academy.html; learning screens
+and existing browser-local learning history live there. All pages share CN, EN,
+and MY controls (Simplified Chinese, English, and Bahasa Melayu). The selected
+language persists between pages. New AI graphs request all three languages;
+older bilingual saved graphs remain readable and fall back to English for
+missing Malay content. External news, original source titles, user input, brand
+names, and addresses are preserved. No database migration is needed for this
+navigation/localization change.
+
+- Member wallet at `/robov.html`: member login bootstrap, balance, recent ledger
+  entries, and a 60-second signed dynamic member code.
+- Staff console at `/staff.html`: scan or paste the member code, enter amount and
+  unique receipt number, issue points at 3%, request redemption, and reverse
+  points after refunds.
+- PostgreSQL ledger with Prisma: atomic transactions, idempotency keys, unique
+  store receipt protection, refund reversal records, audit logs, and store staff
+  role checks.
+
+Set these environment variables before enabling the module in Vercel:
+
+```sh
+DATABASE_URL=postgresql://...
+ROBOV_QR_SECRET=long-random-secret
+ROBOV_DEMO_MODE=true
+```
+
+Run `npm install`, `npx prisma generate`, and `npx prisma migrate deploy` against
+the independently hosted PostgreSQL database. Do not run destructive migrations
+against production member data without an explicit backup and approval.
+
+Member and employee sign-in use Better Auth password accounts and signed cookie
+sessions backed by Prisma. Caller-supplied identity headers cannot authenticate.
+All roles now use strict temporary tab login: refresh, a new tab, or a closed and
+reopened tab requires sign-in. Registration and sign-in force rememberMe=false,
+with session-only HttpOnly cookies and an eight-hour server cap. Protected APIs
+also require x-robov-tab-proof, an HMAC bound to the actual server session ID,
+issued only after password authentication. A cookie alone cannot authorize.
+The browser keeps that proof only in memory; deliberate same-tab navigation uses
+a consumed, path-bound ten-second handoff. Refresh/restoration cannot consume it.
+On close/refresh, the client attempts revocation without a Set-Cookie response,
+preventing delayed close responses from clearing a newly signed-in cookie.
+The homepage links to login, not Store Console; wallets require a session.
+Administrator access is assigned server-side only. ADMIN is limited to active
+StoreStaff assignments (the same account may administer several stores).
+All account types sign in by email; username aliases are not accepted. Member
+registration requires 12-character passwords. Existing test employee accounts
+can sign in with their explicitly configured 8-character passwords; use distinct
+strong passwords before production. configure-test-accounts.cjs accepts secret
+configuration through non-echoing standard input and revokes previous sessions.
+Only SUPERADMIN bypasses assignments and discovers all active stores, including
+newly created stores. Ledger authorization applies the same distinction.
+BETTER_AUTH_SECRET (32+ characters) is required. ROBOV_AUTH_BASE_URL is optional;
+on Vercel it defaults to the deployment URL. Production defaults to disabled.
+The explicitly authorized public beta on robov.ai uses the isolated Singapore
+Neon test database, never a real member database. It additionally requires
+ROBOV_PUBLIC_TEST_MODE=true and ROBOV_TEST_DATABASE_HOST to exactly match the
+Neon database hostname (without -pooler), plus 32+ character auth and QR secrets.
+Set ROBOV_AUTH_BASE_URL=https://robov.ai for public-domain cookie sessions.
+The site displays a CN/EN/MY notice: beta points have no real redemption value.
+Disable ROBOV_PUBLIC_TEST_MODE and redeploy to suspend public beta operations.
+Functions run in sin1 near the database, with bounded transaction wait/timeout.
+Email verification/reset, signup-abuse prevention and broader ledger concurrency
+hardening remain prerequisites for genuine commercial points.
+
+Member QR canvases now encode the complete 60-second signed token using qrcode.
+The merchant camera uses getUserMedia and jsQR, preferring the rear camera with
+device selection, stop/visibility cleanup, permission errors and local image fallback.
+Decoded tokens are authenticated by /api/robov/staff action=scan before use.
+Expired or malformed tokens are rejected server-side; wallet codes refresh at expiry.
+Run npm run build:qr after changing qr-runtime.js; the bundled libraries are served
+locally from assets/robov-qr.js. Automated tests use real decoding on fake camera
+video frames; a physical mobile camera still needs on-site lighting/distance checks.
+
+StoreEarnPolicy provides an enabled flag, default 3% rate and up to 50 nonoverlapping
+amount ranges. Lower bounds are inclusive, upper bounds exclusive (blank = unbounded).
+The whole bill uses its matching rate; gaps use the default. Rates have two decimal
+places, points round down. Assigned ADMIN and SUPERADMIN may edit with version checks
+and audit; STAFF can read only. EARN entries snapshot rate, tier and policy version,
+and new receipts use MYR. Deleting a tier never rewrites old earnings or refunds.
+
+/api/robov/activities manages independent SIGNUP, VOUCHER and INTERACTION activities
+with create/update/archive/restore, expiry, scope, revision checks and audit.
+Only SUPERADMIN manages global or registration activities; ADMIN is store-scoped.
+Additional active registration awards stack once each at new-account creation, never
+on login. Voucher points, discount and minimum spend are server-enforced and snapshotted;
+pending holds remain confirmable after edit/archive. Interactions require merchant
+approval, once per member per activity, with atomic deduplication under concurrent
+approvals. Google review incentives are rejected. Archiving keeps historical ledgers.
+
+New member accounts atomically receive the configured registration reward
+(default 100 points), with a unique signup credit and audit. Repeated login or
+provisioning does not grant it again. Admin-only /api/robov/settings manages the
+enabled flag and points (0-10000) and lists recent credits. Changes affect new
+members only. Optional signupEndsAt, reviewEndsAt and voucherEndsAt determine
+Ongoing/Expired status; disabling registration yields Paused. Registration credit
+and new voucher holds check the end date server-side. Already issued holds can
+still be confirmed. Clearing an end date removes the time limit. /rewards.html
+combines registration awards and RM5 vouchers into one full-width JWD promotion,
+matching the homepage, alongside three voluntary review links. Signup amounts and
+availability remain truthful when the registration campaign is paused or expired;
+expired voucher offers stay visible without participation links. Activity dates and
+signup amount are editable by SUPERADMIN and audited. Global reward settings require SUPERADMIN; local admins cannot
+read or alter them. /api/robov/offer exposes only the public campaign configuration.
+
+SUPERADMIN can use /api/robov/activity to browse all member wallets and recorded
+account/points activity, with search, store/member filters and numbered pagination.
+Signup credits, activity records and the member directory default to ten rows per
+page, with previous/next controls and totals. APIs accept page, pageSize (10/20/50)
+and asOf; the UI preserves asOf while paging and resets it on a new filter.
+Each viewing request is audited. The endpoint denies local admins and members,
+and never returns credentials or auth IDs. Academy history remains browser-local
+and is not part of this server activity log. setup-test-superadmin.cjs provisions
+the isolated test superadmin and binds admin to the three existing JWD stores;
+verify-store-roles.cjs verifies new-store inheritance and access isolation.
+One 5-ROBOV-point voucher gives RM5 off a dine-in bill of RM50 or more, with one
+voucher per store receipt and no combined promotion. Staff declare eligibility;
+the API enforces the terms and the member confirms the debit. Confirmation is
+claimed atomically to avoid duplicate debits. This is not a cash instrument.
+
+For test admin creation, set ROBOV_TEST_DATABASE_HOST and an absolute
+ROBOV_ADMIN_CREDENTIAL_FILE and run scripts/create-test-admin.cjs with .env.local.
+This does not reset an existing admin password. Keep its local output private.
+scripts/verify-auth-rewards.cjs verifies signed sessions, signup credits, role
+denials, voucher terms, concurrent confirmation and logout in the test database.
+
+For an isolated test database, run the database flow verification with:
+
+```sh
+ROBOV_TEST_DATABASE_HOST=<direct-test-host> node --env-file=.env.local scripts/verify-points.cjs
+```
+
+This creates synthetic test users and a test store, retains the resulting ledger
+and audit records, and prints test member/staff IDs. The explicit host must match
+the configured database. Use the unpooled connection for migrations by passing
+DATABASE_URL_UNPOOLED as DATABASE_URL to the Prisma migration process. Test
+database credentials belong only in Vercel Preview and Development.
+
+The homepage groups Wallet, Rewards, Community, Merchant, Intelligence, and
+Academy. Community and Intelligence remain planned. Merchant at /merchants.html
+lists JWD Mee Tarik with brand details, three outlets, photographs, and a staff
+console link. The public data/merchants.json catalog supports more merchants;
+it is not an admin onboarding workflow. Rewards at /rewards.html uses the same
+catalog for three independent voluntary Google Review links. Optional
+ROBOV_GOOGLE_REVIEW_PUTERI_HARBOUR, ROBOV_GOOGLE_REVIEW_KULAI_COMMUNE, and
+ROBOV_GOOGLE_REVIEW_LOTUS_MUTIARA_RINI overrides accept HTTPS Google Maps links.
+These actions do not grant points, require a rating, or collect review proof.
+
 The server calls Kimi through Vercel AI Gateway by default (`moonshotai/kimi-k2`).
 Authentication uses `AI_GATEWAY_API_KEY` or Vercel's deployment OIDC token.
 Alternatively configure `MOONSHOT_API_KEY` for direct Moonshot calls; `KIMI_MODEL`
@@ -96,7 +247,9 @@ Open http://localhost:4173. Production: https://robov.ai.
 
 ## Files
 
-- `index.html`: guided entry, profile, and exploration views
+- `index.html`: public portal, login and JWD rewards voucher
+- `academy.html`: profile and knowledge exploration
+- `login.html`: member registration, member and employee sign-in
 - `app.js`: content and exploration modes
 - `generation.js`: personalized generation and error states
 - `api/knowledge.js`: server-side Kimi integration
@@ -105,7 +258,8 @@ Open http://localhost:4173. Production: https://robov.ai.
 - `network.js`: knowledge nodes and selectable branches
 - `scene.js`: Three.js rendering, labels, picking, and camera controls
 - `profile.js`: profile and local learning history
-- `i18n.js`: Chinese and English
+- `i18n.js` and `locale-data.js`: CN/EN/MY interface
+- `academy-language.js` and `api/translate.js`: cached legacy Malay translations
 - `styles.css`: responsive layout
 - `vendor/`: pinned Three.js 0.180.0 modules and MIT license
 - `vendor/jsonrepair/`: jsonrepair 3.15.0 UMD build from npm, ISC license

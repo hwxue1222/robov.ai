@@ -61,10 +61,10 @@ module.exports = async (req, res) => {
     const response = await fetch(direct ? 'https://api.moonshot.cn/v1/chat/completions' : 'https://ai-gateway.vercel.sh/v1/chat/completions', {
       method: 'POST', headers: { Authorization: 'Bearer ' + key, 'Content-Type': 'application/json' },
       signal: AbortSignal.timeout(100000),
-      body: JSON.stringify({ model, temperature: 0.3, max_tokens: pool ? 4000 : 7500,
+      body: JSON.stringify({ model, temperature: 0.3, max_tokens: pool ? 5500 : 9500,
         ...(focused ? { tools: [{ type: 'function', function: { name: 'submit_graph', description: 'Submit a complete compact bilingual 9-node knowledge network. IDs d1,d2,d3 for domain roots; n1 through n6 for children. No narrative or report.', parameters: focusedGraphSchema } }], tool_choice: { type: 'function', function: { name: 'submit_graph' } } } : {}),
         messages: [
-        { role: 'system', content: pool ? poolSystem + '\n' + poolReferences : system + (focused ? '\nSubmit via submit_graph. All domains MUST have bilingual title and summary. Use d1,d2,d3 as domain/root ids. Keep body under 70 Chinese characters / 40 English words, and other descriptions even shorter. Do not repeat the selected idea or recommendation in long prose.' : '') },
+        { role: 'system', content: (pool ? poolSystem + '\n' + poolReferences : system + (focused ? '\nSubmit via submit_graph. All domains MUST have multilingual title and summary. Use d1,d2,d3 as domain/root ids. Keep body under 70 Chinese characters / 40 English words, and other descriptions even shorter. Do not repeat the selected idea or recommendation in long prose.' : '')) + '\nEvery localized text object must include zh (Simplified Chinese), en (English), and ms (Bahasa Melayu). This overrides earlier bilingual text examples. Malay text must express the same meaning naturally, without added claims. Keep ms titles under 60 characters and bodies under 45 words.' },
         { role: 'user', content: JSON.stringify({ mode: pool ? 'pool' : branch ? 'branch' : input.focus ? 'focused-network' : 'initial', focus: input.focus, direction: branch ? input.direction === 'explore' ? 'cross-disciplinary' : 'deeper' : undefined, requiredStructure: branch || pool ? undefined : { domains: 3, nodesPerDomain: 3, totalNodes: 9 }, description: input.description, selectedNode: input.node, existing: Array.isArray(input.existing) ? input.existing.slice(-80) : [], recentExploration: Array.isArray(input.history) ? input.history.slice(0, 12) : [], reflection: typeof input.reflection === 'string' ? input.reflection.slice(0, 1000) : '' }) }
       ] })
     });
@@ -77,6 +77,14 @@ module.exports = async (req, res) => {
     const message = result.choices?.[0]?.message;
     const content = message?.tool_calls?.find(call => call.function?.name === 'submit_graph')?.function.arguments || message?.content;
     const parsed = parseGeneration(content, result.choices?.[0]?.finish_reason);
+    if (input.language === 'ms') {
+      const checkMalay = value => {
+        if (!value || typeof value !== 'object') return;
+        if (typeof value.zh === 'string' && typeof value.en === 'string' && (typeof value.ms !== 'string' || !value.ms.trim())) throw new Error('Missing Malay translation');
+        Object.values(value).forEach(checkMalay);
+      };
+      checkMalay(parsed);
+    }
     if (pool) {
       if (typeof parsed.researchQuery !== 'string' || parsed.researchQuery.trim().length < 3 || parsed.researchQuery.length > 80) throw new Error('Invalid research query');
       return res.status(200).json({ entries: validatePool(await referencePool(validatePool(parsed.entries))), researchQuery: parsed.researchQuery.trim() });

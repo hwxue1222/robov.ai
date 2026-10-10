@@ -164,7 +164,7 @@ async function loadPoolIdeas() {
   const controller = new AbortController(); ideaRequest = controller;
   const timeout = setTimeout(() => controller.abort(), 115000);
   try {
-    const response = await fetch('/api/knowledge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'pool', description, focus: graph.nodes.find(n => n.id === id) }), signal: controller.signal });
+    const response = await fetch('/api/knowledge', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'pool', description, language: typeof language === 'undefined' ? 'zh' : language, focus: graph.nodes.find(n => n.id === id) }), signal: controller.signal });
     const result = await response.json();
     if (!response.ok) throw new Error('Pool unavailable');
     const entries = validatePool(result.entries);

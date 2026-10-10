@@ -1,0 +1,326 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RobovRole {
+  MEMBER
+  STAFF
+  MANAGER
+  ADMIN
+  SUPERADMIN
+}
+
+enum PointTransactionType {
+  EARN
+  REDEEM_HOLD
+  REDEEM_SETTLE
+  REDEEM_RELEASE
+  REFUND_REVERSAL
+  ADJUSTMENT
+}
+
+enum PointTransactionStatus {
+  PENDING_MEMBER_CONFIRMATION
+  POSTED
+  REVERSED
+  VOIDED
+}
+
+enum AuditAction {
+  MEMBER_INVITED
+  MEMBER_ACTIVITY_VIEWED
+  REWARD_SETTINGS_UPDATED
+  MEMBER_LOGIN
+  QR_ISSUED
+  QR_SCANNED
+  POINTS_EARNED
+  REDEMPTION_REQUESTED
+  REDEMPTION_CONFIRMED
+  REDEMPTION_CANCELLED
+  REFUND_REVERSED
+  STAFF_DENIED
+}
+
+model RewardSettings {
+  id String @id @default("default")
+  signupEnabled Boolean @default(true)
+  signupPoints Int @default(5)
+  signupEndsAt DateTime?
+  reviewEndsAt DateTime?
+  voucherEndsAt DateTime?
+  voucherEnabled Boolean @default(true)
+  reviewEnabled Boolean @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+model RobovUser {
+  id          String       @id @default(cuid())
+  authUserId  String?      @unique
+  username    String?      @unique
+  authUser    AuthUser?    @relation(fields: [authUserId], references: [id], onDelete: Restrict)
+  email       String?      @unique
+  phone       String?      @unique
+  displayName String?
+  role        RobovRole    @default(MEMBER)
+  member      MemberWallet?
+  staffStores StoreStaff[]
+  invitationCodeId String?
+  invitationCode InvitationCode? @relation(fields: [invitationCodeId], references: [id], onDelete: Restrict)
+  staffStoreId String?
+  staffStore Store? @relation("FixedStaffStore", fields: [staffStoreId], references: [id], onDelete: Restrict)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([role])
+  @@index([invitationCodeId, createdAt])
+}
+
+model MemberWallet {
+  id             String             @id @default(cuid())
+  userId         String             @unique
+  user           RobovUser          @relation(fields: [userId], references: [id], onDelete: Restrict)
+  pointBalance   Int                @default(0)
+  pointsOnHold   Int                @default(0)
+  transactions   PointTransaction[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+}
+
+model Store {
+  id           String             @id @default(cuid())
+  number       Int                @unique @default(autoincrement())
+  name         String
+  slug         String             @unique
+  active       Boolean            @default(true)
+  version      Int                @default(1)
+  merchantId   String?
+  merchant     Merchant? @relation(fields: [merchantId], references: [id], onDelete: Restrict)
+  outletName   String?
+  city         String?
+  address      String?
+  hours        String?
+  phone        String?
+  email        String?
+  image        String?
+  reviewUrl    String?
+  staff        StoreStaff[]
+  earnPolicy   StoreEarnPolicy?
+  rewardActivities RewardActivity[]
+  invitationCodes InvitationCode[]
+  fixedStaff RobovUser[] @relation("FixedStaffStore")
+  employeeAccounts AuthUser[]
+  transactions PointTransaction[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model Merchant {
+  id String @id @default(cuid())
+  number Int @unique @default(autoincrement())
+  slug String @unique
+  name String
+  nameZh String @default("")
+  category String @default("")
+  country String @default("")
+  region String @default("")
+  description String @default("")
+  website String @default("")
+  phone String @default("")
+  email String @default("")
+  logo String @default("")
+  image String @default("")
+  sourceUrl String @default("")
+  version Int @default(1)
+  stores Store[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StoreEarnPolicy {
+  storeId String @id
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  enabled Boolean @default(true)
+  baseRateBps Int @default(300)
+  tiers Json @default("[]")
+  version Int @default(1)
+  updatedAt DateTime @updatedAt
+}
+
+model RewardActivity {
+  id String @id @default(cuid())
+  storeId String?
+  store Store? @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  kind String
+  title String
+  points Int @default(0)
+  discountCents Int @default(0)
+  minimumSpendCents Int @default(0)
+  url String?
+  enabled Boolean @default(true)
+  endsAt DateTime?
+  deletedAt DateTime?
+  version Int @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([storeId, kind, deletedAt])
+}
+
+model StoreStaff {
+  id        String    @id @default(cuid())
+  storeId   String
+  userId    String
+  role      RobovRole @default(STAFF)
+  active    Boolean   @default(true)
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  user      RobovUser @relation(fields: [userId], references: [id], onDelete: Restrict)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([storeId, userId])
+  @@index([userId, active])
+}
+
+model PointTransaction {
+  id                    String                 @id @default(cuid())
+  walletId              String
+  wallet                MemberWallet           @relation(fields: [walletId], references: [id], onDelete: Restrict)
+  storeId               String?
+  store                 Store?                 @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  actorUserId           String?
+  type                  PointTransactionType
+  status                PointTransactionStatus @default(POSTED)
+  points                Int
+  amountCents           Int?
+  currency              String                 @default("SGD")
+  receiptNo             String?
+  idempotencyKey        String                 @unique
+  relatedTransactionId  String?
+  memberConfirmedAt     DateTime?
+  metadata              Json?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  @@unique([storeId, receiptNo, type])
+  @@index([walletId, createdAt])
+  @@index([relatedTransactionId])
+}
+
+model AuditLog {
+  id            String      @id @default(cuid())
+  actorUserId   String?
+  memberUserId  String?
+  storeId       String?
+  action        AuditAction
+  targetType    String
+  targetId      String?
+  idempotencyKey String?
+  metadata      Json?
+  createdAt     DateTime    @default(now())
+
+  @@index([actorUserId, createdAt])
+  @@index([memberUserId, createdAt])
+  @@index([storeId, createdAt])
+}
+
+model AuthUser {
+  id            String        @id
+  name          String
+  email         String        @unique
+  emailVerified Boolean       @default(false)
+  image         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
+  sessions      AuthSession[]
+  accounts      AuthAccount[]
+  robovUser     RobovUser?
+  employeeStoreId String?
+  employeeRole String?
+  employeeStoreIds String?
+  employeeStore Store? @relation(fields: [employeeStoreId], references: [id], onDelete: Restrict)
+  invitationCodeId String?
+  invitationCode InvitationCode? @relation(fields: [invitationCodeId], references: [id], onDelete: Restrict)
+}
+
+model InvitationCode {
+  id String @id @default(cuid())
+  code String @unique
+  name String
+  storeId String
+  store Store @relation(fields: [storeId], references: [id], onDelete: Restrict)
+  rateBps Int @default(500)
+  enabled Boolean @default(true)
+  rewardEnabled Boolean @default(true)
+  version Int @default(1)
+  members RobovUser[]
+  authUsers AuthUser[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([storeId, createdAt])
+}
+
+model AuthSession {
+  id        String    @id
+  expiresAt DateTime
+  token     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model MemberSelection {
+  id           String   @id @default(cuid())
+  actorUserId  String
+  memberUserId String
+  storeId      String
+  proofHash    String
+  tokenHash    String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  @@unique([actorUserId, proofHash])
+  @@index([expiresAt])
+}
+
+model AuthAccount {
+  id                     String   @id
+  accountId              String
+  providerId             String
+  userId                 String
+  user                   AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken            String?
+  refreshToken           String?
+  idToken                String?
+  accessTokenExpiresAt   DateTime?
+  refreshTokenExpiresAt  DateTime?
+  scope                  String?
+  password               String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @default(now()) @updatedAt
+  @@index([userId])
+  @@unique([providerId, accountId])
+}
+
+model AuthVerification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  @@index([identifier])
+}
+
+model AuthRateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+}

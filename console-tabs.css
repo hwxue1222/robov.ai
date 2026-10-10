@@ -1,0 +1,48 @@
+#staff-main [data-console-inactive] { display: none !important; }
+#staff-main .points-hero { padding-bottom: 12px; }
+#staff-main .points-hero h1 { font-size: 28px; line-height: 1.3; margin: 8px 0; }
+#staff-main .points-hero .guide-copy { font-size: 14px; margin: 0; }
+.console-profile-button { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 40px; width: 40px; height: 40px; padding: 8px; border: 1px solid #bacfc4; border-radius: 50%; background: #e3f3eb; color: #066d54; box-shadow: none; }
+.console-profile-button svg { width: 22px; height: 22px; }
+.console-profile-button[aria-pressed="true"] { background: #08775e; color: white; }
+.console-profile-button:hover { border-color: #08775e; }
+.store-console .topbar { gap: 12px; }
+.store-console .topbar .nav-links { order: 2; margin-left: auto; }
+.store-console .language-switch { order: 3; }
+.store-console .console-profile-button { order: 4; }
+.console-context { display: grid; grid-template-columns: 1fr minmax(240px, 440px); gap: 24px; align-items: center; padding: 16px 0; }
+.console-context h2 { font-size: 16px; margin: 0 0 4px; }
+.console-context p { margin: 0; overflow-wrap: anywhere; }
+.console-context label { display: block; font-size: 14px; margin-bottom: 6px; }
+.console-context select { width: 100%; min-height: 44px; }
+#staff-main > #store-management { --section-accent: #426c78; background: #f1f7f8; }
+#store-profile-editor { margin-top: 24px; padding-top: 20px; border-top: 1px solid #b6c9c0; }
+.store-profile-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+.store-profile-fields > div { min-width: 0; }
+.store-profile-fields label { display: block; margin-bottom: 8px; }
+.store-profile-fields input:not([type="checkbox"]), .store-profile-fields select { width: 100%; min-height: 44px; border: 1px solid #b9c9c4; padding: 10px; border-radius: 4px; background: white; font: inherit; }
+.store-field-wide { grid-column: 1 / -1; }
+.store-profile-preview { display: block; width: 140px; height: 100px; object-fit: contain; margin-top: 10px; background: white; }
+.console-tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 0 0; border-bottom: 1px solid #b6c9c0; margin-bottom: 20px; }
+.console-tabs button { flex: 0 0 auto; min-height: 48px; padding: 10px 16px; background: transparent; border: 0; border-bottom: 3px solid transparent; border-radius: 0; box-shadow: none; color: #43564e; font-size: 15px; font-weight: 600; }
+.console-tabs button[aria-selected="true"] { color: #066d54; background: #e3f3eb; border-bottom-color: #08775e; }
+.console-tabs button:hover { background: #eaf0ed; }
+.console-tabs button:focus-visible { outline: 2px solid #08775e; outline-offset: -2px; }
+#staff-main > [role="tabpanel"] { margin-top: 0; }
+#console-scan { grid-template-columns: minmax(0, 1fr); margin-bottom: 20px; }
+#console-scan textarea { min-height: 80px; }
+#console-scan .camera-tools { margin-bottom: 12px; }
+.member-countdown { display: flex; align-items: center; gap: 8px; color: #43564e; font-size: 14px; }
+#member-countdown-value { display: inline-block; width: 5ch; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; color: #08775e; }
+.member-countdown[data-urgent="true"] #member-countdown-value { color: #a32742; }
+@media (max-width: 640px) {
+  .store-profile-fields { grid-template-columns: minmax(0, 1fr); }
+  body.store-console .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .store-console .topbar .brand { grid-column: 1; grid-row: 1; }
+  .store-console .console-profile-button { grid-column: 2; grid-row: 1; }
+  .store-console .language-switch { grid-column: 1 / -1; grid-row: 2; justify-self: end; }
+  body.store-console .topbar .nav-links { grid-column: 1 / -1; grid-row: 3; width: 100%; margin-left: 0; }
+  .console-context { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .console-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
+  .console-tabs button { padding: 10px 12px; white-space: nowrap; }
+}

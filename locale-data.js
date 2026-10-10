@@ -199,7 +199,7 @@ const localeRows = [
   ['生产环境应接入正式员工登录；这里的 ID 只用于联调 API 权限。', 'These IDs are for testing. Verified staff sign-in is required for production.', 'ID ini untuk ujian. Log masuk kakitangan yang disahkan diperlukan untuk penggunaan sebenar.'],
   ['会员码', 'Member code', 'Kod ahli'], ['扫描结果或粘贴动态码', 'Scan result or member code', 'Hasil imbasan atau kod ahli'],
   ['粘贴会员动态码', 'Paste the member code', 'Tampal kod ahli'], ['发放积分', 'Credit points', 'Kreditkan mata'],
-  ['消费金额', 'Receipt amount', 'Jumlah resit'], ['唯一收据号', 'Unique receipt number', 'Nombor resit unik'],
+  ['消费金额', 'Receipt amount', 'Jumlah resit'], ['收据号', 'Receipt number', 'Nombor resit'],
   ['按 3% 发积分', 'Credit points at 3%', 'Kreditkan mata pada kadar 3%'], ['发起兑换', 'Redemption request', 'Permohonan penebusan'],
   ['兑换积分', 'Points to redeem', 'Mata untuk ditebus'], ['请求会员确认', 'Request member confirmation', 'Minta pengesahan ahli'],
   ['退款冲回', 'Refund reversal', 'Pembalikan bayaran balik'], ['原积分交易 ID', 'Original points transaction ID', 'ID transaksi mata asal'],

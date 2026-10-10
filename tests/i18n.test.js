@@ -30,14 +30,14 @@ test('MY restores Malay and translates dynamic transaction and merchant messages
 
 test('merchant English uses receipt amount, credit points and redemption request', () => {
   const context = contextFor([], 'en');
-  for (const [source, expected] of [['消费金额', 'Receipt amount'], ['发放积分', 'Credit points'], ['发起兑换', 'Redemption request']]) {
+  for (const [source, expected] of [['消费金额', 'Receipt amount'], ['发放积分', 'Credit points'], ['发起兑换', 'Redemption request'], ['收据号', 'Receipt number']]) {
     assert.equal(vm.runInContext(`translate(${JSON.stringify(source)})`, context), expected);
   }
 });
 
 test('merchant Malay follows the revised English receipt and points terminology', () => {
   const context = contextFor([], 'ms');
-  for (const [source, expected] of [['消费金额', 'Jumlah resit'], ['发放积分', 'Kreditkan mata'], ['发起兑换', 'Permohonan penebusan']]) {
+  for (const [source, expected] of [['消费金额', 'Jumlah resit'], ['发放积分', 'Kreditkan mata'], ['发起兑换', 'Permohonan penebusan'], ['收据号', 'Nombor resit']]) {
     assert.equal(vm.runInContext(`translate(${JSON.stringify(source)})`, context), expected);
   }
 });

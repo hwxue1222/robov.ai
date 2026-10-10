@@ -125,8 +125,10 @@ members only. Optional signupEndsAt, reviewEndsAt and voucherEndsAt determine
 Ongoing/Expired status; disabling registration yields Paused. Registration credit
 and new voucher holds check the end date server-side. Already issued holds can
 still be confirmed. Clearing an end date removes the time limit. /rewards.html
-groups registration awards, RM5 vouchers and three voluntary review links;
-expired activities stay visible without participation links. Activity dates and
+combines registration awards and RM5 vouchers into one full-width JWD promotion,
+matching the homepage, alongside three voluntary review links. Signup amounts and
+availability remain truthful when the registration campaign is paused or expired;
+expired voucher offers stay visible without participation links. Activity dates and
 signup amount are editable by SUPERADMIN and audited. Global reward settings require SUPERADMIN; local admins cannot
 read or alter them. /api/robov/offer exposes only the public campaign configuration.
 

@@ -9,20 +9,27 @@
     if (!response.ok) throw new Error('UNAVAILABLE');
     const { tasks,activities=[] } = await response.json();
     const campaigns=document.querySelector('#reward-campaigns');
-    for(const activity of activities.filter(item=>item.id!=='google-review')) {
-      const article=make('article','reward-campaign');article.dataset.activityId=activity.id;
-      article.append(badge(activity.status));
-      if(activity.id==='registration') {
-        article.append(make('p','eyebrow','ROBOV / MEMBER'),make('h2','','会员注册奖励'));
-        const value=make('p','campaign-value');value.append(make('strong','',activity.rewardPoints===null?'—':String(activity.rewardPoints)),document.createTextNode(' points'));article.append(value,make('p','','新会员专享，每个账号一次。'));
-      } else {
-        const image=make('img','campaign-dish');image.src='./assets/jwd/beef-noodles.jpg';image.alt='JWD Mee Tarik 红烧牛肉面';article.append(image,make('h2','','RM5 折扣券'),make('p','campaign-value','100 points = RM5'),make('p','','JWD 所有营业门店通用'));
-        const terms=make('details','campaign-terms');terms.append(make('summary','','使用条款'));
-        ['仅限堂食，单张账单消费满 RM50。','每张账单限用一张 RM5 折扣券，兑换扣除 100 points。','不可与其他优惠、折扣或折扣券同时使用。','不可兑换现金；须由会员确认后抵用。'].forEach(text=>terms.append(make('p','',text)));article.append(terms);
+    const registration=activities.find(item=>item.id==='registration');
+    const voucher=activities.find(item=>item.id==='voucher');
+    if(voucher) {
+      const section=make('section','reward-campaign reward-promo');section.dataset.activityId='member-reward';
+      const heading=make('div','reward-heading');heading.append(make('p','home-kicker','ROBOV REWARDS / JWD MEE TARIK'),make('h2','','100 points = RM5 折扣券'),badge(voucher.status));
+      const visual=make('div','reward-voucher'),copy=make('div','voucher-copy'),brand=make('div','voucher-brand');
+      const logo=make('img','');logo.src='./assets/jwd/brand-icon.png';logo.alt='JWD Mee Tarik';logo.width=80;logo.height=80;brand.append(logo,make('span','','JWD Mee Tarik'));
+      const value=make('p','voucher-value');value.append(make('small','','RM'),document.createTextNode('5'));
+      copy.append(brand,make('p','voucher-label','ROBOV REWARDS'),value,make('p','voucher-caption','折扣券'),make('p','','100 ROBOV Points'));
+      if(registration?.status==='ongoing') {
+        const award=make('p','combined-signup-award'),label=make('span','','注册赠送积分');award.append(label,` / ${registration.rewardPoints} points`);copy.append(award,make('p','','新会员专享，每个账号一次。'));
+      } else copy.append(make('p','combined-signup-award',registration?.status==='expired'?'注册奖励已结束':registration?.status==='paused'?'注册奖励已暂停':'注册奖励暂未开放'));
+      if(voucher.status==='ongoing') {
+        const signup=registration?.status==='ongoing',link=make('a','home-primary',signup?'注册会员':'会员登录');link.href=signup?'./login.html?mode=member&action=register':'./login.html?mode=member';copy.append(link);
       }
-      if(activity.endsAt) { const end=make('p','campaign-end'),label=make('span','','截止时间');end.append(label,' / '+new Date(activity.endsAt).toLocaleString('en-GB',{timeZone:'Asia/Singapore'})+' SGT');article.append(end); }
-      if(activity.status==='ongoing') { const link=make('a','home-primary',activity.id==='registration'?'注册会员':'会员登录');link.href=activity.id==='registration'?'./login.html?mode=member&action=register':'./login.html?mode=member';article.append(link); }
-      campaigns.append(article);
+      const food=make('div','voucher-food'),image=make('img','');image.src='./assets/jwd/beef-noodles.jpg';image.alt='JWD Mee Tarik 红烧牛肉面';image.width=1000;image.height=750;food.append(image,make('span','','JWD / HAND-PULLED NOODLES'));visual.append(copy,food);
+      const facts=make('div','voucher-facts');['100 points 兑换 RM5','堂食满 RM50','JWD 所有营业门店通用'].forEach(text=>facts.append(make('span','',text)));
+      const terms=make('details','voucher-terms');terms.append(make('summary','','使用条款'));const list=make('ul','');
+      ['新会员专享，每个账号一次。','仅限堂食，单张账单消费满 RM50。','每张账单限用一张 RM5 折扣券，兑换扣除 100 points。','不可与其他优惠、折扣或折扣券同时使用。','不可兑换现金；须由会员确认后抵用。','注册奖励与 Google Review 无关。'].forEach(text=>list.append(make('li','',text)));terms.append(list);
+      for(const activity of [registration,voucher].filter(item=>item?.endsAt)) { const end=make('p','campaign-end');end.append(make('span','',activity.id==='registration'?'注册奖励截止时间':'RM5 活动截止时间'),' / '+new Date(activity.endsAt).toLocaleString('en-GB',{timeZone:'Asia/Singapore'})+' SGT');terms.append(end); }
+      section.append(heading,visual,facts,terms);campaigns.append(section);
     }
     const reviewActivity=activities.find(item=>item.id==='google-review');
     document.querySelector('#google-activity-status').replaceWith(Object.assign(badge(reviewActivity?.status || 'ongoing'),{id:'google-activity-status'}));

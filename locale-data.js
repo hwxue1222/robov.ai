@@ -1,5 +1,6 @@
 // Shared interface translations. Brand names and user-entered text remain intact.
 const localeRows = [
+  ['注册奖励已结束','Registration award expired','Ganjaran pendaftaran tamat tempoh'], ['注册奖励已暂停','Registration award paused','Ganjaran pendaftaran dijeda'], ['注册奖励暂未开放','Registration award unavailable','Ganjaran pendaftaran belum tersedia'],
   ['商家登录','Merchant sign-in','Log masuk peniaga'],
   ['奖励活动','Reward activities','Aktiviti ganjaran'], ['奖励活动管理','Reward activity management','Pengurusan aktiviti ganjaran'],
   ['会员注册奖励','Member registration award','Ganjaran pendaftaran ahli'], ['新会员专享，每个账号一次。','For new members. Once per account.','Untuk ahli baharu. Sekali bagi setiap akaun.'],

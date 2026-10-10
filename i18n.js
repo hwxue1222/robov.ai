@@ -302,9 +302,9 @@ if (typeof fetch === 'function') fetch('/api/robov/status').then(response => res
   banner.dataset.noTranslate = '';
   banner.setAttribute('aria-label', 'Public test');
   const labels = {
-    zh: '公开测试版：账号与积分仅供测试，不具真实兑换价值。请勿提交真实收据或敏感资料。',
-    en: 'Public beta: accounts and points are for testing only, with no real redemption value. Do not submit real receipts or sensitive information.',
-    ms: 'Beta awam: akaun dan mata untuk ujian sahaja, tanpa nilai penebusan sebenar. Jangan hantar resit sebenar atau maklumat sensitif.'
+    zh: '系统目前为 Beta 测试版本。如有任何问题，请联系 jinweide.my@gmail.com。',
+    en: 'The system is in beta version. For any queries, please contact jinweide.my@gmail.com.',
+    ms: 'Sistem ini dalam versi beta. Untuk sebarang pertanyaan, sila hubungi jinweide.my@gmail.com.'
   };
   const render = () => { banner.textContent = labels[language] || labels.en; };
   render(); window.addEventListener('robov:language', render);

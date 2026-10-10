@@ -28,6 +28,13 @@ test('MY restores Malay and translates dynamic transaction and merchant messages
   assert.equal(vm.runInContext("translate('2 个商家')", context), '2 peniaga');
 });
 
+test('merchant English uses receipt amount, credit points and redemption request', () => {
+  const context = contextFor([], 'en');
+  for (const [source, expected] of [['消费金额', 'Receipt amount'], ['发放积分', 'Credit points'], ['发起兑换', 'Redemption request']]) {
+    assert.equal(vm.runInContext(`translate(${JSON.stringify(source)})`, context), expected);
+  }
+});
+
 test('translations remain reversible after live text updates and never alter user input', () => {
   const node = { nodeValue: '已登录', parentElement: { closest: () => null } };
   const userText = { nodeValue: '会员钱包', parentElement: { closest: () => ({ tagName: 'TEXTAREA' }) } };

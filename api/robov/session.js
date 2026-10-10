@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
     if (result.user) {
       await ensureRobovUser(result.user);
       actor = await actorForAuthUser(result.user.id);
-      if ((mode === 'employee' || actor?.role === 'STAFF') && !actor?.isEmployee) {
+      if ((mode === 'employee' || ['STAFF','ADMIN'].includes(actor?.role)) && !actor?.isEmployee) {
         if (result.token) await getPrisma().authSession.deleteMany({ where: { token: result.token } });
         return res.status(403).json({ error: 'STAFF_FORBIDDEN' });
       }

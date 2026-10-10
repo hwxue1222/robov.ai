@@ -205,6 +205,8 @@ model AuthUser {
   accounts      AuthAccount[]
   robovUser     RobovUser?
   employeeStoreId String?
+  employeeRole String?
+  employeeStoreIds String?
   employeeStore Store? @relation(fields: [employeeStoreId], references: [id], onDelete: Restrict)
   invitationCodeId String?
   invitationCode InvitationCode? @relation(fields: [invitationCodeId], references: [id], onDelete: Restrict)

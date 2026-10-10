@@ -97,6 +97,10 @@
     const { user } = await response.json();
     if (!response.ok || !user?.isEmployee) { location.replace('./login.html?mode=employee'); return; }
     $('#staff-main').hidden = false;
+    $('#profile-name').textContent = user.displayName || '—'; $('#profile-email').textContent = user.email || '—';
+    $('#profile-role').textContent = user.role === 'SUPERADMIN' ? '超级管理员' : user.role === 'ADMIN' ? '门店管理员' : '员工';
+    $('#profile-created').textContent = user.createdAt ? new Date(user.createdAt).toLocaleString() : '—';
+    $('#profile-stores').replaceChildren(...user.stores.map(store => { const li = document.createElement('li'); li.textContent = store.name; return li; }));
     const role = document.createElement('span'); role.textContent = user.role === 'SUPERADMIN' ? '超级管理员' : user.role === 'ADMIN' ? '门店管理员' : '员工';
     $('#staff-identity').append(document.createTextNode((user.displayName || user.username || '') + ' · '), role);
     $('#staff-store').replaceChildren(...user.stores.map(store => { const option = document.createElement('option'); option.value = store.id; option.textContent = store.name; return option; }));

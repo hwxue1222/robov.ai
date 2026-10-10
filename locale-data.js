@@ -1,5 +1,6 @@
 // Shared interface translations. Brand names and user-entered text remain intact.
 const localeRows = [
+  ['用户资料','User profile','Profil pengguna'], ['角色','Role','Peranan'], ['注册时间','Registered on','Tarikh pendaftaran'], ['授权门店','Authorized stores','Kedai yang dibenarkan'], ['用户管理','User management','Pengurusan pengguna'], ['新建用户','Create user','Cipta pengguna'], ['用户设置','User settings','Tetapan pengguna'], ['管理门店','Managed stores','Kedai di bawah pengurusan'], ['保存用户','Save user','Simpan pengguna'], ['SELECT_MANAGED_STORES','Select at least one store','Pilih sekurang-kurangnya satu kedai'],
   ['刷新积分','Refresh points','Muat semula mata'],
   ['已启用','Enabled','Diaktifkan'],
   ['积分余额','Points balance','Baki mata'], ['待确认预留','Reserved pending confirmation','Diperuntukkan sementara menunggu pengesahan'], ['待确认兑换','Redemption requests','Permohonan penebusan'], ['确认兑换','Confirm redemption','Sahkan penebusan'], ['拒绝兑换','Decline redemption','Tolak penebusan'], ['兑换已拒绝，预留积分已释放','Redemption declined. Reserved points released.','Penebusan ditolak. Mata yang diperuntukkan dilepaskan.'], ['REDEMPTION_NOT_PENDING','This request has already been resolved.','Permohonan ini telah diselesaikan.'],

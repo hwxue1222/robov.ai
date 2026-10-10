@@ -6,6 +6,10 @@
 .console-profile-button svg { width: 22px; height: 22px; }
 .console-profile-button[aria-pressed="true"] { background: #08775e; color: white; }
 .console-profile-button:hover { border-color: #08775e; }
+.store-console .topbar { gap: 12px; }
+.store-console .topbar .nav-links { order: 2; margin-left: auto; }
+.store-console .language-switch { order: 3; }
+.store-console .console-profile-button { order: 4; }
 .console-context { display: grid; grid-template-columns: 1fr minmax(240px, 440px); gap: 24px; align-items: center; padding: 16px 0; }
 .console-context h2 { font-size: 16px; margin: 0 0 4px; }
 .console-context p { margin: 0; overflow-wrap: anywhere; }
@@ -21,6 +25,7 @@
 #console-scan textarea { min-height: 80px; }
 #console-scan .camera-tools { margin-bottom: 12px; }
 @media (max-width: 640px) {
+  .store-console .topbar .nav-links { order: 5; width: 100%; margin-left: 0; }
   .console-context { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .console-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
   .console-tabs button { padding: 10px 12px; white-space: nowrap; }

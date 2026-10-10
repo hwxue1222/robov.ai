@@ -13,11 +13,11 @@ function fixture(settings) {
   };
   return { ...tx, $transaction: fn => fn(tx), results: () => ({ saved, credit, log }) };
 }
-test('signup defaults to 100 points with one opening ledger credit and audit', async () => {
+test('signup defaults to 5 points with one opening ledger credit and audit', async () => {
   const db = fixture(null), user = { id: 'auth', email: 'member@example.invalid', name: 'Member' };
   await createMember(db, user);
   const { saved, credit, log } = db.results();
-  assert.equal(saved.member.pointBalance,100); assert.equal(saved.role,'MEMBER');
+  assert.equal(saved.member.pointBalance,5); assert.equal(saved.role,'MEMBER');
   assert.equal(credit.idempotencyKey,'signup:auth'); assert.equal(credit.metadata.reason,'SIGNUP_BONUS');
   assert.equal(log.targetId,credit.id);
   assert.equal((await createMember(db,user)).id,saved.id);
@@ -36,7 +36,7 @@ test('signup invitation attribution commits with the wallet once and cannot be r
   assert.equal(member.invitationCodeId, 'invite-one');
   await createMember(db, { ...user, invitationCodeId: 'invite-two' });
   assert.equal(db.results().saved.invitationCodeId, 'invite-one');
-  assert.equal(db.results().saved.member.pointBalance, 100);
+  assert.equal(db.results().saved.member.pointBalance, 5);
 });
 test('voucher rejects incorrect point amount, low spend, takeaway and combined promotions before writing', async () => {
   const input = { points:5,amount:50,receiptNo:'RCP-123',dineIn:true,otherPromotion:false };

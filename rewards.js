@@ -17,7 +17,7 @@
       const visual=make('div','reward-voucher'),copy=make('div','voucher-copy'),brand=make('div','voucher-brand');
       const logo=make('img','');logo.src='./assets/jwd/brand-icon.png';logo.alt='JWD Mee Tarik';logo.width=80;logo.height=80;brand.append(logo,make('span','','JWD Mee Tarik'));
       const value=make('p','voucher-value');value.append(make('small','','RM'),document.createTextNode('5'));
-      copy.append(brand,make('p','voucher-label','ROBOV REWARDS'),value,make('p','voucher-caption','折扣券'),make('p','','100 ROBOV Points'));
+      copy.append(brand,make('p','voucher-label','ROBOV REWARDS'),value,make('p','voucher-caption','折扣券'),make('p','','5 ROBOV Points'));
       if(registration?.status==='ongoing') {
         const award=make('p','combined-signup-award'),label=make('span','','注册赠送积分');award.append(label,` / ${registration.rewardPoints} points`);copy.append(award,make('p','','新会员专享，每个账号一次。'));
       } else copy.append(make('p','combined-signup-award',registration?.status==='expired'?'注册奖励已结束':registration?.status==='paused'?'注册奖励已暂停':'注册奖励暂未开放'));

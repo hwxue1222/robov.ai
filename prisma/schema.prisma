@@ -49,7 +49,7 @@ enum AuditAction {
 model RewardSettings {
   id String @id @default("default")
   signupEnabled Boolean @default(true)
-  signupPoints Int @default(100)
+  signupPoints Int @default(5)
   signupEndsAt DateTime?
   reviewEndsAt DateTime?
   voucherEndsAt DateTime?

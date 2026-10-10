@@ -1,25 +1,76 @@
 (function () {
   const $ = selector => document.querySelector(selector);
   const state = {
-    storeId: localStorage.getItem('robovStoreId') || ''
+    storeId: localStorage.getItem('robovStoreId') || '',
+    memberSessionToken: null,
+    busy: false,
+    clearPending: false
   };
+  function selectionControls() {
+    for (const form of ['earn-form', 'redeem-form', 'interaction-form']) {
+      $(`#${form} button[type="submit"]`).disabled = state.busy || !state.memberSessionToken;
+    }
+    $('#exit-member').disabled = state.busy || (!state.memberSessionToken && !state.clearPending);
+    $('#refund-form button[type="submit"]').disabled = state.busy;
+    $('#staff-store').disabled = state.busy;
+    for (const id of ['start-camera', 'read-qr-image', 'identify-member', 'scan-token']) {
+      $(`#${id}`).disabled = state.busy || state.clearPending || !!state.memberSessionToken;
+    }
+  }
+  async function clearSelection() {
+    if (state.busy) return;
+    state.memberSessionToken = null;
+    state.clearPending = true;
+    state.busy = true;
+    $('#scan-token').value = '';
+    $('#scanned-member').textContent = '';
+    for (const id of ['amount', 'receipt-no', 'redeem-amount', 'redeem-receipt', 'transaction-id']) $(`#${id}`).value = '';
+    $('#redeem-eligible').checked = false;
+    $('#interaction-form input[type="checkbox"]').checked = false;
+    $('#earn-preview').textContent = '';
+    show('已退出当前会员，请识别下一位会员');
+    window.dispatchEvent(new Event('robov-member-cleared'));
+    selectionControls();
+    try {
+      const response = await fetch('/api/robov/staff', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'clear-member', storeId: state.storeId }) });
+      if (!response.ok) throw new Error('会员退出失败，请重试或重新登录');
+      state.clearPending = false;
+    } catch (error) { show(error.message); }
+    finally { state.busy = false; selectionControls(); }
+  }
+  window.RobovSelectedMember = {
+    get busy() { return state.busy || state.clearPending; },
+    get active() { return !!state.memberSessionToken; },
+    verifying(value) { state.busy = value; selectionControls(); },
+    set(token) { state.memberSessionToken = token; selectionControls(); }
+  };
+  $('#exit-member').addEventListener('click', clearSelection);
 
   function idempotencyKey(prefix) {
     return `${prefix}-${crypto.randomUUID()}`;
   }
 
   async function staffAction(body, keyPrefix) {
-    const response = await fetch('/api/robov/staff', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'idempotency-key': idempotencyKey(keyPrefix)
-      },
-      body: JSON.stringify({ ...body, storeId: state.storeId, qrToken: $('#scan-token').value.trim() })
-    });
-    const payload = await response.json();
-    if (!response.ok) throw new Error(payload.error || '请求失败');
-    return payload;
+    if (state.busy) throw new Error('操作处理中，请稍候');
+    if (body.action !== 'refund' && !state.memberSessionToken) throw new Error('MEMBER_NOT_SELECTED');
+    state.busy = true;
+    selectionControls();
+    try {
+      const response = await fetch('/api/robov/staff', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'idempotency-key': idempotencyKey(keyPrefix)
+        },
+        body: JSON.stringify({ ...body, storeId: state.storeId, memberSessionToken: state.memberSessionToken })
+      });
+      const payload = await response.json();
+      if (!response.ok) {
+        if (payload.error === 'MEMBER_NOT_SELECTED') { state.memberSessionToken = null; $('#scanned-member').textContent = ''; }
+        throw new Error(payload.error || '请求失败');
+      }
+      return payload;
+    } finally { state.busy = false; selectionControls(); }
   }
 
   function show(message) {
@@ -29,6 +80,7 @@
   $('#staff-store').addEventListener('change', () => {
     state.storeId = $('#staff-store').value;
     localStorage.setItem('robovStoreId', state.storeId);
+    clearSelection();
   });
 
   (async () => {
@@ -41,6 +93,7 @@
     $('#staff-store').replaceChildren(...user.stores.map(store => { const option = document.createElement('option'); option.value = store.id; option.textContent = store.name; return option; }));
     state.storeId = user.stores.some(store => store.id === state.storeId) ? state.storeId : user.stores[0]?.id || '';
     $('#staff-store').value = state.storeId; $('#staff-store').disabled = false;
+    selectionControls();
   })().catch(() => location.replace('./login.html?mode=employee'));
 
   $('#earn-form').addEventListener('submit', async event => {

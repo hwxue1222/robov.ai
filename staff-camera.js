@@ -12,16 +12,19 @@
   };
   const show = message => { cameraStatus.textContent = message; };
   function controls(active) {
-    running = active; $('#start-camera').disabled = active;
+    running = active; $('#start-camera').disabled = active || window.RobovSelectedMember.active || window.RobovSelectedMember.busy;
     $('#stop-camera').disabled = !active; $('#camera-device').disabled = !active;
     $('#camera-preview').hidden = !active;
   }
   function stop() { scanner.stop(); controls(false); }
   function fail(error) { stop(); show(errorMessages[error.name] || error.message || '无法启动摄像头，请重试'); }
   async function accept(token) {
+    if (window.RobovSelectedMember.busy || window.RobovSelectedMember.active) return;
     stop(); $('#scan-token').value = ''; $('#scanned-member').textContent = '';
     const attempt = ++verification;
     const storeId = $('#staff-store').value;
+    window.RobovSelectedMember.verifying(true);
+    try {
     show('正在验证会员码…');
     if (!/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(token) || token.length > 1024) throw new Error('不是有效的 ROBOV 会员码');
     const response = await fetch('/api/robov/staff', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'scan', storeId, qrToken: token }) }).catch(error=>{if(attempt!==verification)return null;throw error;});
@@ -29,12 +32,16 @@
     const result = await response.json();
     if (attempt !== verification || storeId !== $('#staff-store').value) return;
     if (!response.ok) throw new Error(result.error || '会员码验证失败');
-    $('#scan-token').value = token;
+    $('#scan-token').value = '';
     $('#scanned-member').textContent = result.member.displayName || 'ROBOV Member';
+    $('#staff-status').textContent = '';
+    window.RobovSelectedMember.set(result.memberSessionToken);
     show('会员码已验证，摄像头已关闭');
+    } finally { window.RobovSelectedMember.verifying(false); }
   }
   const scanner = new window.RobovCameraScanner({ video, canvas: document.createElement('canvas'), decode: window.RobovQR.decode, onResult: accept, onError: fail, mediaDevices: navigator.mediaDevices });
   async function start() {
+    if (window.RobovSelectedMember.busy || window.RobovSelectedMember.active) return;
     verification++; $('#scan-token').value = ''; $('#scanned-member').textContent = '';
     if (!window.isSecureContext) { show('摄像头需要 HTTPS 安全连接'); return; }
     if (!navigator.mediaDevices?.getUserMedia) { show('此浏览器不支持摄像头，可选择二维码图片'); return; }
@@ -56,6 +63,7 @@
   $('#stop-camera').addEventListener('click', () => { verification++; stop(); show('摄像头已关闭'); });
   $('#camera-device').addEventListener('change', start);
   $('#read-qr-image').addEventListener('click', () => $('#qr-image').click());
+  $('#identify-member').addEventListener('click', () => accept($('#scan-token').value.trim()).catch(fail));
   $('#qr-image').addEventListener('change', async event => {
     stop(); const selection=++verification;const file = event.target.files[0]; event.target.value = '';
     if (!file) return;
@@ -76,5 +84,6 @@
   $('#scan-token').addEventListener('input', () => { verification++; $('#scanned-member').textContent = ''; });
   document.addEventListener('visibilitychange', () => { if (document.hidden) { verification++; stop(); show('摄像头已关闭'); } });
   window.addEventListener('pagehide', stop);
+  window.addEventListener('robov-member-cleared', () => { verification++; stop(); show('请重新扫描会员码'); });
   window.RobovQR.icons(); controls(false);
 })();

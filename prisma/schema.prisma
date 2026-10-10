@@ -210,6 +210,19 @@ model AuthSession {
   @@index([userId])
 }
 
+model MemberSelection {
+  id           String   @id @default(cuid())
+  actorUserId  String
+  memberUserId String
+  storeId      String
+  proofHash    String
+  tokenHash    String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  @@unique([actorUserId, proofHash])
+  @@index([expiresAt])
+}
+
 model AuthAccount {
   id                     String   @id
   accountId              String

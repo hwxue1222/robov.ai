@@ -4,6 +4,7 @@ const { requireTestMode } = require('../../lib/robov/config');
 const { getPrisma } = require('../../lib/robov/prisma');
 const { earnPoints, requestRedemption, reverseRefund, awardActivity } = require('../../lib/robov/ledger');
 const { verifyMemberQrToken } = require('../../lib/robov/security');
+const { selectMember, selectedMember, clearMember } = require('../../lib/robov/member-selection');
 
 function idempotencyKey(req) {
   return req.headers['idempotency-key'] || req.body?.idempotencyKey || crypto.randomUUID();
@@ -21,7 +22,12 @@ module.exports = async (req, res) => {
     const actor = { userId: user.id, storeId };
     const prisma = getPrisma();
     const action = req.body?.action;
-    let memberUserId = req.body?.memberUserId;
+    const proof = req.headers['x-robov-tab-proof'];
+    if (action === 'clear-member') {
+      await clearMember(prisma, { actorUserId: user.id, proof });
+      return res.status(200).json({ cleared: true });
+    }
+    let memberUserId;
     if (action === 'scan' && !req.body?.qrToken) throw new Error('INVALID_QR_TOKEN');
     if (req.body?.qrToken && action !== 'refund') {
       const scanned = verifyMemberQrToken(req.body.qrToken);
@@ -29,7 +35,13 @@ module.exports = async (req, res) => {
       const member = await prisma.robovUser.findUnique({ where: { id: memberUserId }, select: { displayName: true, member: { select: { id: true } } } });
       if (!member?.member) throw new Error('INVALID_MEMBER');
       await prisma.auditLog.create({ data: { actorUserId: actor.userId, memberUserId, storeId: actor.storeId, action: 'QR_SCANNED', targetType: 'RobovUser', targetId: memberUserId } });
-      if (action === 'scan') return res.status(200).json({ member: { displayName: member.displayName }, expiresAt: scanned.expiresAt });
+      if (action === 'scan') {
+        const memberSessionToken = await selectMember(prisma, { actorUserId: user.id, proof, memberUserId, storeId });
+        return res.status(200).json({ member: { displayName: member.displayName }, memberSessionToken, expiresAt: scanned.expiresAt });
+      }
+    }
+    if (['earn', 'redeem', 'activity'].includes(action) && !memberUserId) {
+      memberUserId = await selectedMember(prisma, { actorUserId: user.id, proof, storeId, token: req.body?.memberSessionToken });
     }
     if (action === 'earn') {
       const result = await earnPoints(prisma, { actorUserId: actor.userId, storeId: actor.storeId, memberUserId, amount: req.body.amount, receiptNo: req.body.receiptNo, idempotencyKey: idempotencyKey(req) });

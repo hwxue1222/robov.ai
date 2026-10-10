@@ -1,5 +1,10 @@
 // Shared interface translations. Brand names and user-entered text remain intact.
 const localeRows = [
+  ['退出当前会员','Exit current member','Keluar daripada ahli semasa'], ['识别会员码','Identify member code','Kenal pasti kod ahli'],
+  ['已退出当前会员，请识别下一位会员','Current member cleared. Identify the next member.','Ahli semasa telah dikosongkan. Kenal pasti ahli seterusnya.'],
+  ['会员退出失败，请重试或重新登录','Could not clear the member. Retry or sign in again.','Tidak dapat mengosongkan ahli. Cuba lagi atau log masuk semula.'],
+  ['操作处理中，请稍候','Operation in progress. Please wait.','Operasi sedang diproses. Sila tunggu.'],
+  ['MEMBER_NOT_SELECTED','Identify the member first.','Kenal pasti ahli terlebih dahulu.'],
   ['上一页','Previous page','Halaman sebelumnya'], ['INVALID_PAGE','Invalid page number','Nombor halaman tidak sah'],
   ['门店服务与会员奖励','Store services and member rewards','Perkhidmatan kedai dan ganjaran ahli'],
   ['显示已归档活动','Show archived activities','Tunjukkan aktiviti diarkibkan'],

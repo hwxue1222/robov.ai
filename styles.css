@@ -249,6 +249,10 @@ textarea:focus-visible, button:focus-visible, input:focus-visible { outline: 3px
 .campaign-row { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px 0; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
 .campaign-row p { margin:8px 0; }
 .custom-activity { padding:24px 0; border-bottom:1px solid var(--line); }
+.records-pagination { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; }
+.records-pagination button { min-height:44px; min-width:84px; }
+.records-pagination span { font-size:14px; text-align:center; flex:1 1 120px; }
+#signup-credits li { padding:8px 0; overflow-wrap:anywhere; font-size:14px; line-height:1.5; }
 @media (max-width:640px) { .campaign-row { align-items:flex-start; flex-direction:column; } }
 @media (max-width: 640px) { .earn-tier { grid-template-columns: 1fr; } }
 

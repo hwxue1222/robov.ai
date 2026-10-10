@@ -24,13 +24,14 @@
       const response = await fetch('/api/robov/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: signup ? 'register' : 'login', mode, identifier, email: identifier, password: $('#login-password').value, displayName: $('#login-name').value.trim() }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'LOGIN_FAILED');
-      location.assign(mode === 'employee' ? './staff.html' : './robov.html');
+      $('#login-password').value = '';
+      window.RobovSession.navigate(mode === 'employee' ? './staff.html' : './robov.html',result.tabProof);
     } catch (error) { $('#login-status').textContent = error.message; $('#login-submit').disabled = false; }
   });
   render();
   try {
     const response = await fetch('/api/robov/session');
     const { user } = await response.json();
-    if (response.ok && user) location.replace(user.isEmployee ? './staff.html' : './robov.html');
+    if (response.ok && user) window.RobovSession.navigate(user.isEmployee ? './staff.html' : './robov.html');
   } catch { /* The sign-in form remains available when session lookup fails. */ }
 })();

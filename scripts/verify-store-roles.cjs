@@ -4,10 +4,11 @@ const crypto = require('node:crypto');
 const { getPrisma } = require('../lib/robov/prisma');
 const { actorForAuthUser } = require('../lib/robov/auth');
 const { earnPoints } = require('../lib/robov/ledger');
+const proofs=new Map();
 async function call(route,method,body,cookie,url) {
-  const req={method,body,url:url || '/api/robov/'+route,headers:{origin:'http://localhost:4173','content-type':'application/json',...(cookie ? {cookie}: {})}};
+  const req={method,body,url:url || '/api/robov/'+route,headers:{origin:'http://localhost:4173','content-type':'application/json',...(cookie ? {cookie,'x-robov-tab-proof':proofs.get(cookie)}: {})}};
   const res={code:200,headers:{},setHeader(k,v){this.headers[k.toLowerCase()]=v;},status(c){this.code=c;return this;},json(data){this.data=data;}};
-  await require('../api/robov/'+route)(req,res);return res;
+  await require('../api/robov/'+route)(req,res);if(res.data?.tabProof&&res.headers['set-cookie'])proofs.set(res.headers['set-cookie'].map(value=>value.split(';')[0]).join('; '),res.data.tabProof);return res;
 }
 (async () => {
   if (process.env.VERCEL_ENV === 'production' || new URL(process.env.DATABASE_URL).hostname.replace('-pooler','') !== process.env.ROBOV_TEST_DATABASE_HOST) throw new Error('EXPLICIT_TEST_DATABASE_REQUIRED');

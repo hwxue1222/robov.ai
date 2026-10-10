@@ -3,11 +3,13 @@ const crypto = require('node:crypto');
 const { getPrisma } = require('../lib/robov/prisma');
 const { ensureRobovUser } = require('../lib/robov/auth');
 const { requestRedemption, confirmRedemption, getWalletSummary } = require('../lib/robov/ledger');
+const proofs=new Map();
 async function call(route, method, body, cookie) {
-  const headers = { origin: 'http://localhost:4173', 'content-type': 'application/json', 'x-forwarded-for': '127.0.0.1', ...(cookie ? { cookie } : {}) };
+  const headers = { origin: 'http://localhost:4173', 'content-type': 'application/json', 'x-forwarded-for': '127.0.0.1', ...(cookie ? { cookie,'x-robov-tab-proof':proofs.get(cookie) } : {}) };
   const req = { method, body, headers };
   const res = { code: 200, headers: {}, setHeader(k, v) { this.headers[k.toLowerCase()] = v; }, status(code) { this.code = code; return this; }, json(data) { this.data = data; } };
   await require('../api/robov/' + route)(req, res);
+  if(res.data?.tabProof&&res.headers['set-cookie'])proofs.set(res.headers['set-cookie'].map(value=>value.split(';')[0]).join('; '),res.data.tabProof);
   return res;
 }
 (async () => {
@@ -23,6 +25,7 @@ async function call(route, method, body, cookie) {
     const user = registered.data.user;
     assert.equal(user.role, 'MEMBER');
     const cookie = registered.headers['set-cookie'].map(value => value.split(';')[0]).join('; ');
+    assert(registered.headers['set-cookie'].filter(value=>value.includes('session_token=')).every(value=>!/(max-age|expires)=/i.test(value)));
     assert(cookie);
     const authUser = await db.authUser.findUnique({ where: { email } });
     await Promise.all([ensureRobovUser(authUser), ensureRobovUser(authUser), ensureRobovUser(authUser)]);

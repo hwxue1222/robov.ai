@@ -3,6 +3,7 @@ document.querySelectorAll('.account-logout').forEach(button => button.addEventLi
   try {
     const response = await fetch('/api/robov/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }) });
     if (!response.ok) throw new Error('LOGOUT_FAILED');
+    window.RobovSession.clear();
     location.replace('./login.html');
   } catch { button.disabled = false; }
 }));

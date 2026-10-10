@@ -1,5 +1,6 @@
 // Shared interface translations. Brand names and user-entered text remain intact.
 const localeRows = [
+  ['上一页','Previous page','Halaman sebelumnya'], ['INVALID_PAGE','Invalid page number','Nombor halaman tidak sah'],
   ['门店服务与会员奖励','Store services and member rewards','Perkhidmatan kedai dan ganjaran ahli'],
   ['显示已归档活动','Show archived activities','Tunjukkan aktiviti diarkibkan'],
   ['最低消费','Minimum spend','Perbelanjaan minimum'], ['每张账单限用一张优惠券','One voucher per bill','Satu baucar bagi setiap bil'], ['INVALID_ACTIVITY_LIMIT','Archive existing activities before adding more.','Arkibkan aktiviti sedia ada sebelum menambah lagi.'],

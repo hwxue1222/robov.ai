@@ -61,12 +61,12 @@
       <form id="interaction-form" class="reward-management"><h2>互动奖励审核</h2><label for="interaction-activity">互动活动</label><select id="interaction-activity" required></select><label><input type="checkbox" required> 已确认会员完成活动</label><button class="secondary-button" type="submit">审核并发放奖励</button></form>
       <section id="activity-management" class="reward-management" hidden><h2>活动管理</h2><div class="activity-filter"><div><label for="campaign-kind">奖励分类</label><select id="campaign-kind"><option value="SIGNUP">注册奖励</option><option value="VOUCHER">兑换优惠</option><option value="INTERACTION">互动活动</option></select></div><button id="new-campaign" class="secondary-button" type="button">新增活动</button></div><label><input id="show-archived-campaigns" type="checkbox"> 显示已归档活动</label><div id="campaign-list"></div><form id="campaign-editor" hidden><h3>活动设置</h3><label for="campaign-title">活动名称</label><input id="campaign-title" maxlength="100" required><label for="campaign-scope">适用范围</label><select id="campaign-scope"><option value="store">当前门店</option><option value="global">全部门店</option></select><label for="campaign-points">活动积分</label><input id="campaign-points" type="number" min="0" max="10000" required><div id="campaign-voucher-fields"><label for="campaign-discount">抵扣金额（RM）</label><input id="campaign-discount" type="number" min="0.01" step="0.01"><label for="campaign-minimum">最低消费（RM）</label><input id="campaign-minimum" type="number" min="0" step="0.01"></div><div id="campaign-link-field"><label for="campaign-url">活动链接</label><input id="campaign-url" type="url" maxlength="2000"></div><label for="campaign-end">活动截止时间</label><input id="campaign-end" type="datetime-local"><label><input id="campaign-enabled" type="checkbox"> 启用活动</label><div class="camera-tools"><button class="primary-button" type="submit">保存活动</button><button id="cancel-campaign" class="secondary-button" type="button">取消</button></div></form><p id="campaign-manager-status" role="status"></p></section>
       <section id="earn-policy-panel" class="reward-management" hidden><h2>消费积分规则</h2><form id="earn-policy-form"><label><input id="earn-enabled" type="checkbox"> 启用消费积分</label><label for="earn-base-rate">默认奖励比例（%）</label><input id="earn-base-rate" type="number" min="0" max="100" step="0.01" required><div id="earn-tiers"></div><button id="add-earn-tier" class="secondary-button" type="button">新增金额区间</button><button class="primary-button" type="submit">保存消费规则</button><p id="earn-policy-status" role="status"></p></form></section>
-      <section id="reward-admin" hidden class="reward-management"><h2>最近注册奖励</h2><ul id="signup-credits"></ul></section>
+      <section id="reward-admin" hidden class="reward-management"><h2>最近注册奖励</h2><div id="signup-pagination-top"></div><p id="signup-records-status" role="status"></p><ul id="signup-credits"></ul><div id="signup-pagination-bottom"></div></section>
       <section id="member-activity-panel" hidden class="points-panel">
         <h2>会员活动</h2><p>账号与积分活动</p>
         <div class="activity-tabs" role="tablist" aria-label="会员视图"><button type="button" role="tab" aria-selected="true" data-activity-view="activity">活动记录</button><button type="button" role="tab" aria-selected="false" data-activity-view="members">所有会员</button></div>
         <form id="activity-filter" class="activity-filter"><div><label for="activity-store">门店</label><select id="activity-store"><option value="">全部门店</option></select></div><div><label for="activity-search">会员姓名或邮箱</label><input id="activity-search" maxlength="100"></div><button type="submit" class="secondary-button">查询</button></form>
-        <button id="activity-clear-member" type="button" class="text-button" hidden>清除会员筛选</button><p id="activity-status" role="status"></p><div id="activity-rows"></div><button id="activity-next" type="button" class="secondary-button" hidden>下一页</button>
+        <button id="activity-clear-member" type="button" class="text-button" hidden>清除会员筛选</button><p id="activity-status" role="status"></p><div id="activity-pagination-top"></div><div id="activity-rows"></div><div id="activity-pagination-bottom"></div>
       </section>
       <form id="refund-form" class="points-panel">
         <h2>退款冲回</h2>
@@ -76,11 +76,11 @@
       </form>
     </main>
   </div>
-  <script src="./locale-data.js"></script><script src="./i18n.js"></script>
+  <script src="./tab-session.js"></script><script src="./locale-data.js"></script><script src="./i18n.js"></script>
   <script src="./staff.js"></script>
   <script src="./assets/robov-qr.js"></script><script src="./camera-scanner.js"></script><script src="./staff-camera.js"></script>
   <script src="./account.js"></script>
-  <script src="./reward-admin.js"></script>
+  <script src="./pagination.js"></script><script src="./reward-admin.js"></script>
   <script src="./earn-policy.js"></script>
   <script src="./activity-manager.js"></script>
   <script src="./member-activity.js"></script>

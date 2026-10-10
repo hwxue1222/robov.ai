@@ -101,6 +101,15 @@ against production member data without an explicit backup and approval.
 
 Member and employee sign-in use Better Auth password accounts and signed cookie
 sessions backed by Prisma. Caller-supplied identity headers cannot authenticate.
+All roles now use strict temporary tab login: refresh, a new tab, or a closed and
+reopened tab requires sign-in. Registration and sign-in force rememberMe=false,
+with session-only HttpOnly cookies and an eight-hour server cap. Protected APIs
+also require x-robov-tab-proof, an HMAC bound to the actual server session ID,
+issued only after password authentication. A cookie alone cannot authorize.
+The browser keeps that proof only in memory; deliberate same-tab navigation uses
+a consumed, path-bound ten-second handoff. Refresh/restoration cannot consume it.
+On close/refresh, the client attempts revocation without a Set-Cookie response,
+preventing delayed close responses from clearing a newly signed-in cookie.
 The homepage links to login, not Store Console; wallets require a session.
 Administrator access is assigned server-side only. ADMIN is limited to active
 StoreStaff assignments (the same account may administer several stores).
@@ -165,7 +174,10 @@ signup amount are editable by SUPERADMIN and audited. Global reward settings req
 read or alter them. /api/robov/offer exposes only the public campaign configuration.
 
 SUPERADMIN can use /api/robov/activity to browse all member wallets and recorded
-account/points activity, with search, store/member filters and cursor pagination.
+account/points activity, with search, store/member filters and numbered pagination.
+Signup credits, activity records and the member directory default to ten rows per
+page, with previous/next controls and totals. APIs accept page, pageSize (10/20/50)
+and asOf; the UI preserves asOf while paging and resets it on a new filter.
 Each viewing request is audited. The endpoint denies local admins and members,
 and never returns credentials or auth IDs. Academy history remains browser-local
 and is not part of this server activity log. setup-test-superadmin.cjs provisions

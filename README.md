@@ -112,8 +112,15 @@ configuration through non-echoing standard input and revokes previous sessions.
 Only SUPERADMIN bypasses assignments and discovers all active stores, including
 newly created stores. Ledger authorization applies the same distinction.
 BETTER_AUTH_SECRET (32+ characters) is required. ROBOV_AUTH_BASE_URL is optional;
-on Vercel it defaults to the deployment URL. Production remains deliberately
-blocked by VERCEL_ENV=production. Only protected test previews enable ROBOV_DEMO_MODE.
+on Vercel it defaults to the deployment URL. Production defaults to disabled.
+The explicitly authorized public beta on robov.ai uses the isolated Singapore
+Neon test database, never a real member database. It additionally requires
+ROBOV_PUBLIC_TEST_MODE=true and ROBOV_TEST_DATABASE_HOST to exactly match the
+Neon database hostname (without -pooler), plus 32+ character auth and QR secrets.
+Set ROBOV_AUTH_BASE_URL=https://robov.ai for public-domain cookie sessions.
+The site displays a CN/EN/MY notice: beta points have no real redemption value.
+Disable ROBOV_PUBLIC_TEST_MODE and redeploy to suspend public beta operations.
+Functions run in sin1 near the database, with bounded transaction wait/timeout.
 Email verification/reset, signup-abuse prevention, a real QR encoder/camera
 scanner and broader ledger concurrency hardening remain production prerequisites.
 

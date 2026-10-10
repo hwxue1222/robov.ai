@@ -3,7 +3,7 @@ const { getReviewTasks } = require('../../lib/robov/rewards');
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'GET') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
-  const enabled = process.env.ROBOV_DEMO_MODE === 'true' && process.env.VERCEL_ENV !== 'production' && Boolean(process.env.DATABASE_URL);
+  const enabled = require('../../lib/robov/config').testModeEnabled() && Boolean(process.env.DATABASE_URL);
   try {
     const settings = enabled ? await require('../../lib/robov/signup-reward').rewardSettings(require('../../lib/robov/prisma').getPrisma()) : {};
     const { activityStatus } = require('../../lib/robov/activity-status');

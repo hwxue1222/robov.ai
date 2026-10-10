@@ -294,3 +294,19 @@ const languageObserver = new MutationObserver(records => {
 applyLanguage();
 languageObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
 languageObserver.observe(document.querySelector('title'), { childList: true, characterData: true, subtree: true });
+
+if (typeof fetch === 'function') fetch('/api/robov/status').then(response => response.ok ? response.json() : null).then(state => {
+  if (!state?.testMode) return;
+  const banner = document.createElement('aside');
+  banner.className = 'public-test-notice';
+  banner.dataset.noTranslate = '';
+  banner.setAttribute('aria-label', 'Public test');
+  const labels = {
+    zh: '公开测试版：账号与积分仅供测试，不具真实兑换价值。请勿提交真实收据或敏感资料。',
+    en: 'Public beta: accounts and points are for testing only, with no real redemption value. Do not submit real receipts or sensitive information.',
+    ms: 'Beta awam: akaun dan mata untuk ujian sahaja, tanpa nilai penebusan sebenar. Jangan hantar resit sebenar atau maklumat sensitif.'
+  };
+  const render = () => { banner.textContent = labels[language] || labels.en; };
+  render(); window.addEventListener('robov:language', render);
+  document.body.prepend(banner);
+}).catch(() => {});

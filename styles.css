@@ -851,4 +851,5 @@ input {
 
 }
 .pool-choice { overflow-wrap: anywhere; }
+.public-test-notice { padding: 12px 24px; background: #fff2c2; color: #332800; border-bottom: 1px solid #d6bd53; font-size: 14px; line-height: 1.6; text-align: center; overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: reduce) { .pool-loading::after { animation: none; } }

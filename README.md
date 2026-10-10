@@ -99,13 +99,31 @@ Run `npm install`, `npx prisma generate`, and `npx prisma migrate deploy` agains
 the independently hosted PostgreSQL database. Do not run destructive migrations
 against production member data without an explicit backup and approval.
 
-The current identity bootstrap trusts caller-supplied user IDs and is a test
-prototype, not verified authentication. All points endpoints are disabled by
-default and always blocked when VERCEL_ENV=production. Enable ROBOV_DEMO_MODE
-only in a protected preview/development environment with an isolated test
-database. Verified member/staff authentication must replace the bootstrap before
-production activation. The visual member code also needs a real QR encoder and
-camera scanner before it can be used as a scan workflow.
+Member and employee sign-in use Better Auth password accounts and signed cookie
+sessions backed by Prisma. Caller-supplied identity headers cannot authenticate.
+The homepage links to login, not Store Console; wallets require a session.
+Administrator access is assigned server-side only. Staff access is store-scoped.
+BETTER_AUTH_SECRET (32+ characters) is required. ROBOV_AUTH_BASE_URL is optional;
+on Vercel it defaults to the deployment URL. Production remains deliberately
+blocked by VERCEL_ENV=production. Only protected test previews enable ROBOV_DEMO_MODE.
+Email verification/reset, signup-abuse prevention, a real QR encoder/camera
+scanner and broader ledger concurrency hardening remain production prerequisites.
+
+New member accounts atomically receive the configured registration reward
+(default 100 points), with a unique signup credit and audit. Repeated login or
+provisioning does not grant it again. Admin-only /api/robov/settings manages the
+enabled flag and points (0-10000) and lists recent credits. Changes affect new
+members only. /api/robov/offer exposes only the public campaign configuration.
+One 100-point voucher gives RM5 off a dine-in bill of RM50 or more, with one
+voucher per store receipt and no combined promotion. Staff declare eligibility;
+the API enforces the terms and the member confirms the debit. Confirmation is
+claimed atomically to avoid duplicate debits. This is not a cash instrument.
+
+For test admin creation, set ROBOV_TEST_DATABASE_HOST and an absolute
+ROBOV_ADMIN_CREDENTIAL_FILE and run scripts/create-test-admin.cjs with .env.local.
+This does not reset an existing admin password. Keep its local output private.
+scripts/verify-auth-rewards.cjs verifies signed sessions, signup credits, role
+denials, voucher terms, concurrent confirmation and logout in the test database.
 
 For an isolated test database, run the database flow verification with:
 
@@ -160,7 +178,9 @@ Open http://localhost:4173. Production: https://robov.ai.
 
 ## Files
 
-- `index.html`: guided entry, profile, and exploration views
+- `index.html`: public portal, login and JWD rewards voucher
+- `academy.html`: profile and knowledge exploration
+- `login.html`: member registration, member and employee sign-in
 - `app.js`: content and exploration modes
 - `generation.js`: personalized generation and error states
 - `api/knowledge.js`: server-side Kimi integration
@@ -169,7 +189,8 @@ Open http://localhost:4173. Production: https://robov.ai.
 - `network.js`: knowledge nodes and selectable branches
 - `scene.js`: Three.js rendering, labels, picking, and camera controls
 - `profile.js`: profile and local learning history
-- `i18n.js`: Chinese and English
+- `i18n.js` and `locale-data.js`: CN/EN/MY interface
+- `academy-language.js` and `api/translate.js`: cached legacy Malay translations
 - `styles.css`: responsive layout
 - `vendor/`: pinned Three.js 0.180.0 modules and MIT license
 - `vendor/jsonrepair/`: jsonrepair 3.15.0 UMD build from npm, ISC license

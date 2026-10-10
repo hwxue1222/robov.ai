@@ -7,6 +7,7 @@
   <title>ROBOV Points | 店员操作</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./home.css">
+  <link rel="stylesheet" href="./login.css">
 </head>
 <body>
   <div class="app-shell">
@@ -14,25 +15,17 @@
       <a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a>
       <nav class="nav-links" aria-label="ROBOV Points">
         <a href="./robov.html">会员钱包</a>
-        <a href="./staff.html">店员操作</a>
+        <a href="./merchants.html">商家</a><button type="button" class="account-logout">退出登录</button>
       </nav>
     </header>
-    <main class="points-shell">
+    <main id="staff-main" class="points-shell" hidden>
       <section class="points-hero">
         <p class="eyebrow">STORE CONSOLE</p>
         <h1>店员扫码操作</h1>
         <p class="guide-copy">扫描会员 60 秒动态码，录入消费金额和唯一收据号，系统按 3% 自动发放积分；也可以发起兑换并等待会员确认。</p>
       </section>
       <section class="points-grid">
-        <form id="staff-auth" class="points-panel">
-          <h2>门店身份</h2>
-          <label for="staff-user">店员用户 ID</label>
-          <input id="staff-user" required placeholder="店员用户 ID">
-          <label for="staff-store">门店 ID</label>
-          <input id="staff-store" required placeholder="门店 ID">
-          <button class="secondary-button" type="submit">保存本机身份</button>
-          <p class="result-note">生产环境应接入正式员工登录；这里的 ID 只用于联调 API 权限。</p>
-        </form>
+        <section class="points-panel"><h2>门店身份</h2><p id="staff-identity"></p><label for="staff-store">门店</label><select id="staff-store" disabled></select></section>
         <section class="points-panel">
           <h2>会员码</h2>
           <label for="scan-token">扫描结果或粘贴动态码</label>
@@ -52,10 +45,14 @@
         <form id="redeem-form" class="points-panel">
           <h2>发起兑换</h2>
           <label for="redeem-points">兑换积分</label>
-          <input id="redeem-points" required type="number" min="1" step="1" placeholder="100">
+          <input id="redeem-points" required type="number" value="100" readonly>
+          <label for="redeem-amount">账单金额（RM）</label><input id="redeem-amount" required type="number" min="50" step="0.01">
+          <label for="redeem-receipt">兑换收据号</label><input id="redeem-receipt" required maxlength="64">
+          <label><input id="redeem-eligible" type="checkbox" required> 堂食且未使用其他优惠</label>
           <button class="primary-button" type="submit">请求会员确认</button>
         </form>
       </section>
+      <section id="reward-admin" hidden class="points-panel"><h2>注册奖励管理</h2><form id="reward-settings-form"><label><input type="checkbox" id="signup-enabled"> 启用注册赠分</label><label for="signup-points">注册赠送积分</label><input id="signup-points" type="number" min="0" max="10000" step="1" required><button class="primary-button" type="submit">保存设置</button><p id="reward-settings-status" role="status"></p></form><h3>最近注册奖励</h3><ul id="signup-credits"></ul></section>
       <form id="refund-form" class="points-panel">
         <h2>退款冲回</h2>
         <label for="transaction-id">原积分交易 ID</label>
@@ -66,5 +63,7 @@
   </div>
   <script src="./locale-data.js"></script><script src="./i18n.js"></script>
   <script src="./staff.js"></script>
+  <script src="./account.js"></script>
+  <script src="./reward-admin.js"></script>
 </body>
 </html>

@@ -1,8 +1,9 @@
 const crypto = require('node:crypto');
+const { requireActor } = require('../../lib/robov/auth');
 const { requireTestMode } = require('../../lib/robov/config');
 const { getPrisma } = require('../../lib/robov/prisma');
 const { earnPoints, requestRedemption, reverseRefund } = require('../../lib/robov/ledger');
-const { readActor, verifyMemberQrToken } = require('../../lib/robov/security');
+const { verifyMemberQrToken } = require('../../lib/robov/security');
 
 function idempotencyKey(req) {
   return req.headers['idempotency-key'] || req.body?.idempotencyKey || crypto.randomUUID();
@@ -12,10 +13,13 @@ module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (!requireTestMode(res)) return;
   if (req.method !== 'POST') return res.status(405).json({ error: 'METHOD_NOT_ALLOWED' });
-  const actor = readActor(req);
-  if (!actor.userId || !actor.storeId) return res.status(401).json({ error: 'STAFF_AUTH_REQUIRED' });
-  const prisma = getPrisma();
   try {
+    const user = await requireActor(req, res, true);
+    if (!user) return;
+    const storeId = req.body?.storeId;
+    if (!user.stores.some(store => store.id === storeId)) return res.status(403).json({ error: 'STAFF_FORBIDDEN' });
+    const actor = { userId: user.id, storeId };
+    const prisma = getPrisma();
     const action = req.body?.action;
     let memberUserId = req.body?.memberUserId;
     if (req.body?.qrToken) {
@@ -28,7 +32,7 @@ module.exports = async (req, res) => {
       return res.status(200).json(result);
     }
     if (action === 'redeem') {
-      const result = await requestRedemption(prisma, { actorUserId: actor.userId, storeId: actor.storeId, memberUserId, points: req.body.points, idempotencyKey: idempotencyKey(req) });
+      const result = await requestRedemption(prisma, { actorUserId: actor.userId, storeId: actor.storeId, memberUserId, points: req.body.points, amount: req.body.amount, receiptNo: req.body.receiptNo, dineIn: req.body.dineIn, otherPromotion: req.body.otherPromotion, idempotencyKey: idempotencyKey(req) });
       return res.status(200).json(result);
     }
     if (action === 'refund') {

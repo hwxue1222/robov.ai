@@ -31,6 +31,7 @@ enum PointTransactionStatus {
 }
 
 enum AuditAction {
+  REWARD_SETTINGS_UPDATED
   MEMBER_LOGIN
   QR_ISSUED
   QR_SCANNED
@@ -42,8 +43,18 @@ enum AuditAction {
   STAFF_DENIED
 }
 
+model RewardSettings {
+  id String @id @default("default")
+  signupEnabled Boolean @default(true)
+  signupPoints Int @default(100)
+  updatedAt DateTime @updatedAt
+}
+
 model RobovUser {
   id          String       @id @default(cuid())
+  authUserId  String?      @unique
+  username    String?      @unique
+  authUser    AuthUser?    @relation(fields: [authUserId], references: [id], onDelete: Restrict)
   email       String?      @unique
   phone       String?      @unique
   displayName String?
@@ -133,4 +144,66 @@ model AuditLog {
   @@index([actorUserId, createdAt])
   @@index([memberUserId, createdAt])
   @@index([storeId, createdAt])
+}
+
+model AuthUser {
+  id            String        @id
+  name          String
+  email         String        @unique
+  emailVerified Boolean       @default(false)
+  image         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
+  sessions      AuthSession[]
+  accounts      AuthAccount[]
+  robovUser     RobovUser?
+}
+
+model AuthSession {
+  id        String    @id
+  expiresAt DateTime
+  token     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+}
+
+model AuthAccount {
+  id                     String   @id
+  accountId              String
+  providerId             String
+  userId                 String
+  user                   AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken            String?
+  refreshToken           String?
+  idToken                String?
+  accessTokenExpiresAt   DateTime?
+  refreshTokenExpiresAt  DateTime?
+  scope                  String?
+  password               String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @default(now()) @updatedAt
+  @@index([userId])
+  @@unique([providerId, accountId])
+}
+
+model AuthVerification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+  @@index([identifier])
+}
+
+model AuthRateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt
 }

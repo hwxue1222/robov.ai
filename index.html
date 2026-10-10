@@ -2,16 +2,16 @@
 <html lang="zh-CN">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="ROBOV.ai 会员积分、门店服务与知识探索。"><title>ROBOV.ai | Points & Connections</title><link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./home.css"><script type="module" src="./home-scene.js"></script></head>
 <body class="home-page"><div class="app-shell">
-<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><nav class="home-nav" aria-label="ROBOV"><a href="./robov.html">会员钱包</a><a href="./staff.html">店员操作</a><a href="./academy.html">知识探索</a></nav><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
+<header class="topbar"><a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a><nav class="home-nav" aria-label="ROBOV"><a href="./rewards.html">任务中心</a><a href="./merchants.html">商家</a><a href="./login.html">登录</a><a href="./academy.html">知识探索</a></nav><div class="language-switch" role="group" aria-label="Language"><button type="button" data-language="zh" aria-pressed="true">中文</button><button type="button" data-language="en" aria-pressed="false">English</button></div></header>
 <main>
 <section id="home" class="home-experience" aria-label="ROBOV Points">
 <div class="home-hero">
 <canvas id="home-canvas" aria-hidden="true"></canvas><span class="home-fallback" aria-hidden="true">R</span>
-<div class="home-copy"><p class="home-kicker">ROBOV POINTS / V1.0</p><h1>ROBOV.AI</h1><p class="home-tagline">连接每一次消费。<br>积累每一份价值。</p><p class="home-summary">你的积分、会员身份与消费记录，<br>从这里开始。</p><div class="home-actions"><a class="home-primary" href="./robov.html">进入会员钱包 <span aria-hidden="true">↗</span></a><a class="home-secondary" href="./staff.html">店员操作 <span aria-hidden="true">↗</span></a></div></div>
+<div class="home-copy"><p class="home-kicker">ROBOV POINTS / V1.0</p><h1>ROBOV.AI</h1><p class="home-tagline">连接每一次消费。<br>积累每一份价值。</p><p class="home-summary">你的积分、会员身份与消费记录，<br>从这里开始。</p><div class="home-actions"><a class="home-primary" href="./login.html">登录 <span aria-hidden="true">↗</span></a><a class="home-secondary" href="./merchants.html">探索商家 <span aria-hidden="true">↗</span></a></div></div>
 <div class="home-hero-footer"><span>MEMBER / STORE / REWARDS</span><a href="#home-access" aria-label="查看服务入口">↓</a><span>ROBOV POINTS</span></div>
 </div>
 <div id="home-access" class="home-access">
-<a href="./robov.html"><span class="home-access-number">01 / MEMBER</span><h2>ROBOV Wallet</h2><p>会员积分钱包</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
+<a href="./login.html?mode=member"><span class="home-access-number">01 / MEMBER</span><h2>ROBOV Member</h2><p>会员中心</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
 <a href="./rewards.html"><span class="home-access-number">02 / REWARDS</span><h2>ROBOV Rewards</h2><p>积分任务中心</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
 <article><span class="home-access-number">03 / COMMUNITY</span><h2>ROBOV Community</h2><p>社区交流</p><span class="home-coming">筹备中</span></article>
 <a href="./merchants.html"><span class="home-access-number">04 / MERCHANT</span><h2>ROBOV Merchant</h2><p>商家管理平台</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
@@ -19,4 +19,13 @@
 <a href="./academy.html"><span class="home-access-number">06 / ACADEMY</span><h2>ROBOV Academy</h2><p>知识网络</p><span class="home-access-arrow" aria-hidden="true">↗</span></a>
 </div>
 </section>
-</main></div><script src="./locale-data.js"></script><script src="./i18n.js"></script></body></html>
+<section class="reward-showcase" aria-labelledby="reward-title">
+  <div class="reward-heading"><p class="home-kicker">ROBOV REWARDS / JWD MEE TARIK</p><h2 id="reward-title">100 points = RM5 折扣券</h2></div>
+  <div class="reward-voucher">
+    <div class="voucher-copy"><div class="voucher-brand"><img src="./assets/jwd/brand-icon.png" alt="JWD Mee Tarik" width="80" height="80"><span>JWD Mee Tarik</span></div><p class="voucher-label">ROBOV REWARDS</p><p class="voucher-value"><small>RM</small>5</p><p class="voucher-caption">折扣券</p><p>100 ROBOV Points</p><a class="home-primary" href="./login.html?mode=member&action=register">注册会员 <span aria-hidden="true">↗</span></a><p id="signup-offer" hidden data-no-translate></p></div>
+    <div class="voucher-food"><img src="./assets/jwd/beef-noodles.jpg" alt="JWD Mee Tarik 红烧牛肉面" width="1000" height="750"><span>JWD / HAND-PULLED NOODLES</span></div>
+  </div>
+  <div class="voucher-facts"><span>100 points 兑换 RM5</span><span>堂食满 RM50</span><span>JWD 所有营业门店通用</span></div>
+  <details class="voucher-terms"><summary>使用条款</summary><ul><li>仅限堂食，单张账单消费满 RM50。</li><li>每张账单限用一张 RM5 折扣券，兑换扣除 100 points。</li><li>适用于 JWD Mee Tarik 所有营业门店。</li><li>不可与其他优惠、折扣或折扣券同时使用。</li><li>不可兑换现金；须由会员确认后抵用。</li><li>注册奖励与 Google Review 无关。</li><li>条款如有变更，以兑换时公布的规则为准。</li></ul></details>
+</section>
+</main><footer class="site-footer" data-no-translate>&copy; 2026 JWD Mee Tarik (M) Sdn Bhd. All rights reserved.</footer></div><script src="./locale-data.js"></script><script src="./i18n.js"></script><script src="./offer.js"></script></body></html>

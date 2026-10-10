@@ -206,6 +206,9 @@ function translateEnglish(source) {
 function translate(source, target = language) {
   if (target === 'zh' || typeof source !== 'string') return source;
   const text = source.trim();
+  if (target === 'ms' && typeof untranslatedMalay !== 'undefined' && untranslatedMalay.has(text) && !malay[text]) {
+    return typeof malayTranslationFailed !== 'undefined' && malayTranslationFailed ? 'Terjemahan belum tersedia' : 'Sedang diterjemahkan…';
+  }
   const dictionary = target === 'ms' ? malay : english;
   let value = dictionary[text];
   if (!value) {
@@ -277,6 +280,7 @@ document.querySelectorAll("[data-language]").forEach(button => button.addEventLi
   language = button.dataset.language;
   try { localStorage.setItem("robov-language", language); } catch {}
   applyLanguage(); refreshLanguageLayout();
+  if (typeof window !== 'undefined') window.dispatchEvent(new Event('robov:language'));
 }));
 const languageObserver = new MutationObserver(records => {
   const relevant = records.some(record => !(record.target.parentElement || record.target).closest?.("svg, script, style, .language-switch, textarea, code, [data-no-translate]"));

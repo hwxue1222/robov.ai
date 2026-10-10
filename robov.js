@@ -1,11 +1,11 @@
 (function () {
-  const state = { userId: localStorage.getItem('robovMemberUserId'), qrExpiresAt: 0, timer: null };
+  const state = { userId: null, qrExpiresAt: 0, timer: null };
   const $ = selector => document.querySelector(selector);
 
   async function api(path, options = {}) {
     const response = await fetch(path, {
       ...options,
-      headers: { 'Content-Type': 'application/json', ...(state.userId ? { 'x-robov-user-id': state.userId } : {}), ...(options.headers || {}) }
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
     });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || '请求失败');
@@ -23,7 +23,7 @@
       amount.textContent = `${item.points > 0 ? '+' : ''}${item.points} RBP`;
       const status = document.createElement('span');
       const kind = document.createElement('span');
-      kind.textContent = ({ EARN: '消费积分', REDEEM_HOLD: '积分兑换', REFUND_REVERSAL: '退款冲回' })[item.type] || item.type;
+      kind.textContent = item.metadata?.reason === 'SIGNUP_BONUS' ? '注册奖励' : ({ EARN: '消费积分', REDEEM_HOLD: '积分兑换', REFUND_REVERSAL: '退款冲回' })[item.type] || item.type;
       const stage = document.createElement('span');
       stage.textContent = ({ POSTED: '已入账', PENDING_MEMBER_CONFIRMATION: '等待会员确认', REVERSED: '已冲回', VOIDED: '已取消' })[item.status] || item.status;
       status.append(kind, ' · ', stage);
@@ -80,30 +80,19 @@
     if (!seconds) clearInterval(state.timer);
   }
 
-  $('#member-login').addEventListener('submit', async event => {
-    event.preventDefault();
-    $('#member-status').textContent = '正在进入钱包...';
-    try {
-      const form = new FormData(event.currentTarget);
-      const payload = await api('/api/robov/session', { method: 'POST', body: JSON.stringify({ email: form.get('email'), phone: form.get('phone') }) });
-      state.userId = payload.user.id;
-      localStorage.setItem('robovMemberUserId', state.userId);
-      $('#refresh-qr').disabled = false;
-      renderWallet({ ...payload.wallet, availablePoints: payload.wallet.pointBalance - payload.wallet.pointsOnHold, transactions: [] });
-      await refreshWallet();
-      await refreshQr();
-      $('#member-status').textContent = '已登录';
-    } catch (error) {
-      $('#member-status').textContent = error.message;
-    }
-  });
-
   $('#refresh-qr').addEventListener('click', () => Promise.all([refreshWallet(), refreshQr()]).catch(error => { $('#member-status').textContent = error.message; }));
   setInterval(() => {
     if (state.userId && !document.hidden) refreshWallet().catch(error => { $('#member-status').textContent = error.message; });
   }, 10000);
-  if (state.userId) {
+  (async () => {
+    const { user } = await api('/api/robov/session');
+    if (!user) { location.replace('./login.html?mode=member'); return; }
+    state.userId = user.id;
+    $('#wallet-main').hidden = false;
+    $('#member-name').textContent = user.displayName || 'ROBOV Member';
+    $('#member-email').textContent = user.email || '';
     $('#refresh-qr').disabled = false;
-    refreshWallet().catch(error => { $('#member-status').textContent = error.message; });
-  }
+    await refreshWallet();
+    await refreshQr();
+  })().catch(() => location.replace('./login.html?mode=member'));
 })();

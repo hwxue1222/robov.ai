@@ -1,12 +1,8 @@
 (function () {
   const $ = selector => document.querySelector(selector);
   const state = {
-    staffUserId: localStorage.getItem('robovStaffUserId') || '',
     storeId: localStorage.getItem('robovStoreId') || ''
   };
-
-  $('#staff-user').value = state.staffUserId;
-  $('#staff-store').value = state.storeId;
 
   function idempotencyKey(prefix) {
     return `${prefix}-${crypto.randomUUID()}`;
@@ -17,11 +13,9 @@
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-robov-user-id': state.staffUserId,
-        'x-robov-store-id': state.storeId,
         'idempotency-key': idempotencyKey(keyPrefix)
       },
-      body: JSON.stringify({ ...body, qrToken: $('#scan-token').value.trim() })
+      body: JSON.stringify({ ...body, storeId: state.storeId, qrToken: $('#scan-token').value.trim() })
     });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || '请求失败');
@@ -32,14 +26,22 @@
     $('#staff-status').textContent = message;
   }
 
-  $('#staff-auth').addEventListener('submit', event => {
-    event.preventDefault();
-    state.staffUserId = $('#staff-user').value.trim();
-    state.storeId = $('#staff-store').value.trim();
-    localStorage.setItem('robovStaffUserId', state.staffUserId);
+  $('#staff-store').addEventListener('change', () => {
+    state.storeId = $('#staff-store').value;
     localStorage.setItem('robovStoreId', state.storeId);
-    show('本机门店身份已保存');
   });
+
+  (async () => {
+    const response = await fetch('/api/robov/session');
+    const { user } = await response.json();
+    if (!response.ok || !user?.isEmployee) { location.replace('./login.html?mode=employee'); return; }
+    $('#staff-main').hidden = false;
+    const role = document.createElement('span'); role.textContent = user.role === 'ADMIN' ? '管理员' : '员工';
+    $('#staff-identity').append(document.createTextNode((user.displayName || user.username || '') + ' · '), role);
+    $('#staff-store').replaceChildren(...user.stores.map(store => { const option = document.createElement('option'); option.value = store.id; option.textContent = store.name; return option; }));
+    state.storeId = user.stores.some(store => store.id === state.storeId) ? state.storeId : user.stores[0]?.id || '';
+    $('#staff-store').value = state.storeId; $('#staff-store').disabled = false;
+  })().catch(() => location.replace('./login.html?mode=employee'));
 
   $('#earn-form').addEventListener('submit', async event => {
     event.preventDefault();
@@ -54,7 +56,7 @@
   $('#redeem-form').addEventListener('submit', async event => {
     event.preventDefault();
     try {
-      const result = await staffAction({ action: 'redeem', points: Number($('#redeem-points').value) }, 'redeem');
+      const result = await staffAction({ action: 'redeem', points: 100, amount: $('#redeem-amount').value, receiptNo: $('#redeem-receipt').value, dineIn: $('#redeem-eligible').checked, otherPromotion: !$('#redeem-eligible').checked }, 'redeem');
       show(`已发起兑换 ${Math.abs(result.transaction.points)} RBP，等待会员确认：${result.transaction.id}`);
     } catch (error) {
       show(error.message);

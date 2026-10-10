@@ -7,6 +7,7 @@
   <title>ROBOV Points | 会员钱包</title>
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./home.css">
+  <link rel="stylesheet" href="./login.css">
 </head>
 <body>
   <div class="app-shell">
@@ -14,25 +15,20 @@
       <a class="brand" href="./"><span class="brand-mark">R</span>ROBOV.ai</a>
       <nav class="nav-links" aria-label="ROBOV Points">
         <a href="./robov.html">会员钱包</a>
-        <a href="./staff.html">店员操作</a>
+        <a href="./merchants.html">商家</a><button type="button" class="account-logout">退出登录</button>
       </nav>
     </header>
-    <main class="points-shell">
+    <main id="wallet-main" class="points-shell" hidden>
       <section class="points-hero">
         <p class="eyebrow">ROBOV POINTS</p>
         <h1>会员钱包</h1>
         <p class="guide-copy">查看 ROBOV Points 余额、积分流水，并生成 60 秒动态会员码供店员扫码。</p>
       </section>
       <section class="points-grid">
-        <form id="member-login" class="points-panel">
-          <h2>会员登录</h2>
-          <label for="member-email">邮箱</label>
-          <input id="member-email" name="email" type="email" autocomplete="email" placeholder="member@example.com">
-          <label for="member-phone">手机号</label>
-          <input id="member-phone" name="phone" type="tel" autocomplete="tel" placeholder="+65 8888 8888">
-          <button class="primary-button" type="submit">进入钱包</button>
+        <section class="points-panel">
+          <h2>会员中心</h2><p id="member-name"></p><p id="member-email"></p>
           <p id="member-status" class="result-note" role="status"></p>
-        </form>
+        </section>
         <section class="points-panel wallet-panel" aria-live="polite">
           <div class="wallet-balance">
             <span>可用积分</span>
@@ -55,5 +51,6 @@
   </div>
   <script src="./locale-data.js"></script><script src="./i18n.js"></script>
   <script src="./robov.js"></script>
+  <script src="./account.js"></script>
 </body>
 </html>

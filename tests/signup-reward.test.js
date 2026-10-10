@@ -1,0 +1,35 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { createMember } = require('../lib/robov/signup-reward');
+const { requestRedemption } = require('../lib/robov/ledger');
+function fixture(settings) {
+  let saved, credit, log;
+  const tx = {
+    rewardSettings: { findUnique: async () => settings },
+    robovUser: { findUnique: async () => saved, create: async ({ data }) => (saved = { id: 'member', ...data, member: { id: 'wallet', pointBalance: data.member.create.pointBalance } }) },
+    pointTransaction: { create: async ({ data }) => (credit = { id: 'credit', ...data }) },
+    auditLog: { create: async ({ data }) => (log = data) }
+  };
+  return { ...tx, $transaction: fn => fn(tx), results: () => ({ saved, credit, log }) };
+}
+test('signup defaults to 100 points with one opening ledger credit and audit', async () => {
+  const db = fixture(null), user = { id: 'auth', email: 'member@example.invalid', name: 'Member' };
+  await createMember(db, user);
+  const { saved, credit, log } = db.results();
+  assert.equal(saved.member.pointBalance,100); assert.equal(saved.role,'MEMBER');
+  assert.equal(credit.idempotencyKey,'signup:auth'); assert.equal(credit.metadata.reason,'SIGNUP_BONUS');
+  assert.equal(log.targetId,credit.id);
+  assert.equal((await createMember(db,user)).id,saved.id);
+});
+test('admin custom amount or disabled campaign governs new account credit', async () => {
+  for (const [enabled, amount, expected] of [[true,150,150],[false,100,0],[true,0,0]]) {
+    const db = fixture({ signupEnabled:enabled,signupPoints:amount });
+    await createMember(db,{ id:'auth',email:'member@example.invalid',name:'Member' });
+    assert.equal(db.results().saved.member.pointBalance,expected);
+    assert.equal(Boolean(db.results().credit),expected > 0);
+  }
+});
+test('voucher rejects incorrect point amount, low spend, takeaway and combined promotions before writing', async () => {
+  const input = { points:100,amount:50,receiptNo:'RCP-123',dineIn:true,otherPromotion:false };
+  for (const patch of [{points:99},{amount:49.99},{dineIn:false},{otherPromotion:true}]) await assert.rejects(requestRedemption({}, { ...input,...patch }), /VOUCHER_/);
+});

@@ -11,6 +11,7 @@ function localText(value) {
   if (typeof value === 'string') return value;
   english[value.zh] = value.en;
   if (value.ms) malay[value.zh] = value.ms;
+  if (typeof registerMalayText === 'function') registerMalayText(value);
   return value.zh;
 }
 function registerGraph(graph) {
@@ -24,7 +25,7 @@ function registerGraph(graph) {
   normalizeRecommendation(graph);
   const register = value => {
     if (value && typeof value === 'object') {
-      if (typeof value.zh === 'string' && typeof value.en === 'string') { english[value.zh] = value.en; if (value.ms) malay[value.zh] = value.ms; }
+      if (typeof value.zh === 'string' && typeof value.en === 'string') { english[value.zh] = value.en; if (value.ms) malay[value.zh] = value.ms; if (typeof registerMalayText === 'function') registerMalayText(value); }
       else Object.values(value).forEach(register);
     }
   };

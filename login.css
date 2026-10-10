@@ -1,0 +1,15 @@
+.login-shell { max-width: 440px; margin: 56px auto 80px; }
+.login-modes { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #b9c9b8; border-radius: 4px; margin: 22px 0; padding: 3px; gap: 4px; }
+.login-modes button { height: 54px; border: 0; border-radius: 3px; font: inherit; font-size: 14px; background: transparent; color: #627265; padding: 8px; }
+.login-modes button[aria-selected="true"] { background: #15271d; color: white; }
+#login-form { background: white; border: 1px solid #cdd5cc; border-radius: 6px; padding: 28px; }
+#login-form h1 { font-size: 28px; margin: 0 0 28px; }
+#login-form label { display: block; font-size: 14px; margin: 18px 0 8px; }
+#login-form input { width: 100%; min-height: 46px; border: 1px solid #b9c9b8; border-radius: 4px; padding: 10px 12px; font: inherit; }
+#login-submit { width: 100%; margin-top: 24px; min-height: 48px; }
+#login-status { font-size: 13px; color: #8a3f35; min-height: 20px; line-height: 1.8; overflow-wrap: anywhere; }
+#signup-toggle { width: 100%; font-size: 14px; padding: 12px; border: 1px solid #08775e; color: #08775e; border-radius: 4px; background: white; cursor: pointer; }
+.account-logout { font: inherit; font-size: 13px; color: #08775e; background: none; border: 0; padding: 8px; cursor: pointer; }
+.points-panel select { width: 100%; min-height: 46px; border: 1px solid #b9c9b8; border-radius: 4px; padding: 10px; font: inherit; background: white; }
+@media (max-width: 680px) { .login-shell { margin-top: 28px; } #login-form { padding: 22px; } }
+@media(max-width:680px) { .topbar .nav-links { display: flex; gap: 16px; width: 100%; flex-wrap: wrap; } }

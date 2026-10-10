@@ -8,8 +8,17 @@
     expiresAt: 0,
     clearRequested: null
   };
-  let expiryTimer;
+  let expiryTimer, countdownTimer;
   const expiryMessage = '会员识别已满5分钟，请重新识别会员';
+  function updateCountdown() {
+    const countdown = $('#member-countdown'), value = $('#member-countdown-value');
+    if (!state.memberSessionToken) { countdown.hidden = true; value.textContent = ''; return; }
+    const seconds = Math.max(0, Math.ceil((state.expiresAt - Date.now()) / 1000));
+    if (!seconds) { expireSelection(); return; }
+    countdown.hidden = false;
+    countdown.dataset.urgent = String(seconds <= 60);
+    value.textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+  }
   function selectionControls() {
     for (const form of ['earn-form', 'redeem-form', 'interaction-form']) {
       $(`#${form} button[type="submit"]`).disabled = state.busy || !state.memberSessionToken;
@@ -23,8 +32,10 @@
   }
   function resetSelection(message) {
     clearTimeout(expiryTimer);
+    clearInterval(countdownTimer);
     state.memberSessionToken = null;
     state.expiresAt = 0;
+    updateCountdown();
     state.clearPending = true;
     $('#scan-token').value = '';
     $('#scanned-member').textContent = '';
@@ -64,10 +75,12 @@
     get active() { return !!state.memberSessionToken && state.expiresAt > Date.now(); },
     verifying(value) { state.busy = value; if (value) selectionControls(); else finishSelectionWork(); },
     set(token, expiresAt) {
-      clearTimeout(expiryTimer); state.memberSessionToken = token;
+      clearTimeout(expiryTimer); clearInterval(countdownTimer); state.memberSessionToken = token;
       state.expiresAt = Math.min(Number(expiresAt) || Date.now() + 300000, Date.now() + 300000);
       state.clearPending = false;
       expiryTimer = setTimeout(expireSelection, Math.max(0, state.expiresAt - Date.now()));
+      updateCountdown();
+      if (state.memberSessionToken) countdownTimer = setInterval(updateCountdown, 1000);
       selectionControls(); window.dispatchEvent(new Event('robov-member-selected'));
     },
     async quote(amount) {
@@ -85,7 +98,7 @@
   window.addEventListener('pagehide', () => {
     resetSelection('已退出当前会员，请识别下一位会员');
   });
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) expireSelection(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) updateCountdown(); });
 
   function idempotencyKey(prefix) {
     return `${prefix}-${crypto.randomUUID()}`;
@@ -108,7 +121,7 @@
       });
       const payload = await response.json();
       if (!response.ok) {
-        if (payload.error === 'MEMBER_NOT_SELECTED') { state.memberSessionToken = null; $('#scanned-member').textContent = ''; }
+        if (payload.error === 'MEMBER_NOT_SELECTED') clearSelection(expiryMessage);
         throw new Error(payload.error || '请求失败');
       }
       return payload;

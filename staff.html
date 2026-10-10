@@ -55,7 +55,7 @@
           <input id="qr-image" type="file" accept="image/*" hidden>
           <label for="camera-device">摄像头</label><select id="camera-device" disabled></select>
           <div id="camera-preview" class="camera-preview" hidden><video id="scan-video" autoplay muted playsinline aria-label="摄像头预览"></video></div>
-          <p id="camera-status" role="status" aria-live="polite"></p><div class="selected-member"><strong id="scanned-member" aria-live="polite"></strong><button id="exit-member" class="secondary-button" type="button" disabled><i data-lucide="user-x" aria-hidden="true"></i><span>退出当前会员</span></button></div>
+          <p id="camera-status" role="status" aria-live="polite"></p><div class="selected-member"><strong id="scanned-member" aria-live="polite"></strong><div id="member-countdown" class="member-countdown" hidden><span>自动退出倒计时</span><span id="member-countdown-value" role="timer" aria-live="off" data-no-translate></span></div><button id="exit-member" class="secondary-button" type="button" disabled><i data-lucide="user-x" aria-hidden="true"></i><span>退出当前会员</span></button></div>
           <label for="scan-token">扫描结果或粘贴动态码</label>
           <textarea id="scan-token" rows="5" placeholder="粘贴会员动态码"></textarea>
           <button id="identify-member" class="secondary-button" type="button">识别会员码</button>

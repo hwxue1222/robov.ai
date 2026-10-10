@@ -32,6 +32,9 @@
 #console-scan { grid-template-columns: minmax(0, 1fr); margin-bottom: 20px; }
 #console-scan textarea { min-height: 80px; }
 #console-scan .camera-tools { margin-bottom: 12px; }
+.member-countdown { display: flex; align-items: center; gap: 8px; color: #43564e; font-size: 14px; }
+#member-countdown-value { display: inline-block; width: 5ch; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; color: #08775e; }
+.member-countdown[data-urgent="true"] #member-countdown-value { color: #a32742; }
 @media (max-width: 640px) {
   .store-profile-fields { grid-template-columns: minmax(0, 1fr); }
   body.store-console .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }

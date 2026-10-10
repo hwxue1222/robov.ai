@@ -23,7 +23,7 @@
       if (merchant.website) links.append(external(merchant.website, '官方网站 ↗'));
       links.append(rewards, staff);
       heading.append(links, make('p', '', `${merchant.phone} · ${merchant.email}`));
-      const source = make('p', 'merchant-source'); if (merchant.sourceUrl) source.append(external(merchant.sourceUrl, '资料来源：JWD 官方网站'));
+      const source = make('p', 'merchant-source'); if (merchant.sourceUrl) source.append(external(merchant.sourceUrl, merchant.id === 'jwd-mee-tarik' ? '资料来源：JWD 官方网站' : '资料来源链接'));
       heading.append(source);
       document.querySelector('#merchant-heading').append(heading);
       for (const outlet of merchant.outlets) {

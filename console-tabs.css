@@ -25,7 +25,11 @@
 #console-scan textarea { min-height: 80px; }
 #console-scan .camera-tools { margin-bottom: 12px; }
 @media (max-width: 640px) {
-  .store-console .topbar .nav-links { order: 5; width: 100%; margin-left: 0; }
+  body.store-console .topbar { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .store-console .topbar .brand { grid-column: 1; grid-row: 1; }
+  .store-console .console-profile-button { grid-column: 2; grid-row: 1; }
+  .store-console .language-switch { grid-column: 1 / -1; grid-row: 2; justify-self: end; }
+  body.store-console .topbar .nav-links { grid-column: 1 / -1; grid-row: 3; width: 100%; margin-left: 0; }
   .console-context { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .console-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin; }
   .console-tabs button { padding: 10px 12px; white-space: nowrap; }
